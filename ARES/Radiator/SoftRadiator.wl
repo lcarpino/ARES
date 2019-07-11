@@ -218,6 +218,8 @@ BeginPackage["`ARES`Radiator`SoftRadiator`", "`ARES`QCD`Constants`"]
 
         (* running of RpNLL XV scale term *)
         - lambda RadsNNLLabl[lambda, alphas, a, b2] logXV Log[muR^2/((xa + xb - 1) Q^2)];
+
+        resNNLL = leg1res + leg2res
       ];
 
 
