@@ -33,10 +33,10 @@ BeginPackage["`ARES`QCD`Constants`"]
   K2::usage = "K2 is "
   K3::usage = "K3 is "
 
-  Gaq0::usage = "Gaq0 is "
-  Gag0::usage = "Gag0 is "
-  Gaq1::usage = "Gaq1 is "
-  Gag1::usage = "Gag1 is "
+  Ga0q::usage = "Ga0q is "
+  Ga0g::usage = "Ga0g is "
+  Ga1q::usage = "Ga1q is "
+  Ga1g::usage = "Ga1g is "
 
   MZ::usage = ""
   AlphaSMZ::usage = ""
