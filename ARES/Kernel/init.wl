@@ -8,6 +8,7 @@ Get["ARES`Observables`Dparameter`"]
 
 Get["ARES`Radiator`SoftRadiator`"]
 Get["ARES`Radiator`HardCollinearRadiator`"]
+Get["ARES`Radiator`DerivativeRadiator`"]
 
 Get["ARES`Expansion`SoftRadiatorExpansion`"]
 Get["ARES`Expansion`CombinedExpansion`"]
