@@ -2,7 +2,7 @@
 
 (* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ *)
 
-(* :Title: DParameter *)
+(* :Title: SoftCollinearParametrisation *)
 
 (* :Author: *)
 
@@ -10,10 +10,10 @@
 
 (* ------------------------------------------------------------------------ *)
 
-BeginPackage["`ARES`Observable`Dparameter`"]
+BeginPackage["ARES`Observables`DParameter`SoftCollinearParametrisation`"]
 
-  BuildMapDparameter::usage =
-    "BuildMapDparameter[dipoles_List, legs_List]"
+  BuildMapDParameter::usage =
+    "BuildMapDParameter[dipoles_?ListQ, legs_?ListQ]"
 
   Begin["`Private`"]
 
@@ -22,7 +22,7 @@ BeginPackage["`ARES`Observable`Dparameter`"]
     etapow = {1, 1, 1};
     spow = 2;
 
-    BuildMapDparameter[dipoles_?ListQ, legs_?ListQ] :=
+    BuildMapDParameter[dipoles_?ListQ, legs_?ListQ] :=
       Module[
         {
           xq, xqb,
@@ -68,6 +68,7 @@ BeginPackage["`ARES`Observable`Dparameter`"]
         leglog2dlbar = Map[log2dlbar[#, xq, xqb] &, legs];
    
         Association[
+          "additive" -> True,
           "ktpow" -> ktpow,
           "etapow" -> etapow,
           "spow" -> spow,
@@ -75,6 +76,14 @@ BeginPackage["`ARES`Observable`Dparameter`"]
           "log2dabbar" -> diplog2dbar,
           "logdlbar" -> leglogdlbar,
           "log2dlbar" -> leglog2dlbar
+          (*
+          "Iscl" -> Iscl,
+          "Irecl" -> Irecl,
+          "Ihcl" -> Ihcl,
+          "Iwaab" -> Iwaab,
+          "Icorrell" -> Icorrell,
+          "Iclustl" -> Iclustl
+          *)
         ]
       ]
 
