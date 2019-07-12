@@ -24,25 +24,28 @@ BeginPackage["ARES`Observables`CParameter`SoftCollinearParametrisation`"]
     BuildMapCParameter[] :=
       Module[
         {},
+        0
       ]
 
     dl[] :=
       Module[
         {},
+        0
       ]
 
     dab[] :=
       Module[
         {},
+        0
       ]
 
-    logdlbar[]   := []
+    logdlbar[] := 0
 
-    log2dlbar[]  := []
+    log2dlbar[] := 0
 
-    logdabbar[]  := []
+    logdabbar[] := 0
 
-    log2dabbar[] := []
+    log2dabbar[] := 0
 
   End[]
 
