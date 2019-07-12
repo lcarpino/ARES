@@ -10,7 +10,7 @@
 
 (* ------------------------------------------------------------------------ *)
 
-BeginPackage["`ARES`Radiator`SoftRadiator`", "`ARES`QCD`Constants`"]
+BeginPackage["ARES`Radiator`SoftRadiator`", "ARES`QCD`Constants`"]
 
   g1::usage = ""
   g2::usage = ""

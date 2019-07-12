@@ -10,7 +10,7 @@
 
 (* ------------------------------------------------------------------------ *)
 
-BeginPackage["`ARES`QCD`ScaleChoices`"]
+BeginPackage["ARES`QCD`ScaleChoices`"]
 
   muRConst::usage = ""
   muRGluonKT::usage = ""

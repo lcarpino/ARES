@@ -10,7 +10,7 @@
 
 (* ------------------------------------------------------------------------ *)
 
-BeginPackage["`ARES`Radiator`DerivativeRadiator`", {"`ARES`QCD`Constants`"}]
+BeginPackage["ARES`Radiator`DerivativeRadiator`", {"ARES`QCD`Constants`"}]
 
   RadpNLLl::usage = ""
   RadpNLL::usage = ""

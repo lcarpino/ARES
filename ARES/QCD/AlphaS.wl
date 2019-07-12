@@ -10,7 +10,7 @@
 
 (* ------------------------------------------------------------------------ *)
 
-BeginPackage["`ARES`QCD`AlphaS`", {"`ARES`QCD`Constants`"}]
+BeginPackage["ARES`QCD`AlphaS`", {"ARES`QCD`Constants`"}]
 
    AlphaSFixedNF::usage = ""
 

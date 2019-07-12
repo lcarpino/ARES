@@ -10,7 +10,7 @@
 
 (* ------------------------------------------------------------------------ *)
 
-BeginPackage["`ARES`EPA`MatrixElements`", {"`ARES`QCD`Constants`"}]
+BeginPackage["ARES`EPA`MatrixElements`", {"ARES`QCD`Constants`"}]
 
   M3sq::usage = ""
   Virt3::usage = ""

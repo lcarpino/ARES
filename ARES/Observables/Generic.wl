@@ -10,9 +10,9 @@
 
 (* ------------------------------------------------------------------------ *)
 
-BeginPackage["`ARES`Observable`Generic`",
+BeginPackage["ARES`Observables`Generic`",
   {
-    "`ARES`QCD`Constants`"
+    "ARES`QCD`Constants`"
   }]
 
   BuildMapThreeLegs::usage = ""
@@ -52,10 +52,10 @@ BeginPackage["`ARES`Observable`Generic`",
         legs =
           Table[
             Association[
-              "num" -> i,
+              "num"  -> i,
               "flav" -> legmap[i],
-              "col" -> colmap[legmap[i]],
-              "x" -> xnum[[i]]
+              "col"  -> colmap[legmap[i]],
+              "x"    -> xnum[[i]]
             ],
             {i, 1, 3}
           ]

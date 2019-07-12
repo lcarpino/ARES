@@ -10,7 +10,7 @@
 
 (* ------------------------------------------------------------------------ *)
 
-BeginPackage["`ARES`Radiator`HardCollinearRadiator`", "`ARES`QCD`Constants`"]
+BeginPackage["ARES`Radiator`HardCollinearRadiator`", "ARES`QCD`Constants`"]
 
   h2::usage = ""
   h3::usage = ""

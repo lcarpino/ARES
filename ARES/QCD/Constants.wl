@@ -10,7 +10,7 @@
 
 (* ------------------------------------------------------------------------ *)
 
-BeginPackage["`ARES`QCD`Constants`"]
+BeginPackage["ARES`QCD`Constants`"]
 
 
   TF::usage = "TF is the index of the fundamental representation"
