@@ -10,11 +10,9 @@
 
 (* ------------------------------------------------------------------------ *)
 
-BeginPackage["ARES`Observable`GenericInterface`",
+BeginPackage["ARES`Observables`GenericInterface`",
   {
-    "ARES`Observables`Generic`",
-    "ARES`Observables`DParameter`SoftCollinearParametrisation`",
-    "ARES`Observables`CParameter`SoftCollinearParametrisation`"
+    "ARES`Observables`Generic`"
   }]
 
   InitialiseObservable::usage = ""
@@ -28,11 +26,13 @@ BeginPackage["ARES`Observable`GenericInterface`",
         testlegs = BuildMapThreeLegs[0.3, 0.9];
         testdips = BuildMapDipoles[testlegs];
         testobs  = ARES`Observables`DParameter`SoftCollinearParametrisation`BuildMapDParameter[testdips, testlegs];
-        {testlegs, testdips, testobs}
+        {testlegs, testdips, testobs};
+
+        ARES`Observables`DParameter`SoftCollinearCorrections`InitialiseCorrections[]
 
       ]
 
-      (* {ARES`Observable`DParameter`Initialise[], ARES`Observable`CParameter`Initialise[]} *)
+      (* {ARES`Observables`DParameter`Initialise[], ARES`Observables`CParameter`Initialise[]} *)
 
   End[]
 

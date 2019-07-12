@@ -10,17 +10,16 @@
 
 (* ------------------------------------------------------------------------ *)
 
-BeginPackage["ARES`Observables`DParameter`Initialise`",
-  {
-    "ARES`Observables`DParameter`SoftCollinearParametrisation`",
-    "ARES`Observables`DParameter`SoftCollinearCorrections`",
-  }]
+BeginPackage["ARES`Observables`DParameter`Initialise`"]
 
-  Initialise::usage = ""
+  InitialiseDParameter::usage = ""
 
   Begin["`Private`"]
 
-    Initialise[] := 0
+    Needs["ARES`Observables`DParameter`SoftCollinearParametrisation`"]
+    Needs["ARES`Observables`DParameter`SoftCollinearCorrections`"]
+
+    InitialiseDParameter[] := 0
 
   End[]
 

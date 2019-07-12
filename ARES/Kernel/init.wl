@@ -24,13 +24,8 @@ Get["ARES`Expansion`CombinedExpansion`"]
 
   (* D-Parameter *)
   Get["ARES`Observables`DParameter`Initialise`"]
-  Get["ARES`Observables`DParameter`SoftCollinearCorrections`"]
-  Get["ARES`Observables`DParameter`SoftCollinearParametrisation`"]
 
   (* C-Parameter *)
-  Get["ARES`Observables`CParameter`Initialise`"]
-  Get["ARES`Observables`CParameter`SoftCollinearCorrections`"]
-  Get["ARES`Observables`CParameter`SoftCollinearParametrisation`"]
 
   Get["ARES`Observables`GenericInterface`"]
 
