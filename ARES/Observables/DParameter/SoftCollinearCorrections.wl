@@ -16,6 +16,7 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearCorrections`",
     "ARES`Radiator`DerivativeRadiator`"
   }]
 
+    InitialiseCorrections::usage = ""
     Iscl::usage = ""
     Irecl::usage = ""
     Ihcl::usage = ""
@@ -24,6 +25,22 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearCorrections`",
     Iclustl::usage = ""
 
   Begin["`Private`"]
+
+    InitialiseCorrections[] :=
+      Module[
+        {Iwa12Grid},
+
+        Iwa12Grid = Import[
+                      FileNameJoin[
+                        {
+                          "/home/luke/Research/ARES/ARES/Grids",
+                          "DParameter-Iwa12.mx"
+                        }]];
+
+       Iwa12Interpolation = Interpolation[
+                              Flatten[
+                                Iwa12Grid, 1], InterpolationOrder -> 1];
+      ];
 
     Iscl[lambda_?NumericQ, RpNLL_?NumericQ, as_?NumericQ,
          leg_?AssociationQ, obspar_?AssociationQ] :=
@@ -74,6 +91,9 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearCorrections`",
         ];
         res = -ga0 (PolyGamma[0, 1 + RpNLL] + EulerGamma)
       ]
+
+
+    Iwa12Interpolation;
 
     Iwaab[dip_?AssociationQ, obspar_?AssociationQ] := 
       Module[
