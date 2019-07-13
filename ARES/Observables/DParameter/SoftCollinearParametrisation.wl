@@ -12,6 +12,8 @@
 
 BeginPackage["ARES`Observables`DParameter`SoftCollinearParametrisation`"]
 
+  InitialiseSoftCollinearParametrisation::usage = ""
+
   BuildMapDParameter::usage =
     "BuildMapDParameter[dipoles_?ListQ, legs_?ListQ]"
 
@@ -21,6 +23,8 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearParametrisation`"]
     ktpow = 1;
     etapow = {1, 1, 1};
     spow = 2;
+
+    InitialiseSoftCollinearParametrisation[] := 0;
 
     BuildMapDParameter[dipoles_?ListQ, legs_?ListQ] :=
       Module[
@@ -68,7 +72,6 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearParametrisation`"]
         leglog2dlbar = Map[log2dlbar[#, xq, xqb] &, legs];
    
         Association[
-          "additive" -> True,
           "ktpow" -> ktpow,
           "etapow" -> etapow,
           "spow" -> spow,
@@ -76,14 +79,6 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearParametrisation`"]
           "log2dabbar" -> diplog2dbar,
           "logdlbar" -> leglogdlbar,
           "log2dlbar" -> leglog2dlbar
-          (*
-          "Iscl" -> Iscl,
-          "Irecl" -> Irecl,
-          "Ihcl" -> Ihcl,
-          "Iwaab" -> Iwaab,
-          "Icorrell" -> Icorrell,
-          "Iclustl" -> Iclustl
-          *)
         ]
       ]
 

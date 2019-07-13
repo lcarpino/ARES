@@ -40,7 +40,7 @@ BeginPackage["ARES`Radiator`DerivativeRadiator`", {"ARES`QCD`Constants`"}]
       Total[Map[RadpNLLl[lambda, #, obspar] &, legs]]
 
 
-    RadsNNLLl[lambda_?NumericQ, alphas_?NumericQ,
+    RadsNNLLl[lambda_?NumericQ, AlphaS_?NumericQ,
               leg_?AssociationQ, obspar_?AssociationQ] :=
 
       Module[
@@ -52,15 +52,15 @@ BeginPackage["ARES`Radiator`DerivativeRadiator`", {"ARES`QCD`Constants`"}]
         (* lambda < a/2 *)
         If[lambda > a/2, Return[0, Module]];
 
-        leg[["col"]] (alphas/Pi 2/((a - 2 lambda) (a + b - 2 lambda)))
+        leg[["col"]] (AlphaS/Pi 2/((a - 2 lambda) (a + b - 2 lambda)))
       ]
 
-    RadsNNLL[lambda_?NumericQ, alphas_?NumericQ,
+    RadsNNLL[lambda_?NumericQ, AlphaS_?NumericQ,
              legs_?ListQ, obspar_?AssociationQ] :=
-      Total[Map[RadsNNLLl[lambda, alphas, #, obspar] &, legs]]
+      Total[Map[RadsNNLLl[lambda, AlphaS, #, obspar] &, legs]]
 
 
-    RadpNNLLl[lambda_?NumericQ, alphas_?NumericQ,
+    RadpNNLLl[lambda_?NumericQ, AlphaS_?NumericQ,
               leg_?AssociationQ, obspar_?AssociationQ] :=
 
       Module[
@@ -72,16 +72,16 @@ BeginPackage["ARES`Radiator`DerivativeRadiator`", {"ARES`QCD`Constants`"}]
         (* lambda < a/2 *)
         If[lambda > a/2, Return[0, Module]];
 
-        leg[["col"]] (alphas/(b Pi^2 beta0^2 (a - 2 lambda) (a + b - 2 lambda))
+        leg[["col"]] (AlphaS/(b Pi^2 beta0^2 (a - 2 lambda) (a + b - 2 lambda))
                       (b K1 beta0 lambda - 2 Pi b beta1 lambda
                       - Pi a (a + b - 2 lambda) beta1 Log[1 - (2 lambda)/a]
                       + Pi (a + b) (a -2 lambda) beta1 Log[1 - (2 lambda)/(a + b)]))
 
       ]
 
-    RadpNNLL[lambda_?NumericQ, alphas_?NumericQ,
+    RadpNNLL[lambda_?NumericQ, AlphaS_?NumericQ,
              legs_?ListQ, obspar_?AssociationQ] :=
-      Total[Map[RadpNNLLl[lambda, alphas, #, obspar] &, legs]]
+      Total[Map[RadpNNLLl[lambda, AlphaS, #, obspar] &, legs]]
 
 
   End[]

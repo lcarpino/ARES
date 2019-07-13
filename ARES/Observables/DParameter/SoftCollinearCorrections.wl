@@ -17,6 +17,8 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearCorrections`",
   }]
 
     InitialiseCorrections::usage = ""
+    BuildMapICorrection::usage = "" 
+
     Iscl::usage = ""
     Irecl::usage = ""
     Ihcl::usage = ""
@@ -41,6 +43,8 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearCorrections`",
                               Flatten[
                                 Iwa12Grid, 1], InterpolationOrder -> 1];
       ];
+
+    BuildMapICorrection[] := 0
 
     Iscl[lambda_?NumericQ, RpNLL_?NumericQ, as_?NumericQ,
          leg_?AssociationQ, obspar_?AssociationQ] :=
@@ -120,7 +124,7 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearCorrections`",
         caconst = 1.813962;
         nfconst = 1.156192;
   
-        (ca caconst + 2 TF NF nfconst)
+        (CA caconst + 2 TF NF nfconst)
       ]
 
     Iclustl[leg_?AssociationQ, obspar_?AssociationQ] := 0
