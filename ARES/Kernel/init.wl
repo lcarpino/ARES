@@ -10,6 +10,7 @@ Get["ARES`Radiator`HardCollinearRadiator`"]
 Get["ARES`Radiator`DerivativeRadiator`"]
 
 (* Multiple-emission functions *)
+Get["ARES`MultipleEmission`AdditiveInterface`"]
 
 (* Resummation constants *)
 
