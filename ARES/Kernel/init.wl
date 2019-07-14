@@ -4,6 +4,9 @@ Get["ARES`QCD`AlphaS`"]
 Get["ARES`QCD`ScaleChoices`"]
 Get["ARES`EPA`MatrixElements`"]
 
+(* Event Geometry *)
+Get["ARES`Event`EventThreeJets`"]
+
 (* Radiator *)
 Get["ARES`Radiator`SoftRadiator`"]
 Get["ARES`Radiator`HardCollinearRadiator`"]
@@ -18,5 +21,4 @@ Get["ARES`MultipleEmission`AdditiveInterface`"]
 Get["ARES`Expansion`SoftRadiatorExpansion`"]
 
 (* Observables *)
-Get["ARES`Observables`Generic`"]
-Get["ARES`Observables`GenericInterface`"]
+Get["ARES`Observables`ObservableBuilder`"]

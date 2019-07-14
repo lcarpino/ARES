@@ -2,7 +2,7 @@
 
 (* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ *)
 
-(* :Title: GenericInterface *)
+(* :Title: ObservableBuilder *)
 
 (* :Author: *)
 
@@ -10,7 +10,7 @@
 
 (* ------------------------------------------------------------------------ *)
 
-BeginPackage["ARES`Observables`GenericInterface`"]
+BeginPackage["ARES`Observables`ObservableBuilder`"]
 
   InitialiseObservable::usage = ""
 

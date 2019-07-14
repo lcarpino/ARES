@@ -2,7 +2,7 @@
 
 (* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ *)
 
-(* :Title: Generic *)
+(* :Title: EventThreeJets *)
 
 (* :Author: *)
 
@@ -10,7 +10,7 @@
 
 (* ------------------------------------------------------------------------ *)
 
-BeginPackage["ARES`Observables`Generic`",
+BeginPackage["ARES`Event`EventThreeJets`",
   {
     "ARES`QCD`Constants`"
   }]
