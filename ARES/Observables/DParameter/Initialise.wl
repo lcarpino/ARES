@@ -13,9 +13,7 @@
 BeginPackage["ARES`Observables`DParameter`Initialise`"]
 
   InitialiseDParameter::usage = ""
-  Additive::usage = ""
-  SoftCollinearMap::usage = ""
-  ICorrectionMap::usage = ""
+  BuildDParameter::usage = ""
 
   Begin["`Private`"]
 
@@ -26,11 +24,16 @@ BeginPackage["ARES`Observables`DParameter`Initialise`"]
       InitialiseSoftCollinearParametrisation[]
       InitialiseCorrections[]
 
-    Additive[] := True
+    Additive = True;
+    NJets = 3;
 
-    SoftCollinearMap := BuildMapDParameter
-
-    ICorrectionMap := BuildMapICorrection
+    BuildDParameter[] :=
+      Association[
+        "Additive" -> Additive,
+        "NJets"    -> NJets,
+        "SCParametrisation" -> BuildMapDParameter,
+        "TransferFunctions" -> BuildMapICorrection[]
+      ]
 
   End[]
 

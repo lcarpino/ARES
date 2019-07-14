@@ -18,23 +18,20 @@ BeginPackage["ARES`Observables`GenericInterface`",
   InitialiseObservable::usage = ""
 
   Begin["`Private`"]
+    Needs["ARES`Observables`DParameter`Initialise`"];
+    Needs["ARES`Observables`CParameter`Initialise`"];
 
     InitialiseObservable[Observable_] :=
-
       Module[
         {},
 
         Which[
           Observable == "DParameter",
-            ARES`Observables`DParameter`Initialise`InitialiseDParameter[];
-            Association[
-              "Additive"          -> ARES`Observables`DParameter`Initialise`Additive[],
-              "SCParametrisation" -> ARES`Observables`DParameter`Initialise`SoftCollinearMap,
-              "TransferFunctions" -> ARES`Observables`DParameter`Initialise`ICorrectionMap[]
-            ],
-
+            InitialiseDParameter[];
+            BuildDParameter[],
           Observable == "CParameter",
-            {}
+            InitialiseCParameter[];
+            BuildCParameter[]
         ]
       ]
 

@@ -12,15 +12,28 @@
 
 BeginPackage["ARES`Observables`CParameter`Initialise`"]
 
-  Initialise::usage = ""
+  InitialiseCParameter::usage = ""
+  BuildCParameter::usage = ""
 
   Begin["`Private`"]
 
     Needs["ARES`Observables`CParameter`SoftCollinearParametrisation`"]
     Needs["ARES`Observables`CParameter`SoftCollinearCorrections`"]
 
+    InitialiseDParameter[] :=
+      InitialiseSoftCollinearParametrisation[]
+      InitialiseCorrections[]
 
-    Initialise[] := 0
+    Additive = True;
+    NJets = 2;
+
+    BuildCParameter[] :=
+      Association[
+        "Additive" -> Additive,
+        "NJets"    -> NJets,
+        "SCParametrisation" -> BuildMapCParameter,
+        "TransferFunctions" -> BuildMapICorrection[]
+      ]
 
   End[]
 

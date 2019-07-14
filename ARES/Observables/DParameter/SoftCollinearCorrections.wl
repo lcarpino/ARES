@@ -47,7 +47,7 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearCorrections`",
 
     BuildMapICorrection[] :=
       Association[
-        "INLL"     -> INLL
+        "INLL"     -> INLL,
         "Iscl"     -> Iscl,
         "Irecl"    -> Irecl,
         "Ihcl"     -> Ihcl,

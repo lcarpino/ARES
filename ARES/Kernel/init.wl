@@ -16,17 +16,7 @@ Get["ARES`MultipleEmission`AdditiveInterface`"]
 
 (* Expansion of the resummation *)
 Get["ARES`Expansion`SoftRadiatorExpansion`"]
-Get["ARES`Expansion`CombinedExpansion`"]
 
 (* Observables *)
-
-  (* Event geometry *)
-  Get["ARES`Observables`Generic`"]
-
-  (* D-Parameter *)
-  Get["ARES`Observables`DParameter`Initialise`"]
-
-  (* C-Parameter *)
-
-  Get["ARES`Observables`GenericInterface`"]
-
+Get["ARES`Observables`Generic`"]
+Get["ARES`Observables`GenericInterface`"]
