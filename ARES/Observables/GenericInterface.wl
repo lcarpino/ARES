@@ -10,10 +10,7 @@
 
 (* ------------------------------------------------------------------------ *)
 
-BeginPackage["ARES`Observables`GenericInterface`",
-  {
-    "ARES`Observables`Generic`"
-  }]
+BeginPackage["ARES`Observables`GenericInterface`"]
 
   InitialiseObservable::usage = ""
 
