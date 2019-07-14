@@ -19,20 +19,24 @@ BeginPackage["ARES`Observables`GenericInterface`",
 
   Begin["`Private`"]
 
-    InitialiseObservable[] :=
+    InitialiseObservable[Observable_] :=
+
       Module[
-        {testlegs, testdips, testobs},
+        {},
 
-        testlegs = BuildMapThreeLegs[0.3, 0.9];
-        testdips = BuildMapDipoles[testlegs];
-        testobs  = ARES`Observables`DParameter`SoftCollinearParametrisation`BuildMapDParameter[testdips, testlegs];
-        {testlegs, testdips, testobs};
+        Which[
+          Observable == "DParameter",
+            ARES`Observables`DParameter`Initialise`InitialiseDParameter[];
+            Association[
+              "Additive"          -> ARES`Observables`DParameter`Initialise`Additive[],
+              "SCParametrisation" -> ARES`Observables`DParameter`Initialise`SoftCollinearMap,
+              "TransferFunctions" -> ARES`Observables`DParameter`Initialise`ICorrectionMap[]
+            ],
 
-        ARES`Observables`DParameter`SoftCollinearCorrections`InitialiseCorrections[]
-
+          Observable == "CParameter",
+            {}
+        ]
       ]
-
-      (* {ARES`Observables`DParameter`Initialise[], ARES`Observables`CParameter`Initialise[]} *)
 
   End[]
 

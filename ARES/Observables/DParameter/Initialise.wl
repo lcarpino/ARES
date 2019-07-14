@@ -28,9 +28,9 @@ BeginPackage["ARES`Observables`DParameter`Initialise`"]
 
     Additive[] := True
 
-    SoftCollinearMap[] := BuildMapDParameter
+    SoftCollinearMap := BuildMapDParameter
 
-    ICorrectionMap[] := BuildMapICorrection
+    ICorrectionMap := BuildMapICorrection
 
   End[]
 

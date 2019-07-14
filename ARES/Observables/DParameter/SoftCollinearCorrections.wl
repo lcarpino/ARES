@@ -19,6 +19,7 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearCorrections`",
     InitialiseCorrections::usage = ""
     BuildMapICorrection::usage = "" 
 
+    INLL::usage = ""
     Iscl::usage = ""
     Irecl::usage = ""
     Ihcl::usage = ""
@@ -44,7 +45,19 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearCorrections`",
                                 Iwa12Grid, 1], InterpolationOrder -> 1];
       ];
 
-    BuildMapICorrection[] := 0
+    BuildMapICorrection[] :=
+      Association[
+        "INLL"     -> INLL
+        "Iscl"     -> Iscl,
+        "Irecl"    -> Irecl,
+        "Ihcl"     -> Ihcl,
+        "Iwaab"    -> Iwaab,
+        "Icorrell" -> Icorrell,
+        "Iclustl"  -> Iclustl
+      ]
+
+
+    INLL[] := 0
 
     Iscl[lambda_?NumericQ, RpNLL_?NumericQ, as_?NumericQ,
          leg_?AssociationQ, obspar_?AssociationQ] :=
