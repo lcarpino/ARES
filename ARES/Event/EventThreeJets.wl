@@ -15,10 +15,28 @@ BeginPackage["ARES`Event`EventThreeJets`",
     "ARES`QCD`Constants`"
   }]
 
+  BuildEvent::usage = ""
+
   BuildMapThreeLegs::usage = ""
   BuildMapDipoles::usage = ""
 
   Begin["`Private`"]
+
+    BuildEvent[xq_?NumericQ, xqb_?NumericQ] :=
+      Module[
+        {legs, dipoles},
+
+        legs = BuildMapThreeLegs[xq, xqb];
+        dipoles = BuildMapDipoles[legs];
+
+        Association[
+          "xq"  -> xq,
+          "xqb" -> xqb,
+          "legs" -> legs,
+          "dipoles" -> dipoles
+        ]
+      ]
+
 
     BuildMapThreeLegs[xq_?NumericQ, xqb_?NumericQ] :=
       Module[

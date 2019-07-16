@@ -26,6 +26,9 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearParametrisation`"]
 
     InitialiseSoftCollinearParametrisation[] := 0;
 
+    BuildMapDParameter[Event_?AssociationQ] :=
+      BuildMapDParameter[Event["dipoles"], Event["legs"]]
+
     BuildMapDParameter[dipoles_?ListQ, legs_?ListQ] :=
       Module[
         {
