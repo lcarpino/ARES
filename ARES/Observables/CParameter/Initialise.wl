@@ -20,9 +20,12 @@ BeginPackage["ARES`Observables`CParameter`Initialise`"]
     Needs["ARES`Observables`CParameter`SoftCollinearParametrisation`"]
     Needs["ARES`Observables`CParameter`SoftCollinearCorrections`"]
 
-    InitialiseDParameter[] :=
-      InitialiseSoftCollinearParametrisation[]
-      InitialiseCorrections[]
+    InitialiseCParameter[] :=
+      Module[
+        {},
+        InitialiseSoftCollinearParametrisation[];
+        InitialiseCorrections[];
+      ]
 
     Additive = True;
     NJets = 2;
