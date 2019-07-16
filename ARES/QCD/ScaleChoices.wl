@@ -15,8 +15,6 @@ BeginPackage["ARES`QCD`ScaleChoices`"]
   muRConst::usage = ""
   muRGluonKT::usage = ""
 
-  LogXConst::usage = ""
-
   Begin["`Private`"]
 
     muRConst[xq_?NumericQ, xqb_?NumericQ] := 1
