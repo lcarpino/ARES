@@ -17,6 +17,9 @@ Get["ARES`MultipleEmission`AdditiveInterface`"]
 
 (* Resummation constants *)
 
+(* Resummation *)
+Get["ARES`Resummation`EPAThreeJets`"]
+
 (* Expansion of the resummation *)
 Get["ARES`Expansion`SoftRadiatorExpansion`"]
 

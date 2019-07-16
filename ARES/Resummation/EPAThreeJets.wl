@@ -14,21 +14,32 @@
 BeginPackage["ARES`Resummation`EPAThreeJets`",
   {
     "ARES`QCD`Constants`",
-    "ARES`EPA`MatrixElements`"
+    "ARES`QCD`AlphaS`",
+    "ARES`QCD`ScaleChoices`",
+    "ARES`Logarithms`LogarithmPT`",
+    "ARES`Logarithms`ScaleChoices`",
+    "ARES`EPA`MatrixElements`",
+    "ARES`Radiator`SoftRadiator`"
   }]
+
+  LL::usage = ""
+  NLL::usage = ""
+  NNLL::usage = ""
 
   Begin["`Private`"]
 
     Options[LL] =
       {
         "Q" -> MZ,
-        "muRstrategy" -> muRconst,  "muR0" -> 1, 
-        "Xstrategy"   -> logXconst, "X0"   -> 1,
+        "muRstrategy" -> muRConst,  "muR0" -> 1, 
+        "Xstrategy"   -> LogXConst, "X0"   -> 1,
         "RadiatorScheme" -> "Physical",
         "refscale" -> MZ, "refalphas" -> AlphaSMZ
       };
 
-    LL[logV_?NumericQ, xq_?NumericQ, xqb_?NumericQ, OptionsPattern[]] :=
+    LL[logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
+       OptionsPattern[]] :=
+
       Module[
         {
           Q = OptionValue["Q"],
@@ -38,27 +49,25 @@ BeginPackage["ARES`Resummation`EPAThreeJets`",
           logX0 = Log[OptionValue["X0"]],
           refscale = OptionValue["refscale"], 
           refalphas = OptionValue["refalphas"],
-          obspar, legs, dipoles,
+          legs, dipoles, xq, xqb,
           lambda, logXV, muR, alphas,
           Rs,
           res
         },
   
-        legs = buildAssoclegs[xq, xqb];
-        dipoles = buildAssocdips[legs];
-        obspar = buildAssocdpar[dipoles, legs, xq, xqb];
-  
-        logX0=Log[X0];
+        xq      = Event["xq"];
+        xqb     = Event["xqb"];
+        legs    = Event["legs"];
+        dipoles = Event["dipoles"];
+
         muR = muRstrategy[xq, xqb] muR0 Q;
-        logXV = Xstrategy[dipoles, legs, obspar] + logX0;
+        logXV = Xstrategy[dipoles, legs, obsSC] + logX0;
+        alphas = AlphaSFixedNF[muR, 1];
+        lambda = alphas beta0 LtildePT[Exp[-logV], Exp[logXV]];
   
-        alphas = alphasFixednf[muR, 1, refalphas, refscale];
+        Rs = Rads[lambda, alphas, Q, muR, logXV, 0, dipoles, obsSC];
   
-        lambda = alphas beta0 Ltilde[Exp[-logV], Exp[logXV], 1, 1];
-  
-        Rs = Rads[lambda, alphas, Q, muR, logXV, 0, dipoles, obspar];
-  
-        res = M3sq[xq, xqb] Exp[-\[ScriptCapitalR]s]
+        res = M3sq[xq, xqb] Exp[-Rs]
       ]
 
 
