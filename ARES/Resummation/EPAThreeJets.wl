@@ -19,7 +19,10 @@ BeginPackage["ARES`Resummation`EPAThreeJets`",
     "ARES`Logarithms`LogarithmPT`",
     "ARES`Logarithms`ScaleChoices`",
     "ARES`EPA`MatrixElements`",
-    "ARES`Radiator`SoftRadiator`"
+    "ARES`Radiator`SoftRadiator`",
+    "ARES`Radiator`HardCollinearRadiator`",
+    "ARES`Radiator`DerivativeRadiator`",
+    "ARES`MultipleEmission`AdditiveInterface`"
   }]
 
   LL::usage = ""
@@ -74,13 +77,13 @@ BeginPackage["ARES`Resummation`EPAThreeJets`",
     Options[NLL] =
       {
         "Q" -> MZ,
-        "muRstrategy" -> muRconst,  "muR0" -> 1, 
-        "Xstrategy"   -> logXconst, "X0"   -> 1,
+        "muRstrategy" -> muRConst,  "muR0" -> 1, 
+        "Xstrategy"   -> LogXConst, "X0"   -> 1,
         "RadiatorScheme" -> "Physical",
         "refscale" -> MZ, "refalphas" -> AlphaSMZ
       };
 
-    NLL[logV_?NumericQ, xq_?NumericQ, xqb_?NumericQ, OptionsPattern[]] :=
+    NLL[logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
           Q = OptionValue["Q"],
@@ -90,31 +93,30 @@ BeginPackage["ARES`Resummation`EPAThreeJets`",
           logX0 = Log[OptionValue["X0"]],
           refscale = OptionValue["refscale"], 
           refalphas = OptionValue["refalphas"],
-          obspar, legs, dipoles,
+          legs, dipoles, xq, xqb,
           lambda, logXV, muR, alphas,
           Rs, Rhc, Rp,
-          FNLL,
+          Fnll,
           res
         },
   
-        legs = buildAssoclegs[xq, xqb];
-        dipoles = buildAssocdips[legs];
-        obspar = buildAssocdpar[dipoles, legs, xq, xqb];
-  
-        (*logX0=Log[X0];*)
+        xq      = Event["xq"];
+        xqb     = Event["xqb"];
+        legs    = Event["legs"];
+        dipoles = Event["dipoles"];
+
         muR = muRstrategy[xq, xqb] muR0 Q;
-        logXV = Xstrategy[dipoles, legs, obspar] + logX0;
+        logXV = Xstrategy[dipoles, legs, obsSC] + logX0;
+        alphas = AlphaSFixedNF[muR, 2];
   
-        alphas = alphasFixednf[muR, 2, refalphas, refscale];
+        lambda = alphas beta0 LtildePT[Exp[-logV], Exp[logXV]];
   
-        lambda = alphas beta0 Ltilde[Exp[-logV], Exp[logXV], 1, 1];
+        Rs = Rads[lambda, alphas, Q, muR, logXV, 1, dipoles, obsSC];
+        Rhc = Radhc[lambda, alphas, Q, muR, logXV, 1, legs, obsSC];
+        Rp = RadpNLL[lambda, legs, obsSC];
+        Fnll = FNLL[Rp];
   
-        Rs = Rads[lambda, alphas, Q, muR, logXV, 1, dipoles, obspar];
-        Rhc = Radhc[lambda, alphas, Q, muR, logXV, 1, legs, obspar];
-        Rp = RadpNLL[lambda, legs, obspar];
-        FNLL = FNLL[Rp];
-  
-        res = M3sq[xq, xqb] Exp[-Rs - Rhc] FNLL
+        res = M3sq[xq, xqb] Exp[-Rs-Rhc] Fnll
       ]
 
 
