@@ -22,6 +22,7 @@ BeginPackage["ARES`Resummation`EPAThreeJets`",
     "ARES`Radiator`SoftRadiator`",
     "ARES`Radiator`HardCollinearRadiator`",
     "ARES`Radiator`DerivativeRadiator`",
+    "ARES`HardConstants`CollinearConstant`",
     "ARES`MultipleEmission`AdditiveInterface`"
   }]
 
@@ -123,13 +124,13 @@ BeginPackage["ARES`Resummation`EPAThreeJets`",
     Options[NNLL] =
       {
         "Q" -> MZ,
-        "muRstrategy" -> muRconst,  "muR0" -> 1, 
-        "Xstrategy"   -> logXconst, "X0"   -> 1,
+        "muRstrategy" -> muRConst,  "muR0" -> 1, 
+        "Xstrategy"   -> LogXConst, "X0"   -> 1,
         "RadiatorScheme" -> "Physical",
         "refscale" -> MZ, "refalphas" -> AlphaSMZ
       };
 
-    NNLL[logV_?NumericQ, xq_?NumericQ, xqb_?NumericQ, OptionsPattern[]] :=
+    NNLL[logV_?NumericQ, Event_?AssociationQ, obs_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
           Q = OptionValue["Q"],
@@ -139,54 +140,55 @@ BeginPackage["ARES`Resummation`EPAThreeJets`",
           logX0 = Log[OptionValue["X0"]],
           refscale = OptionValue["refscale"], 
           refalphas = OptionValue["refalphas"],
-          subEndPoint = OptionValue["subEndPoint"],
-          obspar, legs, dipoles,
+          RadScheme = OptionValue["RadiatorScheme"],
+          legs, dipoles, xq, xqb, obsSC,
           lambda, logXV, muR, alphas,
           Rs, RsEndPoint, Rhc, RpNLL, RpNNLL, RsNNLL,
-          FNLL,
-          dFsc, dFrec, dFhc, dFwa, dFcorrel, dFclust, dFNNLL,
-          H1, C1hc,
+          mFNLL,
+          mIsc, mIrec, mIhc, mIwa, mIcorrel, mIclust,
+          mdFsc, mdFrec, mdFhc, mdFwa, mdFcorrel, mdFclust, mdFNNLL,
+          mH1, mC1hc,
           res
         },
-  
-        legs = buildAssoclegs[xq, xqb];
-        dipoles = buildAssocdips[legs];
-        obspar = buildAssocdpar[dipoles, legs, xq, xqb];
-  
-        muR = muRstrategy[xq, xqb] muR0 Q;
-        logXV = Xstrategy[dipoles, legs, obspar] + logX0;
-  
-        alphas = alphasFixednf[muR, 3, refalphas, refscale];
-  
-        lambda = alphas beta0 Ltilde[Exp[-logV], Exp[logXV], 1, 1];
-  
-        Rs = Rads[lambda, alphas, Q, muR, logXV, 2, dipoles, obspar];
-        RsEndPoint = Rads[0, alphas, Q, muR, logXV, 2, dipoles, obspar];
-        Rhc = Radhc[lambda, alphas, Q, muR, logXV, 2, legs, obspar];
-        RpNLL = RadpNLL[lambda, legs, obspar];
-        FNLL = FNLL[RpNLL];
-        H1 = virt3[xq, xqb];
-        C1hc = dC1hc[lambda, xq, xqb, legs, obspar];
-  
-        dFsc = dFsc[lambda, RpNLL, alphas, legs, obspar];
-        dFrec = dFrec[lambda, RpNLL, legs, obspar];
-        dFhc = dFhc[lambda, RpNLL, legs, obspar];
-        dFwa = dFwa[lambda, RpNLL, dipoles, obspar];
-        dFcorrel = dFcorrel[lambda, RpNLL, alphas, legs, obspar];
-        dFclust = 0;
-  
-        dFNNLL = dFsc + dFrec + dFhc + dFwa + dFcorrel + dFclust;
-  
-        If[subEndPoint,
-          res = (Exp[-(Rs - RsEndPoint) - Rhc]
-                 (M3sq[xq, xqb] FNLL (1 + alphas/(2 Pi) C1hc - RsEndPoint)
-                  + FNLL alphas/(2 Pi) H1 + M3sq[xq, xqb] alphas/Pi dFNNLL)),
-          res = (Exp[-Rs-Rhc]
-                 (M3sq[xq, xqb] FNLL (1 + alphas/(2 Pi) C1hc)
-                  + FNLL alphas/(2 Pi) H1 + M3sq[xq, xqb] alphas/Pi dFNNLL))
-        ];
 
-        res
+        xq      = Event["xq"];
+        xqb     = Event["xqb"];
+        legs    = Event["legs"];
+        dipoles = Event["dipoles"];
+        obsSC   = obs["SCParametrisation"][Event];
+ 
+        mIscl     = obs["TransferFunctions"]["Iscl"];
+        mIrecl    = obs["TransferFunctions"]["Irecl"];
+        mIhcl     = obs["TransferFunctions"]["Ihcl"];
+        mIwaab    = obs["TransferFunctions"]["Iwaab"];
+        mIcorrell = obs["TransferFunctions"]["Icorrell"];
+        mIclustl  = obs["TransferFunctions"]["Iclustl"];
+
+        muR = muRstrategy[xq, xqb] muR0 Q;
+        logXV = Xstrategy[dipoles, legs, obsSC] + logX0;
+        alphas = AlphaSFixedNF[muR, 3];
+        lambda = alphas beta0 LtildePT[Exp[-logV], Exp[logXV]];
+  
+        Rs = Rads[lambda, alphas, Q, muR, logXV, 2, dipoles, obsSC];
+        RsEndPoint = Rads[0, alphas, Q, muR, logXV, 2, dipoles, obsSC];
+        Rhc = Radhc[lambda, alphas, Q, muR, logXV, 2, legs, obsSC];
+        RpNLL = RadpNLL[lambda, legs, obsSC];
+        mFNLL = FNLL[RpNLL];
+        mH1 = Virt3[xq, xqb];
+        mC1hc = C1hc[lambda, xq, xqb, legs, obsSC];
+  
+        mdFsc     = dFsc[lambda, RpNLL, alphas, legs, obsSC];
+        mdFrec    = dFrec[lambda, RpNLL, alphas, legs, obsSC, mIrecl];
+        mdFhc     = dFhc[lambda, RpNLL, alphas, legs, obsSC];
+        mdFwa     = dFwa[lambda, RpNLL, alphas, dipoles, obsSC, mIwaab];
+        mdFcorrel = dFcorrel[lambda, RpNLL, alphas, legs, obsSC, mIcorrell];
+        mdFclust  = dFclust[lambda, RpNLL, alphas, legs, obsSC, mIclustl];
+  
+        mdFNNLL = mdFsc + mdFrec + mdFhc + mdFwa + mdFcorrel + mdFclust;
+  
+        res = (Exp[-Rs-Rhc]
+               (M3sq[xq, xqb] mFNLL (1 + alphas/(2 Pi) mC1hc)
+                + mFNLL alphas/(2 Pi) mH1 + M3sq[xq, xqb] alphas/Pi mdFNNLL))
       ]
 
   End[]

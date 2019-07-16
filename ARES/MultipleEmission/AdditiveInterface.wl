@@ -41,14 +41,14 @@ BeginPackage["ARES`MultipleEmission`AdditiveInterface`",
       Total[Map[dFscl[lambda, RpNLL, AlphaS, #, obspar] &, legs]]
 
     dFsc[lambda_?NumericQ, RpNLL_?NumericQ, AlphaS_?NumericQ,
-         legs_?ListQ, obspar_?AssociationQ, Isc_?ListQ] := 
-      Total[MapThread[dFscl[lambda, RpNLL, AlphaS, #1, obspar, #2] &, {legs, Isc}]]
+         legs_?ListQ, obspar_?AssociationQ, Isc_] := 
+      Total[Map[dFscl[lambda, RpNLL, AlphaS, #, obspar, Isc] &, legs]]
 
 
     (* recoil correction *)
     dFrec[lambda_?NumericQ, RpNLL_?NumericQ, AlphaS_?NumericQ,
-          legs_?ListQ, obspar_?AssociationQ, Irec_?ListQ] := 
-      Total[MapThread[dFrecl[lambda, RpNLL, AlphaS, #1, obspar, #2] &, {legs, Irec}]]
+          legs_?ListQ, obspar_?AssociationQ, Irec_] := 
+      Total[Map[dFrecl[lambda, RpNLL, AlphaS, #, obspar, Irec] &, legs]]
 
 
     (* hard-collinear correction *)
@@ -57,26 +57,26 @@ BeginPackage["ARES`MultipleEmission`AdditiveInterface`",
       Total[Map[dFhcl[lambda, RpNLL, AlphaS, #, obspar] &, legs]]
 
     dFhc[lambda_?NumericQ, RpNLL_?NumericQ, AlphaS_?NumericQ,
-         legs_?ListQ, obspar_?AssociationQ, Ihc_?ListQ] := 
-      Total[MapThread[dFhcl[lambda, RpNLL, AlphaS, #1, obspar, #2] &, {legs, Ihc}]]
+         legs_?ListQ, obspar_?AssociationQ, Ihc_] := 
+      Total[Map[dFhcl[lambda, RpNLL, AlphaS, #, obspar, Ihc] &, legs]]
 
 
     (* wide-angle correction *)
     dFwa[lambda_?NumericQ, RpNLL_?NumericQ, AlphaS_?NumericQ,
-         dips_?ListQ, obspar_?AssociationQ, Iwa_?ListQ] := 
-      Total[MapThread[dFwaab[lambda, RpNLL, AlphaS, #1, obspar, #2] &, {dips, Iwa}]]
+         dips_?ListQ, obspar_?AssociationQ, Iwa_] := 
+      Total[Map[dFwaab[lambda, RpNLL, AlphaS, #, obspar, Iwa] &, dips]]
 
 
     (* correlated correction *)
     dFcorrel[lambda_?NumericQ, RpNLL_?NumericQ, AlphaS_?NumericQ, 
-             legs_?ListQ, obspar_?AssociationQ, Icorrel_?ListQ] := 
-      Total[MapThread[dFcorrell[lambda, RpNLL, AlphaS, #1, obspar, #2] &, {legs, Icorrel}]]
+             legs_?ListQ, obspar_?AssociationQ, Icorrel_] := 
+      Total[Map[dFcorrell[lambda, RpNLL, AlphaS, #, obspar, Icorrel] &, legs]]
 
 
     (* clustering correction *)
     dFclust[lambda_?NumericQ, RpNLL_?NumericQ, AlphaS_?NumericQ,
-            legs_?ListQ, obspar_?AssociationQ, Iclust_?ListQ] :=
-      Total[MapThread[dFclustl[lambda, RpNLL, AlphaS, #1, obspar, #2] &, {legs, Iclust}]]
+            legs_?ListQ, obspar_?AssociationQ, Iclust_] :=
+      Total[Map[dFclustl[lambda, RpNLL, AlphaS, #, obspar, Iclust] &, legs]]
 
 
 
@@ -109,7 +109,7 @@ BeginPackage["ARES`MultipleEmission`AdditiveInterface`",
 
 
     (* recoil correction *)
-    dFrecl[lambda_?NumericQ, RpNLL_?NumericQ,
+    dFrecl[lambda_?NumericQ, RpNLL_?NumericQ, AlphaS_?NumericQ,
            leg_?AssociationQ, obspar_?AssociationQ, Irecl_] :=
 
       Module[
@@ -125,7 +125,7 @@ BeginPackage["ARES`MultipleEmission`AdditiveInterface`",
 
 
     (* hard-collinear correction *)
-    dFhcl[lambda_?NumericQ, RpNLL_?NumericQ,
+    dFhcl[lambda_?NumericQ, RpNLL_?NumericQ, AlphaS_?NumericQ,
           leg_?AssociationQ, obspar_?AssociationQ] :=
 
       Module[
@@ -146,7 +146,7 @@ BeginPackage["ARES`MultipleEmission`AdditiveInterface`",
 
 
     (* wide angle correction *)
-    dFwaab[lambda_?NumericQ, RpNLL_?NumericQ,
+    dFwaab[lambda_?NumericQ, RpNLL_?NumericQ, AlphaS_?NumericQ,
            dip_?AssociationQ, obspar_?AssociationQ, Iwaab_] :=
 
       Module[

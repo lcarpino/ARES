@@ -119,12 +119,7 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearCorrections`",
         xa = dip["legs"][[1]]["x"];
         xb = dip["legs"][[2]]["x"];
    
-        Which[
-          dip["num"] == "12", {res = Iwa12Interpolation[xa, xb]},
-          dip["num"] == "13", {res = Iwa13Interpolation[xa, xb]},
-          dip["num"] == "23", {res = Iwa23Interpolation[xa, xb]}
-        ];
-        res
+        res = Iwa12Interpolation[xa, xb]
       ]
 
     Icorrell[leg_?AssociationQ, obspar_?AssociationQ] := 

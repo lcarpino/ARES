@@ -10,11 +10,17 @@
 
 (* ------------------------------------------------------------------------ *)
 
-BeginPackage["ARES`Radiator`HardConstants`", "ARES`QCD`Constants`"]
+BeginPackage["ARES`HardConstants`CollinearConstant`", "ARES`QCD`Constants`"]
 
+  C1hc::usage = ""
   C1hcl::usage = ""
 
   Begin["`Private`"]
+
+    C1hc[lambda_?NumericQ, xq_?NumericQ, xqb_?NumericQ, 
+         legs_?ListQ, obspar_?AssociationQ] :=
+      Total[Map[C1hcl[lambda, xq, xqb, #, obspar] &, legs]]
+
 
     C1hcl[lambda_?NumericQ, xq_?NumericQ, xqb_?NumericQ, 
           leg_?AssociationQ, obspar_?AssociationQ] :=
