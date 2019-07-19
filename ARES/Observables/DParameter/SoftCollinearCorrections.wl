@@ -12,6 +12,7 @@
 
 BeginPackage["ARES`Observables`DParameter`SoftCollinearCorrections`",
   {
+    "ARES`ARES`",
     "ARES`QCD`Constants`",
     "ARES`Radiator`DerivativeRadiator`"
   }]
@@ -29,20 +30,24 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearCorrections`",
 
   Begin["`Private`"]
 
+    (* variables to hold any grids *)
+    Iwa12Interpolation;
+    Iwa13Interpolation;
+    Iwa23Interpolation;
+
     InitialiseCorrections[] :=
       Module[
         {Iwa12Grid},
 
-        Iwa12Grid = Import[
-                      FileNameJoin[
-                        {
-                          "/home/luke/Research/ARES/ARES/Grids",
-                          "DParameter-Iwa12.mx"
-                        }]];
+        Iwa12Grid = Import["DParameter-Iwa12.mx", Path -> $ARESGrids];
 
-       Iwa12Interpolation = Interpolation[
+        Iwa12Interpolation = Interpolation[
                               Flatten[
                                 Iwa12Grid, 1], InterpolationOrder -> 1];
+
+        Iwa13Interpolation = Iwa12Interpolation;
+        Iwa23Interpolation = Iwa12Interpolation;
+
       ];
 
     BuildMapICorrection[] :=
@@ -109,9 +114,6 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearCorrections`",
         res = -ga0 (PolyGamma[0, 1 + RpNLL] + EulerGamma)
       ]
 
-
-    Iwa12Interpolation;
-
     Iwaab[dip_?AssociationQ, obspar_?AssociationQ] := 
       Module[
         {a, xa, xb, eta0, csq, ssq, res},
@@ -119,7 +121,16 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearCorrections`",
         xa = dip["legs"][[1]]["x"];
         xb = dip["legs"][[2]]["x"];
    
-        res = Iwa12Interpolation[xa, xb]
+        Which[
+          dip["num"] == "12",
+            res = Iwa12Interpolation[xa, xb],
+          dip["num"] == "13",
+            res = Iwa13Interpolation[xa, xb],
+          dip["num"] == "23",
+            res = Iwa23Interpolation[xa, xb]
+        ];
+
+        res
       ]
 
     Icorrell[leg_?AssociationQ, obspar_?AssociationQ] := 

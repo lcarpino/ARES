@@ -1,3 +1,6 @@
+(* ARES main *)
+Get["ARES`ARES`"]
+
 (* QCD *)
 Get["ARES`QCD`Constants`"]
 Get["ARES`QCD`AlphaS`"]
