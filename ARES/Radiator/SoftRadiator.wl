@@ -120,7 +120,7 @@ BeginPackage["ARES`Radiator`SoftRadiator`", "ARES`QCD`Constants`"]
 
   (* full soft radiator *)
 
-  Radsab[lambda_, alphas_, Q_, muR_, logXV_, order_?IntegerQ,
+  Radsab[lambda_, alphas_, xmuR_, logXV_, order_?IntegerQ,
          dip_?AssociationQ, obspar_?AssociationQ] :=
 
     Module[
@@ -156,10 +156,10 @@ BeginPackage["ARES`Radiator`SoftRadiator`", "ARES`QCD`Constants`"]
       (* NLL contribution *)
       If[order >= 1,
         leg1res = -g2[lambda, a, b1] - lambda^2 g1p[lambda, a, b1] \
-          Log[muR^2/((xa + xb - 1) Q^2)] - RadpNLLabl[lambda, a, b1] logXV \
+          Log[xmuR^2/(xa + xb - 1)] - RadpNLLabl[lambda, a, b1] logXV \
           + RadpNLLabl[lambda, a, b1] logd1bar;
         leg2res = -g2[lambda, a, b2] - lambda^2 g1p[lambda, a, b2] \
-          Log[muR^2/((xa + xb - 1) Q^2)] - RadpNLLabl[lambda, a, b2] logXV \
+          Log[xmuR^2/(xa + xb - 1)] - RadpNLLabl[lambda, a, b2] logXV \
           + RadpNLLabl[lambda, a, b2] logd2bar;
         resNLL = leg1res + leg2res
       ];
@@ -171,13 +171,13 @@ BeginPackage["ARES`Radiator`SoftRadiator`", "ARES`QCD`Constants`"]
         leg1res = -(alphas/Pi) g3[lambda, a, b1] - alphas/Pi gm3[lambda, a, b1] \
 
         (* alphas running terms from gi functions *)
-        - alphas (beta0 lambda g2p[lambda, a, b1] + \
-        beta1/beta0 lambda^2 g1p[lambda, a, b1]) Log[muR^2/((xa + xb - 1) Q^2)] \
+        - alphas (beta0 lambda g2p[lambda, a, b1] \
+        + beta1/beta0 lambda^2 g1p[lambda, a, b1]) Log[xmuR^2/(xa + xb - 1)] \
         - alphas (beta0 lambda^2 g1p[lambda, a, b1] \
-        + beta0/2 lambda^3 g1s[lambda, a, b1]) Log[muR^2/((xa + xb - 1) Q^2)]^2 \
+        + beta0/2 lambda^3 g1s[lambda, a, b1]) Log[xmuR^2/(xa + xb - 1)]^2 \
 
         (* running of RpNLL *)
-        + lambda RadsNNLLabl[lambda, alphas, a, b1] logd1bar Log[muR^2/((xa + xb - 1) Q^2)] \
+        + lambda RadsNNLLabl[lambda, alphas, a, b1] logd1bar Log[xmuR^2/(xa + xb - 1)] \
 
         (* normalisation corrections *)
         + RadpNNLLabl[lambda, alphas, a, b1] logd1bar \
@@ -190,7 +190,7 @@ BeginPackage["ARES`Radiator`SoftRadiator`", "ARES`QCD`Constants`"]
         - RadsNNLLabl[lambda, alphas, a, b1] logd1bar logXV \
 
         (* running of RpNLL XV scale term *)
-        - lambda RadsNNLLabl[lambda, alphas, a, b1] logXV Log[muR^2/((xa + xb - 1) Q^2)];
+        - lambda RadsNNLLabl[lambda, alphas, a, b1] logXV Log[xmuR^2/(xa + xb - 1)];
 
 
 
@@ -199,12 +199,12 @@ BeginPackage["ARES`Radiator`SoftRadiator`", "ARES`QCD`Constants`"]
 
         (* alphas running terms from gi functions *)
         - alphas (beta0 lambda g2p[lambda, a, b2] + \
-        beta1/beta0 lambda^2 g1p[lambda, a, b2]) Log[muR^2/((xa + xb - 1) Q^2)] \
+        beta1/beta0 lambda^2 g1p[lambda, a, b2]) Log[xmuR^2/(xa + xb - 1)] \
         - alphas (beta0 lambda^2 g1p[lambda, a, b2] \
-        + beta0/2 lambda^3 g1s[lambda, a, b2]) Log[muR^2/((xa + xb - 1) Q^2)]^2 \
+        + beta0/2 lambda^3 g1s[lambda, a, b2]) Log[xmuR^2/(xa + xb - 1)]^2 \
 
         (* running of RpNLL *)
-        + lambda RadsNNLLabl[lambda, alphas, a, b2] logd2bar Log[muR^2/((xa + xb - 1) Q^2)] \
+        + lambda RadsNNLLabl[lambda, alphas, a, b2] logd2bar Log[xmuR^2/(xa + xb - 1)] \
 
         (* normalisation corrections *)
         + RadpNNLLabl[lambda, alphas, a, b2] logd2bar \
@@ -217,7 +217,7 @@ BeginPackage["ARES`Radiator`SoftRadiator`", "ARES`QCD`Constants`"]
         - RadsNNLLabl[lambda, alphas, a, b2] logd2bar logXV \
 
         (* running of RpNLL XV scale term *)
-        - lambda RadsNNLLabl[lambda, alphas, a, b2] logXV Log[muR^2/((xa + xb - 1) Q^2)];
+        - lambda RadsNNLLabl[lambda, alphas, a, b2] logXV Log[xmuR^2/(xa + xb - 1)];
 
         resNNLL = leg1res + leg2res
       ];
@@ -227,9 +227,9 @@ BeginPackage["ARES`Radiator`SoftRadiator`", "ARES`QCD`Constants`"]
       res = dip["col"]/2 (resLL + resNLL + resNNLL)
     ]
 
-  Rads[lambda_?NumericQ, alphas_?NumericQ, Q_?NumericQ, muR_?NumericQ,
-       logXV_?NumericQ, order_?IntegerQ, dips_?ListQ, obspar_?AssociationQ] :=
-    Total[Map[Radsab[lambda, alphas, Q, muR, logXV, order, #, obspar] &, dips]];
+  Rads[lambda_?NumericQ, alphas_?NumericQ, xmuR_?NumericQ, logXV_?NumericQ,
+       order_?IntegerQ, dips_?ListQ, obspar_?AssociationQ] :=
+    Total[Map[Radsab[lambda, alphas, xmuR, logXV, order, #, obspar] &, dips]];
 
   End[]
 EndPackage[]

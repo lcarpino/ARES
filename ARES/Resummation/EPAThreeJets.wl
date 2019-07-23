@@ -11,20 +11,7 @@
 (* ------------------------------------------------------------------------ *)
 
 
-BeginPackage["ARES`Resummation`EPAThreeJets`",
-  {
-    "ARES`QCD`Constants`",
-    "ARES`QCD`AlphaS`",
-    "ARES`QCD`ScaleChoices`",
-    "ARES`Logarithms`LogarithmPT`",
-    "ARES`Logarithms`ScaleChoices`",
-    "ARES`EPA`MatrixElements`",
-    "ARES`Radiator`SoftRadiator`",
-    "ARES`Radiator`HardCollinearRadiator`",
-    "ARES`Radiator`DerivativeRadiator`",
-    "ARES`HardConstants`CollinearConstant`",
-    "ARES`MultipleEmission`AdditiveInterface`"
-  }]
+BeginPackage["ARES`Resummation`EPAThreeJets`"]
 
   LL::usage = ""
   NLL::usage = ""
@@ -32,30 +19,37 @@ BeginPackage["ARES`Resummation`EPAThreeJets`",
 
   Begin["`Private`"]
 
+    Needs["ARES`QCD`Constants`"]
+    Needs["ARES`QCD`AlphaS`"]
+    Needs["ARES`QCD`ScaleChoices`"]
+    Needs["ARES`Logarithms`LogarithmPT`"]
+    Needs["ARES`Logarithms`ScaleChoices`"]
+    Needs["ARES`EPA`MatrixElements`"]
+    Needs["ARES`Radiator`SoftRadiator`"]
+    Needs["ARES`Radiator`HardCollinearRadiator`"]
+    Needs["ARES`Radiator`DerivativeRadiator`"]
+    Needs["ARES`HardConstants`CollinearConstant`"]
+    Needs["ARES`MultipleEmission`AdditiveInterface`"]
+
     Options[LL] =
       {
-        "Q" -> MZ,
-        "muRstrategy" -> muRConst,  "muR0" -> 1, 
-        "Xstrategy"   -> LogXConst, "X0"   -> 1,
-        "RadiatorScheme" -> "Physical",
-        "refscale" -> MZ, "refalphas" -> AlphaSMZ
+        "xmuR"  -> 1,
+        "logXV" -> 0,
+        "TransferFunctions" -> Identity,
+        "RadiatorScheme" -> "Physical"
       };
 
-    LL[logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
+    LL[alphaS_?NumericQ, logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
        OptionsPattern[]] :=
 
       Module[
         {
-          Q = OptionValue["Q"],
-          muRstrategy = OptionValue["muRstrategy"], 
-          muR0 = OptionValue["muR0"],
-          Xstrategy = OptionValue["Xstrategy"], 
-          logX0 = Log[OptionValue["X0"]],
-          refscale = OptionValue["refscale"], 
-          refalphas = OptionValue["refalphas"],
+          xmuR  = OptionValue["xmuR"],
+          logXV = OptionValue["logXV"],
+          TransferFunctions = OptionValue["TransferFunctions"],
+          RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, dipoles, xq, xqb,
-          lambda, logXV, muR, alphas,
-          Rs,
+          lambda, Rs,
           res
         },
   
@@ -64,12 +58,9 @@ BeginPackage["ARES`Resummation`EPAThreeJets`",
         legs    = Event["legs"];
         dipoles = Event["dipoles"];
 
-        muR = muRstrategy[xq, xqb] muR0 Q;
-        logXV = Xstrategy[dipoles, legs, obsSC] + logX0;
-        alphas = AlphaSFixedNF[muR, 1];
-        lambda = alphas beta0 LtildePT[Exp[-logV], Exp[logXV]];
+        lambda = alphaS beta0 LtildePT[Exp[-logV], Exp[logXV]];
   
-        Rs = Rads[lambda, alphas, Q, muR, logXV, 0, dipoles, obsSC];
+        Rs = Rads[lambda, alphaS, xmuR, logXV, 0, dipoles, obsSC];
   
         res = M3sq[xq, xqb] Exp[-Rs]
       ]
@@ -77,27 +68,22 @@ BeginPackage["ARES`Resummation`EPAThreeJets`",
 
     Options[NLL] =
       {
-        "Q" -> MZ,
-        "muRstrategy" -> muRConst,  "muR0" -> 1, 
-        "Xstrategy"   -> LogXConst, "X0"   -> 1,
-        "RadiatorScheme" -> "Physical",
-        "refscale" -> MZ, "refalphas" -> AlphaSMZ
+        "xmuR"  -> 1,
+        "logXV" -> 0,
+        "TransferFunctions" -> Identity,
+        "RadiatorScheme" -> "Physical"
       };
 
-    NLL[logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+    NLL[alphaS_?NumericQ, logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
+        OptionsPattern[]] :=
       Module[
         {
-          Q = OptionValue["Q"],
-          muRstrategy = OptionValue["muRstrategy"], 
-          muR0 = OptionValue["muR0"],
-          Xstrategy = OptionValue["Xstrategy"], 
-          logX0 = Log[OptionValue["X0"]],
-          refscale = OptionValue["refscale"], 
-          refalphas = OptionValue["refalphas"],
+          xmuR  = OptionValue["xmuR"],
+          logXV = OptionValue["logXV"],
+          TransferFunctions = OptionValue["TransferFunctions"],
+          RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, dipoles, xq, xqb,
-          lambda, logXV, muR, alphas,
-          Rs, Rhc, Rp,
-          Fnll,
+          lambda, Rs, Rhc, Rp, mFNLL,
           res
         },
   
@@ -106,15 +92,11 @@ BeginPackage["ARES`Resummation`EPAThreeJets`",
         legs    = Event["legs"];
         dipoles = Event["dipoles"];
 
-        muR = muRstrategy[xq, xqb] muR0 Q;
-        logXV = Xstrategy[dipoles, legs, obsSC] + logX0;
-        alphas = AlphaSFixedNF[muR, 2];
+        lambda = alphaS beta0 LtildePT[Exp[-logV], Exp[logXV]];
   
-        lambda = alphas beta0 LtildePT[Exp[-logV], Exp[logXV]];
-  
-        Rs = Rads[lambda, alphas, Q, muR, logXV, 1, dipoles, obsSC];
-        Rhc = Radhc[lambda, alphas, Q, muR, logXV, 1, legs, obsSC];
-        Rp = RadpNLL[lambda, legs, obsSC];
+        Rs =  Rads[lambda, alphaS, xmuR, logXV, 1, dipoles, obsSC];
+        Rhc = Radhc[lambda, alphaS, xmuR, logXV, 1, legs, obsSC];
+        Rp =  RadpNLL[lambda, legs, obsSC];
         Fnll = FNLL[Rp];
   
         res = M3sq[xq, xqb] Exp[-Rs-Rhc] Fnll
@@ -123,27 +105,22 @@ BeginPackage["ARES`Resummation`EPAThreeJets`",
 
     Options[NNLL] =
       {
-        "Q" -> MZ,
-        "muRstrategy" -> muRConst,  "muR0" -> 1, 
-        "Xstrategy"   -> LogXConst, "X0"   -> 1,
-        "RadiatorScheme" -> "Physical",
-        "refscale" -> MZ, "refalphas" -> AlphaSMZ
+        "xmuR"  -> 1,
+        "logXV" -> 0,
+        "TransferFunctions" -> Identity,
+        "RadiatorScheme" -> "Physical"
       };
 
-    NNLL[logV_?NumericQ, Event_?AssociationQ, obs_?AssociationQ, OptionsPattern[]] :=
+    NNLL[alphaS_?NumericQ, logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
+         OptionsPattern[]] :=
       Module[
         {
-          Q = OptionValue["Q"],
-          muRstrategy = OptionValue["muRstrategy"], 
-          muR0 = OptionValue["muR0"],
-          Xstrategy = OptionValue["Xstrategy"], 
-          logX0 = Log[OptionValue["X0"]],
-          refscale = OptionValue["refscale"], 
-          refalphas = OptionValue["refalphas"],
-          RadScheme = OptionValue["RadiatorScheme"],
-          legs, dipoles, xq, xqb, obsSC,
-          lambda, logXV, muR, alphas,
-          Rs, RsEndPoint, Rhc, RpNLL, RpNNLL, RsNNLL,
+          xmuR  = OptionValue["xmuR"],
+          logXV = OptionValue["logXV"],
+          TransferFunctions = OptionValue["TransferFunctions"],
+          RadiatorScheme = OptionValue["RadiatorScheme"],
+          legs, dipoles, xq, xqb,
+          lambda, Rs, RsEndPoint, Rhc, RpNLL, RpNNLL, RsNNLL,
           mFNLL,
           mIsc, mIrec, mIhc, mIwa, mIcorrel, mIclust,
           mdFsc, mdFrec, mdFhc, mdFwa, mdFcorrel, mdFclust, mdFNNLL,
@@ -155,40 +132,36 @@ BeginPackage["ARES`Resummation`EPAThreeJets`",
         xqb     = Event["xqb"];
         legs    = Event["legs"];
         dipoles = Event["dipoles"];
-        obsSC   = obs["SCParametrisation"][Event];
  
-        mIscl     = obs["TransferFunctions"]["Iscl"];
-        mIrecl    = obs["TransferFunctions"]["Irecl"];
-        mIhcl     = obs["TransferFunctions"]["Ihcl"];
-        mIwaab    = obs["TransferFunctions"]["Iwaab"];
-        mIcorrell = obs["TransferFunctions"]["Icorrell"];
-        mIclustl  = obs["TransferFunctions"]["Iclustl"];
+        mIscl     = TransferFunctions["Iscl"];
+        mIrecl    = TransferFunctions["Irecl"];
+        mIhcl     = TransferFunctions["Ihcl"];
+        mIwaab    = TransferFunctions["Iwaab"];
+        mIcorrell = TransferFunctions["Icorrell"];
+        mIclustl  = TransferFunctions["Iclustl"];
 
-        muR = muRstrategy[xq, xqb] muR0 Q;
-        logXV = Xstrategy[dipoles, legs, obsSC] + logX0;
-        alphas = AlphaSFixedNF[muR, 3];
-        lambda = alphas beta0 LtildePT[Exp[-logV], Exp[logXV]];
+        lambda = alphaS beta0 LtildePT[Exp[-logV], Exp[logXV]];
   
-        Rs = Rads[lambda, alphas, Q, muR, logXV, 2, dipoles, obsSC];
-        RsEndPoint = Rads[0, alphas, Q, muR, logXV, 2, dipoles, obsSC];
-        Rhc = Radhc[lambda, alphas, Q, muR, logXV, 2, legs, obsSC];
+        Rs = Rads[lambda, alphaS, xmuR, logXV, 2, dipoles, obsSC];
+        RsEndPoint = Rads[0, alphaS, xmuR, logXV, 2, dipoles, obsSC];
+        Rhc = Radhc[lambda, alphaS, xmuR, logXV, 2, legs, obsSC];
         RpNLL = RadpNLL[lambda, legs, obsSC];
         mFNLL = FNLL[RpNLL];
         mH1 = Virt3[xq, xqb];
         mC1hc = C1hc[lambda, xq, xqb, legs, obsSC];
   
-        mdFsc     = dFsc[lambda, RpNLL, alphas, legs, obsSC];
-        mdFrec    = dFrec[lambda, RpNLL, alphas, legs, obsSC, mIrecl];
-        mdFhc     = dFhc[lambda, RpNLL, alphas, legs, obsSC];
-        mdFwa     = dFwa[lambda, RpNLL, alphas, dipoles, obsSC, mIwaab];
-        mdFcorrel = dFcorrel[lambda, RpNLL, alphas, legs, obsSC, mIcorrell];
-        mdFclust  = dFclust[lambda, RpNLL, alphas, legs, obsSC, mIclustl];
+        mdFsc     = dFsc[lambda, RpNLL, alphaS, legs, obsSC];
+        mdFrec    = dFrec[lambda, RpNLL, alphaS, legs, obsSC, mIrecl];
+        mdFhc     = dFhc[lambda, RpNLL, alphaS, legs, obsSC];
+        mdFwa     = dFwa[lambda, RpNLL, alphaS, dipoles, obsSC, mIwaab];
+        mdFcorrel = dFcorrel[lambda, RpNLL, alphaS, legs, obsSC, mIcorrell];
+        mdFclust  = dFclust[lambda, RpNLL, alphaS, legs, obsSC, mIclustl];
   
         mdFNNLL = mdFsc + mdFrec + mdFhc + mdFwa + mdFcorrel + mdFclust;
   
         res = (Exp[-Rs-Rhc]
-               (M3sq[xq, xqb] mFNLL (1 + alphas/(2 Pi) mC1hc)
-                + mFNLL alphas/(2 Pi) mH1 + M3sq[xq, xqb] alphas/Pi mdFNNLL))
+               (M3sq[xq, xqb] mFNLL (1 + alphaS/(2 Pi) mC1hc)
+                + mFNLL alphaS/(2 Pi) mH1 + M3sq[xq, xqb] alphaS/Pi mdFNNLL))
       ]
 
   End[]

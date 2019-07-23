@@ -38,7 +38,7 @@ BeginPackage["ARES`Radiator`HardCollinearRadiator`", "ARES`QCD`Constants`"]
 
     (* full hard-collinear radiator *)
 
-    Radhcl[lambda_, alphas_, Q_, muR_, logXV_,
+    Radhcl[lambda_, alphas_, xmuR_, logXV_,
            order_?IntegerQ, leg_?AssociationQ, obspar_?AssociationQ] :=
 
       Module[
@@ -66,7 +66,7 @@ BeginPackage["ARES`Radiator`HardCollinearRadiator`", "ARES`QCD`Constants`"]
    
         If[order >= 2,
           resNNLL = -(alphas/Pi) h3[lambda, ga0, ga1, a, b] \
-            - alphas beta0 lambda h2p[lambda, ga0, a, b] Log[muR^2/Q^2] \
+            - alphas beta0 lambda h2p[lambda, ga0, a, b] Log[xmuR^2] \
             + alphas/Pi ga0/(a + b - 2 lambda) logXV
         ];
    
@@ -75,9 +75,9 @@ BeginPackage["ARES`Radiator`HardCollinearRadiator`", "ARES`QCD`Constants`"]
         res = resNLL + resNNLL
     ];
 
-    Radhc[lambda_?NumericQ, alphas_?NumericQ, Q_?NumericQ, muR_?NumericQ,
+    Radhc[lambda_?NumericQ, alphas_?NumericQ, xmuR_?NumericQ,
           logXV_?NumericQ, order_?IntegerQ, legs_?ListQ, obspar_?AssociationQ] := 
-      Total[Map[Radhcl[lambda, alphas, Q, muR, logXV, order, #, obspar] &, legs]]
+      Total[Map[Radhcl[lambda, alphas, xmuR, logXV, order, #, obspar] &, legs]]
 
   End[]
 
