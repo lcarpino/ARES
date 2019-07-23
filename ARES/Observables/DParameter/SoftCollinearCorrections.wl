@@ -12,7 +12,7 @@
 
 BeginPackage["ARES`Observables`DParameter`SoftCollinearCorrections`",
   {
-    "ARES`ARES`",
+    "ARES`Config`",
     "ARES`QCD`Constants`",
     "ARES`Radiator`DerivativeRadiator`"
   }]

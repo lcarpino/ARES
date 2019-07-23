@@ -12,7 +12,7 @@
 
 BeginPackage["ARES`QCD`AlphaS`", {"ARES`QCD`Constants`"}]
 
-   AlphaSFixedNF::usage = ""
+  AlphaSFixedNF::usage = ""
 
   Begin["`Private`"]
 
