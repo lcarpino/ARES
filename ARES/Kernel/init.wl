@@ -1,5 +1,6 @@
 (* ARES main *)
 Get["ARES`ARES`"]
+Get["ARES`Driver`Resummation`"]
 
 (* QCD *)
 Get["ARES`QCD`Constants`"]
