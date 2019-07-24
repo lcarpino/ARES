@@ -26,6 +26,7 @@ BeginPackage["ARES`Driver`Resummation`"]
 
     Options[Resum] =
       {
+        "Order" -> "NNLL",
         "Q" -> MZ,
         "RadiatorScheme" -> "Physical",
         "muRstrategy"  -> muRConst,  "muR0" -> 1, 
@@ -38,6 +39,7 @@ BeginPackage["ARES`Driver`Resummation`"]
 
       Module[
         {
+          Order = OptionValue["Order"],
           Q = OptionValue["Q"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
           muRstrategy = OptionValue["muRstrategy"], 
@@ -49,7 +51,7 @@ BeginPackage["ARES`Driver`Resummation`"]
           event, dipoles, legs,
           obsSC,
           muR, xmuR, logX0, logXV,
-          ResumOpts
+          ResumOpts, res
         },
 
         (* set up the event *)
@@ -63,7 +65,15 @@ BeginPackage["ARES`Driver`Resummation`"]
         (* set up renormalisation scale *)
         muR = muRstrategy[xq, xqb] muR0 Q;
         xmuR = muR/Q;
-        alphaS = AlphaSFixedNF[muR, 1];
+        Which[
+          Order == "LL",
+            alphaS = AlphaSFixedNF[muR, 1],
+          Order == "NLL",
+            alphaS = AlphaSFixedNF[muR, 2],
+          Order == "NNLL",
+            alphaS = AlphaSFixedNF[muR, 3]
+        ];
+
 
         (* set up logarithm scales *)
         logX0 = Log[X0];
@@ -77,7 +87,16 @@ BeginPackage["ARES`Driver`Resummation`"]
             "RadiatorScheme" -> RadiatorScheme
           };
 
-        LL[alphaS, logV, event, obsSC, ResumOpts]
+        Which[
+          Order == "LL",
+            res = LL[alphaS, logV, event, obsSC, ResumOpts],
+          Order == "NLL",
+            res = NLL[alphaS, logV, event, obsSC, ResumOpts],
+          Order == "NNLL",
+            res = NNLL[alphaS, logV, event, obsSC, ResumOpts]
+        ];
+
+        res
       ]
 
   End[]
