@@ -22,38 +22,94 @@ BeginPackage["ARES`Expansion`SoftRadiatorExpansion`", {"ARES`QCD`Constants`"}]
 
   Begin["`Private`"]
 
-    (**)
-
-    Options[G12] =
+    ExpOpts =
       {
-        ""
+        "xmuR"  -> 1,
+        "RadiatorScheme" -> "Physical"
       };
 
-    G12[dips_?ListQ, obspar_?AssociationQ, muR_?NumericQ, Q_?NumericQ] :=
-      Total[Map[G12ab[#, obspar, muR, Q] &, dips]]
+    Options[G12] = ExpOpts;
+    Options[G11] = ExpOpts;
+    Options[G10] = ExpOpts;
+    Options[G23] = ExpOpts;
+    Options[G22] = ExpOpts;
+    Options[G21] = ExpOpts;
 
-    G11[dips_?ListQ, obspar_?AssociationQ, muR_?NumericQ, Q_?NumericQ] :=
-      Total[Map[G11ab[#, obspar, muR, Q] &, dips]]
 
-    G10[dips_?ListQ, obspar_?AssociationQ, muR_?NumericQ, Q_?NumericQ] :=
-      Total[Map[G10ab[#, obspar, muR, Q] &, dips]]
+    G12[dips_?ListQ, obspar_?AssociationQ, OptionsPattern[]] :=
+      Module[
+        {
+          xmuR = OptionValue["xmuR"],
+          RadiatorScheme = OptionValue["RadiatorScheme"]
+        },
 
-    G23[dips_?ListQ, obspar_?AssociationQ, muR_?NumericQ, Q_?NumericQ] :=
-      Total[Map[G23ab[#, obspar, muR, Q] &, dips]]
+        Total[Map[G12ab[#, obspar] &, dips]]
+      ]
 
-    G22[dips_?ListQ, obspar_?AssociationQ, muR_?NumericQ, Q_?NumericQ] :=
-      Total[Map[G22ab[#, obspar, muR, Q] &, dips]]
+    G11[dips_?ListQ, obspar_?AssociationQ, OptionsPattern[]] :=
+      Module[
+        {
+          xmuR = OptionValue["xmuR"],
+          RadiatorScheme = OptionValue["RadiatorScheme"]
+        },
 
-    G21[dips_?ListQ, obspar_?AssociationQ, muR_?NumericQ, Q_?NumericQ] :=
-      Total[Map[G21ab[#, obspar, muR, Q] &, dips]]
+        Total[Map[G11ab[#, obspar] &, dips]]
+      ]
+
+    G10[dips_?ListQ, obspar_?AssociationQ, OptionsPattern[]] :=
+      Module[
+        {
+          xmuR = OptionValue["xmuR"],
+          RadiatorScheme = OptionValue["RadiatorScheme"]
+        },
+
+        Which[
+          RadiatorScheme == "Physical",
+            Total[Map[G10ab[#, obspar] &, dips]],
+          RadiatorScheme == "ConstantFree",
+            Total[Map[G10abConstantFree[#, obspar] &, dips]]
+        ]
+      ]
+
+    G23[dips_?ListQ, obspar_?AssociationQ, OptionsPattern[]] :=
+      Module[
+        {
+          xmuR = OptionValue["xmuR"],
+          RadiatorScheme = OptionValue["RadiatorScheme"]
+        },
+
+        Total[Map[G23ab[#, obspar] &, dips]]
+      ]
+
+    G22[dips_?ListQ, obspar_?AssociationQ, OptionsPattern[]] :=
+      Module[
+        {
+          xmuR = OptionValue["xmuR"],
+          RadiatorScheme = OptionValue["RadiatorScheme"]
+        },
+
+        Total[Map[G22ab[#, obspar, xmuR] &, dips]]
+      ]
+
+    G21[dips_?ListQ, obspar_?AssociationQ, OptionsPattern[]] :=
+      Module[
+        {
+          xmuR = OptionValue["xmuR"],
+          RadiatorScheme = OptionValue["RadiatorScheme"]
+        },
+
+        Total[Map[G21ab[#, obspar, xmuR] &, dips]]
+      ]
 
     (* dipole definitions *)
 
     (* O(as) expansion in terms of dipoles *)
 
-    G12ab[dip_?AssociationQ, obspar_?AssociationQ, muR_?NumericQ, Q_?NumericQ] :=
+    G12ab[dip_?AssociationQ, obspar_?AssociationQ] :=
       Module[
-        {a, b1, b2},
+        {
+          a, b1, b2
+        },
 
         a = obspar["ktpow"];
         b1 = obspar["etapow"][[dip["legs"][[1]]["num"]]];
@@ -62,9 +118,11 @@ BeginPackage["ARES`Expansion`SoftRadiatorExpansion`", {"ARES`QCD`Constants`"}]
         -dip["col"] (1/(a (a + b1)) + 1/(a (a + b2)))
       ]
 
-    G11ab[dip_?AssociationQ, obspar_?AssociationQ, muR_?NumericQ, Q_?NumericQ] :=
+    G11ab[dip_?AssociationQ, obspar_?AssociationQ] :=
       Module[
-        {a, b1, b2, logd1bar, logd2bar},
+        {
+          a, b1, b2, logd1bar, logd2bar
+        },
 
         a = obspar["ktpow"];
         b1 = obspar["etapow"][[dip["legs"][[1]]["num"]]];
@@ -75,9 +133,11 @@ BeginPackage["ARES`Expansion`SoftRadiatorExpansion`", {"ARES`QCD`Constants`"}]
         -dip["col"] (2/(a (a + b1)) logd1bar + 2/(a (a + b2)) logd2bar)
       ]
 
-    G10ab[dip_?AssociationQ, obspar_?AssociationQ, muR_?NumericQ, Q_?NumericQ] :=
+    G10ab[dip_?AssociationQ, obspar_?AssociationQ] :=
       Module[
-        {a, b1, b2, log2d1bar, log2d2bar},
+        {
+          a, b1, b2, log2d1bar, log2d2bar
+        },
 
         a = obspar["ktpow"];
         b1 = obspar["etapow"][[dip["legs"][[1]]["num"]]];
@@ -88,12 +148,21 @@ BeginPackage["ARES`Expansion`SoftRadiatorExpansion`", {"ARES`QCD`Constants`"}]
         -dip["col"] (1/(a (a + b1)) log2d1bar + 1/(a (a + b2)) log2d2bar)
       ]
 
+    G10abConstantFree[dip_?AssociationQ, obspar_?AssociationQ] :=
+      Module[
+        {
+        },
+        0
+      ]
+
 
     (* O(as^2) expansion in terms of dipoles *)
 
-    G23ab[dip_?AssociationQ, obspar_?AssociationQ, muR_?NumericQ, Q_?NumericQ] :=
+    G23ab[dip_?AssociationQ, obspar_?AssociationQ] :=
       Module[
-        {a, b1, b2, leg1res, leg2res},
+        {
+          a, b1, b2, leg1res, leg2res
+        },
 
         a = obspar["ktpow"];
         b1 = obspar["etapow"][[dip["legs"][[1]]["num"]]];
@@ -105,7 +174,7 @@ BeginPackage["ARES`Expansion`SoftRadiatorExpansion`", {"ARES`QCD`Constants`"}]
         -dip["col"] (leg1res + leg2res)
       ]
 
-    G22ab[dip_?AssociationQ, obspar_?AssociationQ, muR_?NumericQ, Q_?NumericQ] :=
+    G22ab[dip_?AssociationQ, obspar_?AssociationQ, xmuR_?NumericQ] :=
       Module[
         {
           a, b1, b2, xa, xb, logd1bar, logd2bar,
@@ -121,14 +190,14 @@ BeginPackage["ARES`Expansion`SoftRadiatorExpansion`", {"ARES`QCD`Constants`"}]
         xb = dip["legs"][[2]]["x"];
 
         leg1res = ((4 Pi beta0)/a^2 (2 a + b1)/(a + b1)^2 logd1bar + K1/(a (a + b1))
-                    + (2 Pi beta0)/(a (a + b1)) Log[muR^2/((xa + xb - 1) Q^2)]);
+                    + (2 Pi beta0)/(a (a + b1)) Log[xmuR^2/(xa + xb - 1)]);
         leg2res = ((4 Pi beta0)/a^2 (2 a + b2)/(a + b2)^2 logd2bar + K1/(a (a + b2))
-                    + (2 Pi beta0)/(a (a + b2)) Log[muR^2/((xa + xb - 1) Q^2)]);
+                    + (2 Pi beta0)/(a (a + b2)) Log[xmuR^2/(xa + xb - 1)]);
 
         -dip["col"] (leg1res + leg2res)
       ]
 
-    G21ab[dip_?AssociationQ, obspar_?AssociationQ, muR_?NumericQ, Q_?NumericQ] :=
+    G21ab[dip_?AssociationQ, obspar_?AssociationQ, xmuR_?NumericQ] :=
       Module[
         {
           a, b1, b2, xa, xb, logd1bar, logd2bar, log2d1bar, log2d2bar,
@@ -147,10 +216,10 @@ BeginPackage["ARES`Expansion`SoftRadiatorExpansion`", {"ARES`QCD`Constants`"}]
 
         leg1res = ((Pi^3 beta0)/3 1/(a + b1) + (2 K1)/(a (a + b1)) logd1bar
                     + (4 Pi beta0)/a^2 (2 a + b1)/(a + b1)^2 log2d1bar
-                    + (4 Pi beta0)/(a (a + b1)) logd1bar Log[muR^2/((xa + xb - 1) Q^2)]);
+                    + (4 Pi beta0)/(a (a + b1)) logd1bar Log[xmuR^2/(xa + xb - 1)]);
         leg2res = ((Pi^3 beta0)/3 1/(a + b2) + (2 K1)/(a (a + b2)) logd2bar
                     + (4 Pi beta0)/a^2 (2 a + b2)/(a + b2)^2 log2d2bar
-                    + (4 Pi beta0)/(a (a + b2)) logd2bar Log[muR^2/((xa + xb - 1) Q^2)]);
+                    + (4 Pi beta0)/(a (a + b2)) logd2bar Log[xmuR^2/(xa + xb - 1)]);
 
         -dip["col"] (leg1res + leg2res)
       ]

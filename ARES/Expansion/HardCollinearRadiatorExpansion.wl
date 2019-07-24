@@ -20,44 +20,86 @@ BeginPackage["ARES`Expansion`HardCollinearRadiatorExpansion`", {"ARES`QCD`Consta
 
   Begin["`Private`"]
 
-    (**)
+    ExpOpts =
+      {
+        "xmuR"  -> 1,
+        "RadiatorScheme" -> "Physical"
+      };
 
-    H11[legs_?ListQ, obspar_?AssociationQ, muR_?NumericQ, Q_?NumericQ] :=
-      Total[Map[H11l[#, obspar, muR, Q] &, legs]]
+    Options[H11] = ExpOpts;
+    Options[H10] = ExpOpts;
+    Options[H22] = ExpOpts;
+    Options[H21] = ExpOpts;
 
-    H10[legs_?ListQ, obspar_?AssociationQ, muR_?NumericQ, Q_?NumericQ] :=
-      Total[Map[H10l[#, obspar, muR, Q] &, legs]]
 
-    H22[legs_?ListQ, obspar_?AssociationQ, muR_?NumericQ, Q_?NumericQ] :=
-      Total[Map[H22l[#, obspar, muR, Q] &, legs]]
+    H11[legs_?ListQ, obspar_?AssociationQ, OptionsPattern[]] :=
+      Module[
+        {
+          xmuR = OptionValue["xmuR"],
+          RadiatorScheme = OptionValue["RadiatorScheme"]
+        },
 
-    H21[legs_?ListQ, obspar_?AssociationQ, muR_?NumericQ, Q_?NumericQ] :=
-      Total[Map[H21l[#, obspar, muR, Q] &, legs]]
+        Total[Map[H11l[#, obspar] &, legs]]
+      ]
+
+    H10[legs_?ListQ, obspar_?AssociationQ, OptionsPattern[]] :=
+      Module[
+        {
+          xmuR = OptionValue["xmuR"],
+          RadiatorScheme = OptionValue["RadiatorScheme"]
+        },
+
+        Total[Map[H10l[#, obspar] &, legs]]
+      ]
+
+    H22[legs_?ListQ, obspar_?AssociationQ, OptionsPattern[]] :=
+      Module[
+        {
+          xmuR = OptionValue["xmuR"],
+          RadiatorScheme = OptionValue["RadiatorScheme"]
+        },
+
+        Total[Map[H22l[#, obspar] &, legs]]
+      ]
+
+    H21[legs_?ListQ, obspar_?AssociationQ, OptionsPattern[]] :=
+      Module[
+        {
+          xmuR = OptionValue["xmuR"],
+          RadiatorScheme = OptionValue["RadiatorScheme"]
+        },
+
+        Total[Map[H21l[#, obspar, xmuR] &, legs]]
+      ]
 
     (* leg definitions *)
 
     (* O(as) expansion in terms of legs *)
 
-    H11l[leg_?AssociationQ, obspar_?AssociationQ, muR_?NumericQ, Q_?NumericQ] :=
+    H11l[leg_?AssociationQ, obspar_?AssociationQ] :=
       Module[
-        {a, b, ga},
+        {
+          a, b, Ga0
+        },
 
         a = obspar["ktpow"];
         b = obspar["etapow"][[leg["num"]]];
 
         Which[
           leg["flav"] == "q" || leg["flav"] == "qb",
-            ga = Ga0q,
+            Ga0 = Ga0q,
           leg["flav"] == "g",
-            ga = Ga0g
+            Ga0 = Ga0g
         ];
 
-        -((2 ga)/(a + b))
+        -((2 Ga0)/(a + b))
       ]
 
-    H10l[leg_?AssociationQ, obspar_?AssociationQ, muR_?NumericQ, Q_?NumericQ] :=
+    H10l[leg_?AssociationQ, obspar_?AssociationQ] :=
       Module[
-        {a, b},
+        {
+          a, b
+        },
 
         a = obspar["ktpow"];
         b = obspar["etapow"][[leg["num"]]];
@@ -68,39 +110,42 @@ BeginPackage["ARES`Expansion`HardCollinearRadiatorExpansion`", {"ARES`QCD`Consta
 
     (* O(as^2) expansion in terms of legs *)
 
-    H22l[leg_?AssociationQ, obspar_?AssociationQ, muR_?NumericQ, Q_?NumericQ] :=
+    H22l[leg_?AssociationQ, obspar_?AssociationQ] :=
       Module[
-        {a, b, ga},
+        {
+          a, b, Ga0
+        },
 
         a = obspar["ktpow"];
         b = obspar["etapow"][[leg["num"]]];
 
         Which[
           leg["flav"] == "q" || leg["flav"] == "qb",
-            ga = Ga0q,
+            Ga0 = Ga0q,
           leg["flav"] == "g",
-            ga = Ga0g
+            Ga0 = Ga0g
         ];
 
-        -4 Pi beta0 ga/(a + b)^2
-
+        -4 Pi beta0 Ga0/(a + b)^2
       ]
 
-    H21l[leg_?AssociationQ, obspar_?AssociationQ, muR_?NumericQ, Q_?NumericQ] :=
+    H21l[leg_?AssociationQ, obspar_?AssociationQ, xmuR_?NumericQ] :=
       Module[
-        {a, b},
+        {
+          a, b, Ga0, Ga1
+        },
 
         a = obspar["ktpow"];
         b = obspar["etapow"][[leg["num"]]];
 
         Which[
           leg["flav"] == "q" || leg["flav"] == "qb",
-            ga = Ga1q,
+            {Ga0 = Ga0q, Ga1 = Ga1q},
           leg["flav"] == "g",
-            ga = Ga1g
+            {Ga0 = Ga0g, Ga1 = Ga1g}
         ];
 
-        -((2 ga)/(a + b))
+        -((2 Ga1)/(a + b) + (4 Pi beta0)/(a + b) Ga0) 
       ]
 
   End[]
