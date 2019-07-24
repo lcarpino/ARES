@@ -40,6 +40,7 @@ context =
 
     (* Expansion of the resummation *)
     "ARES`Expansion`SoftRadiatorExpansion`",
+    "ARES`Expansion`CombinedExpansion`",
 
     (* Observables *)
     "ARES`Observables`ObservableBuilder`"
