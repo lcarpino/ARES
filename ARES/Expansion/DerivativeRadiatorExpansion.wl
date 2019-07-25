@@ -10,9 +10,24 @@
 
 (* ------------------------------------------------------------------------ *)
 
-BeginPackage["ARES`Expansion`DerivativeRadiatorExpansion`", {"ARES`QCD`Constants`"}]
+BeginPackage["ARES`Expansion`DerivativeRadiatorExpansion`"]
+
+  RadpNLL11l::usage = ""
+  RadpNLL11::usage = ""
+
+  RadsNNLL10l::usage = ""
+  RadsNNLL10::usage = ""
 
   Begin["`Private`"]
+
+    Needs["ARES`QCD`Constants`"]
+
+    RadpNLL11[legs_?ListQ, obsSC_?AssociationQ] :=
+      Total[Map[RadpNLL11l[#, obsSC] &, legs]]
+
+    RadsNNLL11[legs_?ListQ, obsSC_?AssociationQ] :=
+      Total[Map[RadsNNLL11l[#, obsSC] &, legs]]
+
 
     RadpNLL11l[leg_?AssociationQ, obsSC_?AssociationQ] :=
       Module[
@@ -20,8 +35,8 @@ BeginPackage["ARES`Expansion`DerivativeRadiatorExpansion`", {"ARES`QCD`Constants
           a, b
         },
   
-        a = obspar["ktpow"];
-        b = obspar["etapow"][[leg["num"]]];
+        a = obsSC["ktpow"];
+        b = obsSC["etapow"][[leg["num"]]];
   
         leg["col"] 4/(a (a + b))
       ]
@@ -32,8 +47,8 @@ BeginPackage["ARES`Expansion`DerivativeRadiatorExpansion`", {"ARES`QCD`Constants
           a, b
         },
   
-        a = obspar["ktpow"];
-        b = obspar["etapow"][[leg["num"]]];
+        a = obsSC["ktpow"];
+        b = obsSC["etapow"][[leg["num"]]];
   
         leg["col"] 4/(a (a + b))
       ]

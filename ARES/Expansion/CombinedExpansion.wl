@@ -27,12 +27,15 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     Needs["ARES`EPA`MatrixElements`"]
     Needs["ARES`Expansion`SoftRadiatorExpansion`"]
     Needs["ARES`Expansion`HardCollinearRadiatorExpansion`"]
+    Needs["ARES`Expansion`DerivativeRadiatorExpansion`"]
+    Needs["ARES`Expansion`AdditiveInterface`"]
 
     ExpOpts =
       {
         "Order" -> 2,
         "xmuR" -> 1,
         "logXV" -> 0,
+        "TransferFunctions" -> Identity,
         "RadiatorScheme" -> "Physical"
       };
 
@@ -51,6 +54,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           Order = OptionValue["Order"],
           xmuR  = OptionValue["xmuR"],
           logXV = OptionValue["logXV"],
+          TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, dipoles, xq, xqb,
           mG12, mH12,
@@ -76,8 +80,8 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           Order = OptionValue["Order"],
           xmuR  = OptionValue["xmuR"],
           logXV = OptionValue["logXV"],
+          TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
-          logXV = OptionValue["logXV"],
           legs, dipoles, xq, xqb,
           rmG12, rmG11, rmH11,
           mH12, mH11,
@@ -117,12 +121,12 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           Order = OptionValue["Order"],
           xmuR  = OptionValue["xmuR"],
           logXV = OptionValue["logXV"],
+          TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
-          logXV = OptionValue["logXV"],
-          obspar, legs, dipoles,
+          legs, dipoles, xq, xqb,
           rmG12, rmG11, rmG10, rmH11, rmH10,
-          mH1, mC1hc, mFrec10,
-          mFwa10, mF10,
+          mH1, mC1hc,
+          RpNLL11, mFrec10, mFwa10, mF10,
           mH12, mH11, mH10,
           mH10bar
         },
@@ -132,10 +136,12 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         legs    = Event["legs"];
         dipoles = Event["dipoles"];
  
+        RpNLL11 = RadpNLL11[legs, obsSC];
+
         Which[
           Order == 0,
             {
-              rmG12 = G12[dipoles, obspar],
+              rmG12 = G12[dipoles, obsSC],
               rmG11 = 0,
               rmG10 = 0,
               rmH11 = 0,
@@ -146,10 +152,10 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
             },
           Order == 1,
             {
-              rmG12 = G12[dipoles, obspar],
-              rmG11 = G11[dipoles, obspar],
+              rmG12 = G12[dipoles, obsSC],
+              rmG11 = G11[dipoles, obsSC],
               rmG10 = 0,
-              rmH11 = H11[legs, obspar],
+              rmH11 = H11[legs, obsSC],
               rmH10 = 0,
               mH1   = 0,
               mF10  = 0,
@@ -157,14 +163,15 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
             },
           Order >= 2,
             {
-              rmG12 = G12[dipoles, obspar],
-              rmG11 = G11[dipoles, obspar],
-              rmG10 = G10[dipoles, obspar],
-              rmH11 = H11[legs, obspar],
+              rmG12 = G12[dipoles, obsSC],
+              rmG11 = G11[dipoles, obsSC],
+              rmG10 = G10[dipoles, obsSC],
+              rmH11 = H11[legs, obsSC],
               rmH10 = 0,
-              mH1   = virt3[xq, xqb],
-              mF10  = Frec10[legs, obspar] + Fwa10[dipoles, obspar],
-              mC1hc = C1hc[legs, obspar, xq, xqb]
+              mH1   = Virt3[xq, xqb],
+              mF10  = (Frec10[RpNLL11, legs, obsSC, TransferFunctions["Irecl"]]
+                       + Fwa10[RpNLL11, dipoles, obsSC, TransferFunctions["Iwaab"]]),
+              mC1hc = 0 (* C1hc[legs, obsSC, xq, xqb] *)
             }
         ];
   
@@ -182,6 +189,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           Order = OptionsValue["Order"],
           xmuR  = OptionValue["xmuR"],
           logXV = OptionValue["logXV"],
+          TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, dipoles, xq, xqb,
           rmG12, mH24,
@@ -193,7 +201,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         legs    = Event["legs"];
         dipoles = Event["dipoles"];
 
-        rmG12 = G12[dipoles, obspar];
+        rmG12 = G12[dipoles, obsSC];
   
         mH24 = M3sq[xq, xqb] 1/2 rmG12^2;
         mH24bar = mH24;
@@ -207,6 +215,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           Order = OptionsValue["Order"],
           xmuR  = OptionValue["xmuR"],
           logXV = OptionValue["logXV"],
+          TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, dipoles, xq, xqb,
           rmG11, rmG12, rmG23, rmH11,
@@ -221,17 +230,17 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         Which[
           Order == 0,
             {
-              rmG12 = G12[dipoles, obspar],
+              rmG12 = G12[dipoles, obsSC],
               rmG11 = 0,
-              rmG23 = G23[dipoles, obspar],
+              rmG23 = G23[dipoles, obsSC],
               rmH11 = 0
             },
           Order >= 1,
             {
-              rmG12 = G12[dipoles, obspar],
-              rmG11 = G11[dipoles, obspar],
-              rmG23 = G23[dipoles, obspar],
-              rmH11 = H11[legs, obspar]
+              rmG12 = G12[dipoles, obsSC],
+              rmG11 = G11[dipoles, obsSC],
+              rmG23 = G23[dipoles, obsSC],
+              rmH11 = H11[legs, obsSC]
             }
         ];
   
@@ -248,6 +257,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           Order = OptionsValue["Order"],
           xmuR  = OptionValue["xmuR"],
           logXV = OptionValue["logXV"],
+          TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, dipoles, xq, xqb,
           rmG10, rmG11, rmG12,
@@ -270,10 +280,10 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         Which[
           Order == 0,
             {
-              rmG12 = G12[dipoles, obspar],
+              rmG12 = G12[dipoles, obsSC],
               rmG11 = 0,
               rmG10 = 0,
-              rmG23 = G23[dipoles, obspar],
+              rmG23 = G23[dipoles, obsSC],
               rmG22 = 0,
     
               rmH11 = 0,
@@ -287,16 +297,16 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
             },
           Order == 1,
             {
-              rmG12 = G12[dipoles, obspar],
-              rmG11 = G11[dipoles, obspar],
+              rmG12 = G12[dipoles, obsSC],
+              rmG11 = G11[dipoles, obsSC],
               rmG10 = 0,
-              rmG23 = G23[dipoles, obspar],
-              rmG22 = G22[dipoles, obspar],
+              rmG23 = G23[dipoles, obsSC],
+              rmG22 = G22[dipoles, obsSC],
     
-              rmH11 = H11[legs, obspar],
-              rmH22 = H22[legs, obspar],
+              rmH11 = H11[legs, obsSC],
+              rmH22 = H22[legs, obsSC],
     
-              mF22  = FNLL22[legs, obspar],
+              mF22  = FNLL22[legs, obsSC],
     
               mH1   = 0,
               mC1hc = 0,
@@ -304,20 +314,20 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
             },
           Order >= 2,
             {
-              rmG12 = G12[dipoles, obspar],
-              rmG11 = G11[dipoles, obspar],
-              rmG10 = G10[dipoles, obspar],
-              rmG23 = G23[dipoles, obspar],
-              rmG22 = G22[dipoles, obspar],
+              rmG12 = G12[dipoles, obsSC],
+              rmG11 = G11[dipoles, obsSC],
+              rmG10 = G10[dipoles, obsSC],
+              rmG23 = G23[dipoles, obsSC],
+              rmG22 = G22[dipoles, obsSC],
     
-              rmH11 = H11[legs, obspar],
-              rmH22 = H22[legs, obspar],
+              rmH11 = H11[legs, obsSC],
+              rmH22 = H22[legs, obsSC],
     
-              mF22  = FNLL22[legs, obspar],
+              mF22  = FNLL22[legs, obsSC],
     
               mH1   = virt3[xq, xqb],
-              mC1hc = C1hc[legs, obspar, xq, xqb],
-              mF10  = Frec10[legs, obspar] + Fwa10[dipoles, obspar]
+              mC1hc = C1hc[legs, obsSC, xq, xqb],
+              mF10  = Frec10[legs, obsSC] + Fwa10[dipoles, obsSC]
             }
         ];
   
@@ -336,6 +346,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           Order = OptionsValue["Order"],
           xmuR  = OptionValue["xmuR"],
           logXV = OptionValue["logXV"],
+          TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, dipoles, xq, xqb,
           rmG10, rmG11, rmG12,
@@ -354,15 +365,15 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         legs    = Event["legs"];
         dipoles = Event["dipoles"];
  
-        RpNLL = RpNLL11[legs, obspar];
+        RpNLL = RpNLL11[legs, obsSC];
   
         Which[
           Order == 0,
             {
-              rmG12 = G12[dipoles, obspar],
+              rmG12 = G12[dipoles, obsSC],
               rmG11 = 0,
               rmG10 = 0,
-              rmG23 = G23[dipoles, obspar],
+              rmG23 = G23[dipoles, obsSC],
               rmG22 = 0,
               rmG21 = 0,
     
@@ -381,19 +392,19 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
             },
           Order == 1,
             {
-              rmG12 = G12[dipoles, obspar],
-              rmG11 = G11[dipoles, obspar],
+              rmG12 = G12[dipoles, obsSC],
+              rmG11 = G11[dipoles, obsSC],
               rmG10 = 0,
-              rmG23 = G23[dipoles, obspar],
-              rmG22 = G22[dipoles, obspar],
+              rmG23 = G23[dipoles, obsSC],
+              rmG22 = G22[dipoles, obsSC],
               rmG21 = 0,
     
-              rmH11 = H11[legs, obspar],
+              rmH11 = H11[legs, obsSC],
               rmH10 = 0,
-              rmH22 = H22[legs, obspar],
+              rmH22 = H22[legs, obsSC],
               rmH21 = 0,
     
-              mF22 = FNLL22[legs, obspar],
+              mF22 = FNLL22[legs, obsSC],
     
               mH1 = 0,
               mC1hc = 0,
@@ -403,27 +414,27 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
             },
           Order >= 2,
             {
-              rmG12 = G12[dipoles, obspar],
-              rmG11 = G11[dipoles, obspar],
-              rmG10 = G10[dipoles, obspar],
-              rmG23 = G23[dipoles, obspar],
-              rmG22 = G22[dipoles, obspar],
-              rmG21 = G21[dipoles, obspar],
+              rmG12 = G12[dipoles, obsSC],
+              rmG11 = G11[dipoles, obsSC],
+              rmG10 = G10[dipoles, obsSC],
+              rmG23 = G23[dipoles, obsSC],
+              rmG22 = G22[dipoles, obsSC],
+              rmG21 = G21[dipoles, obsSC],
     
-              rmH11 = H11[legs, obspar],
+              rmH11 = H11[legs, obsSC],
               rmH10 = 0,
-              rmH22 = H22[legs, obspar],
-              rmH21 = H21[legs, obspar],
+              rmH22 = H22[legs, obsSC],
+              rmH21 = H21[legs, obsSC],
     
-              mF22 = FNLL22[legs, obspar],
+              mF22 = FNLL22[legs, obsSC],
     
               mH1 = virt3[xq, xqb],
-              mC1hc = C1hc[legs, obspar, xq, xqb],
-              mC1hc21 = C1hc21[legs, obspar, xq, xqb],
-              mF10 = Frec10[legs, obspar] + Fwa10[dipoles, obspar],
-              mF21 = (Fsc21[legs, obspar, RpNLL] + Frec21[legs, obspar]
-                      + Fhc21[legs, obspar, RpNLL] + Fwa21[dipoles, obspar]
-                      + Fcorrel21[legs, obspar])
+              mC1hc = C1hc[legs, obsSC, xq, xqb],
+              mC1hc21 = C1hc21[legs, obsSC, xq, xqb],
+              mF10 = Frec10[legs, obsSC] + Fwa10[dipoles, obsSC],
+              mF21 = (Fsc21[legs, obsSC, RpNLL] + Frec21[legs, obsSC]
+                      + Fhc21[legs, obsSC, RpNLL] + Fwa21[dipoles, obsSC]
+                      + Fcorrel21[legs, obsSC])
             }
         ];
   
@@ -445,6 +456,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           Order = OptionsValue["Order"],
           xmuR  = OptionValue["xmuR"],
           logXV = OptionValue["logXV"],
+          TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, dipoles, xq, xqb,
           rmG10, rmG11, rmG12,
@@ -463,15 +475,15 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         legs    = Event["legs"];
         dipoles = Event["dipoles"];
  
-        RpNLL = RpNLL11[legs, obspar];
+        RpNLL = RpNLL11[legs, obsSC];
   
         Which[
           Order == 0,
             {
-              rmG12 = G12[dipoles, obspar],
+              rmG12 = G12[dipoles, obsSC],
               rmG11 = 0,
               rmG10 = 0,
-              rmG23 = G23[dipoles, obspar],
+              rmG23 = G23[dipoles, obsSC],
               rmG22 = 0,
               rmG21 = 0,
     
@@ -490,19 +502,19 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
             },
           Order == 1,
             {
-              rmG12 = G12[dipoles, obspar],
-              rmG11 = G11[dipoles, obspar],
+              rmG12 = G12[dipoles, obsSC],
+              rmG11 = G11[dipoles, obsSC],
               rmG10 = 0,
-              rmG23 = G23[dipoles, obspar],
-              rmG22 = G22[dipoles, obspar],
+              rmG23 = G23[dipoles, obsSC],
+              rmG22 = G22[dipoles, obsSC],
               rmG21 = 0,
     
-              rmH11 = H11[legs, obspar],
+              rmH11 = H11[legs, obsSC],
               rmH10 = 0,
-              rmH22 = H22[legs, obspar],
+              rmH22 = H22[legs, obsSC],
               rmH21 = 0,
     
-              mF22 = FNLL22[legs, obspar],
+              mF22 = FNLL22[legs, obsSC],
     
               mH1 = 0,
               mC1hc = 0,
@@ -512,27 +524,27 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
             },
           Order >= 2,
             {
-              rmG12 = G12[dipoles, obspar],
-              rmG11 = G11[dipoles, obspar],
-              rmG10 = G10[dipoles, obspar],
-              rmG23 = G23[dipoles, obspar],
-              rmG22 = G22[dipoles, obspar],
-              rmG21 = G21[dipoles, obspar],
+              rmG12 = G12[dipoles, obsSC],
+              rmG11 = G11[dipoles, obsSC],
+              rmG10 = G10[dipoles, obsSC],
+              rmG23 = G23[dipoles, obsSC],
+              rmG22 = G22[dipoles, obsSC],
+              rmG21 = G21[dipoles, obsSC],
     
-              rmH11 = H11[legs, obspar],
+              rmH11 = H11[legs, obsSC],
               rmH10 = 0,
-              rmH22 = H22[legs, obspar],
-              rmH21 = H21[legs, obspar],
+              rmH22 = H22[legs, obsSC],
+              rmH21 = H21[legs, obsSC],
     
-              mF22 = FNLL22[legs, obspar],
+              mF22 = FNLL22[legs, obsSC],
     
               mH1 = virt3[xq, xqb],
-              mC1hc = C1hc[legs, obspar, xq, xqb],
-              mC1hc21 = C1hc21[legs, obspar, xq, xqb],
-              mF10 = Frec10[legs, obspar] + Fwa10[dipoles, obspar],
-              mF21 = (Fsc21[legs, obspar, RpNLL] + Frec21[legs, obspar]
-                      + Fhc21[legs, obspar, RpNLL] + Fwa21[dipoles, obspar]
-                      + Fcorrel21[legs, obspar])
+              mC1hc = C1hc[legs, obsSC, xq, xqb],
+              mC1hc21 = C1hc21[legs, obsSC, xq, xqb],
+              mF10 = Frec10[legs, obsSC] + Fwa10[dipoles, obsSC],
+              mF21 = (Fsc21[legs, obsSC, RpNLL] + Frec21[legs, obsSC]
+                      + Fhc21[legs, obsSC, RpNLL] + Fwa21[dipoles, obsSC]
+                      + Fcorrel21[legs, obsSC])
             }
         ];
   
