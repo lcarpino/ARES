@@ -48,6 +48,10 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     H12bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
+          Order = OptionValue["Order"],
+          xmuR  = OptionValue["xmuR"],
+          logXV = OptionValue["logXV"],
+          RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, dipoles, xq, xqb,
           mG12, mH12,
           mH12bar
@@ -70,6 +74,9 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
       Module[
         {
           Order = OptionValue["Order"],
+          xmuR  = OptionValue["xmuR"],
+          logXV = OptionValue["logXV"],
+          RadiatorScheme = OptionValue["RadiatorScheme"],
           logXV = OptionValue["logXV"],
           legs, dipoles, xq, xqb,
           rmG12, rmG11, rmH11,
@@ -108,6 +115,9 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
       Module[
         {
           Order = OptionValue["Order"],
+          xmuR  = OptionValue["xmuR"],
+          logXV = OptionValue["logXV"],
+          RadiatorScheme = OptionValue["RadiatorScheme"],
           logXV = OptionValue["logXV"],
           obspar, legs, dipoles,
           rmG12, rmG11, rmG10, rmH11, rmH10,
@@ -169,6 +179,10 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     H24bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
+          Order = OptionsValue["Order"],
+          xmuR  = OptionValue["xmuR"],
+          logXV = OptionValue["logXV"],
+          RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, dipoles, xq, xqb,
           rmG12, mH24,
           mH24bar
@@ -190,6 +204,10 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     H23bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
+          Order = OptionsValue["Order"],
+          xmuR  = OptionValue["xmuR"],
+          logXV = OptionValue["logXV"],
+          RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, dipoles, xq, xqb,
           rmG11, rmG12, rmG23, rmH11,
           mH24, mH23, mH23bar
@@ -227,8 +245,10 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     H22bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order = OptionValue["Order"],
+          Order = OptionsValue["Order"],
+          xmuR  = OptionValue["xmuR"],
           logXV = OptionValue["logXV"],
+          RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, dipoles, xq, xqb,
           rmG10, rmG11, rmG12,
           rmG21, rmG22, rmG23,
@@ -313,8 +333,10 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     H21bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order = OptionValue["Order"],
+          Order = OptionsValue["Order"],
+          xmuR  = OptionValue["xmuR"],
           logXV = OptionValue["logXV"],
+          RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, dipoles, xq, xqb,
           rmG10, rmG11, rmG12,
           rmG21, rmG22, rmG23,
@@ -420,8 +442,10 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     H20bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order = OptionValue["Order"],
+          Order = OptionsValue["Order"],
+          xmuR  = OptionValue["xmuR"],
           logXV = OptionValue["logXV"],
+          RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, dipoles, xq, xqb,
           rmG10, rmG11, rmG12,
           rmG21, rmG22, rmG23,
