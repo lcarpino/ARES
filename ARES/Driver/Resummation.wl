@@ -51,7 +51,7 @@ BeginPackage["ARES`Driver`Resummation`"]
           event, dipoles, legs,
           obsSC,
           muR, xmuR, logX0, logXV,
-          ResumOpts, res
+          ResumOpts, alphaSOpts, res
         },
 
         (* set up the event *)
@@ -63,15 +63,21 @@ BeginPackage["ARES`Driver`Resummation`"]
         obsSC = obs["SCParametrisation"][event];
 
         (* set up renormalisation scale *)
+        alphaSOpts =
+          {
+            "refscale"  -> refscale,
+            "refalphas" -> refalphas
+          };
+
         muR = muRstrategy[xq, xqb] muR0 Q;
         xmuR = muR/Q;
         Which[
           Order == "LL",
-            alphaS = AlphaSFixedNF[muR, 1],
+            alphaS = AlphaSFixedNF[muR, 1, alphaSOpts],
           Order == "NLL",
-            alphaS = AlphaSFixedNF[muR, 2],
+            alphaS = AlphaSFixedNF[muR, 2, alphaSOpts],
           Order == "NNLL",
-            alphaS = AlphaSFixedNF[muR, 3]
+            alphaS = AlphaSFixedNF[muR, 3, alphaSOpts]
         ];
 
 
