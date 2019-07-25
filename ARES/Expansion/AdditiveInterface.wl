@@ -66,8 +66,8 @@ BeginPackage["ARES`Expansion`AdditiveInterface`"]
       Total[Map[Fcorrel21l[RpNLL11, #, obsSC, Icorrel] &, legs]]
 
     (* clustering correction *)
-    Fclust21[RpNLL11_?NumericQ, legs_?ListQ, obsSC_?AssociationQ] :=
-      Total[Map[Fclust21l[RpNLL11, #, obsSC] &, legs]]
+    Fclust21[RpNLL11_?NumericQ, legs_?ListQ, obsSC_?AssociationQ, Iclustl_] :=
+      Total[Map[Fclust21l[RpNLL11, #, obsSC, Iclustl] &, legs]]
 
 
 
@@ -162,7 +162,7 @@ BeginPackage["ARES`Expansion`AdditiveInterface`"]
         res = -(1/a) RadsNNLL10l[leg, obsSC] I[leg, obsSC]
       ]
 
-    Fclust21l[RpNLL11_?NumericQ, leg_?AssociationQ, obsSC_?AssociationQ] :=
+    Fclust21l[RpNLL11_?NumericQ, leg_?AssociationQ, obsSC_?AssociationQ, I_] :=
       Module[
         {
         },

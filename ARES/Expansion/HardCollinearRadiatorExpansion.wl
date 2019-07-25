@@ -145,7 +145,7 @@ BeginPackage["ARES`Expansion`HardCollinearRadiatorExpansion`", {"ARES`QCD`Consta
             {Ga0 = Ga0g, Ga1 = Ga1g}
         ];
 
-        -((2 Ga1)/(a + b) + (4 Pi beta0)/(a + b) Ga0) 
+        -((2 Ga1)/(a + b) + (4 Pi beta0)/(a + b) Ga0 Log[xmuR]) 
       ]
 
   End[]
