@@ -18,11 +18,12 @@ BeginPackage["ARES`Expansion`HardCollinearRadiatorExpansion`", {"ARES`QCD`Consta
   H22::usage = ""
   H21::usage = ""
 
+  LogXlegs::usage = ""
+
   Begin["`Private`"]
 
     ExpOpts =
       {
-        "xmuR"  -> 1,
         "RadiatorScheme" -> "Physical"
       };
 
@@ -31,45 +32,54 @@ BeginPackage["ARES`Expansion`HardCollinearRadiatorExpansion`", {"ARES`QCD`Consta
     Options[H22] = ExpOpts;
     Options[H21] = ExpOpts;
 
+    LogXlegs[legs_?ListQ, xmuR_?NumericQ] :=
+      Map[LogXl[#, xmuR] &, legs]
 
     H11[legs_?ListQ, obspar_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          xmuR = OptionValue["xmuR"],
           RadiatorScheme = OptionValue["RadiatorScheme"]
         },
 
-        Total[Map[H11l[#, obspar] &, legs]]
+        Map[H11l[#, obspar] &, legs]
       ]
 
     H10[legs_?ListQ, obspar_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          xmuR = OptionValue["xmuR"],
           RadiatorScheme = OptionValue["RadiatorScheme"]
         },
 
-        Total[Map[H10l[#, obspar] &, legs]]
+        Map[H10l[#, obspar] &, legs]
       ]
 
     H22[legs_?ListQ, obspar_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          xmuR = OptionValue["xmuR"],
           RadiatorScheme = OptionValue["RadiatorScheme"]
         },
 
-        Total[Map[H22l[#, obspar] &, legs]]
+        Map[H22l[#, obspar] &, legs]
       ]
 
     H21[legs_?ListQ, obspar_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          xmuR = OptionValue["xmuR"],
           RadiatorScheme = OptionValue["RadiatorScheme"]
         },
 
-        Total[Map[H21l[#, obspar, xmuR] &, legs]]
+        Map[H21l[#, obspar] &, legs]
+      ]
+
+    LogXl[leg_?AssociationQ, xmuR_?NumericQ] :=
+      Module[
+        {
+          xl
+        },
+
+        xl = leg["x"];
+
+        Log[xmuR^2]
       ]
 
     (* leg definitions *)
@@ -129,7 +139,7 @@ BeginPackage["ARES`Expansion`HardCollinearRadiatorExpansion`", {"ARES`QCD`Consta
         -4 Pi beta0 Ga0/(a + b)^2
       ]
 
-    H21l[leg_?AssociationQ, obspar_?AssociationQ, xmuR_?NumericQ] :=
+    H21l[leg_?AssociationQ, obspar_?AssociationQ] :=
       Module[
         {
           a, b, Ga0, Ga1
@@ -145,7 +155,7 @@ BeginPackage["ARES`Expansion`HardCollinearRadiatorExpansion`", {"ARES`QCD`Consta
             {Ga0 = Ga0g, Ga1 = Ga1g}
         ];
 
-        -((2 Ga1)/(a + b) + (4 Pi beta0)/(a + b) Ga0 Log[xmuR]) 
+        -(2 Ga1)/(a + b)
       ]
 
   End[]

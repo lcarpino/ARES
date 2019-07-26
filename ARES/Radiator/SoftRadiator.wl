@@ -148,19 +148,33 @@ BeginPackage["ARES`Radiator`SoftRadiator`", "ARES`QCD`Constants`"]
   
       (* LL contribution *)
       If[order >= 0,
-        leg1res = -lambda/(alphas beta0) g1[lambda, a, b1];
-        leg2res = -lambda/(alphas beta0) g1[lambda, a, b2];
+        leg1res = (-lambda/(alphas beta0) g1[lambda, a, b1]
+                   -lambda^2 g1p[lambda, a, b1] Log[xmuR^2/(xa + xb - 1)]
+                   -alphas beta1/beta0 lambda^2 g1p[lambda, a, b1] Log[xmuR^2/(xa + xb - 1)]
+                   -alphas (beta0 lambda^2 g1p[lambda, a, b1]
+                   +beta0/2 lambda^3 g1s[lambda, a, b1]) Log[xmuR^2/(xa + xb - 1)]^2);
+        leg2res = (-lambda/(alphas beta0) g1[lambda, a, b2]
+                   -lambda^2 g1p[lambda, a, b2] Log[xmuR^2/(xa + xb - 1)]
+                   -alphas beta1/beta0 lambda^2 g1p[lambda, a, b2] Log[xmuR^2/(xa + xb - 1)]
+                   -alphas (beta0 lambda^2 g1p[lambda, a, b2]
+                   +beta0/2 lambda^3 g1s[lambda, a, b2]) Log[xmuR^2/(xa + xb - 1)]^2);
+
         resLL = leg1res + leg2res
       ];
   
       (* NLL contribution *)
       If[order >= 1,
-        leg1res = -g2[lambda, a, b1] - lambda^2 g1p[lambda, a, b1] \
-          Log[xmuR^2/(xa + xb - 1)] - RadpNLLabl[lambda, a, b1] logXV \
-          + RadpNLLabl[lambda, a, b1] logd1bar;
-        leg2res = -g2[lambda, a, b2] - lambda^2 g1p[lambda, a, b2] \
-          Log[xmuR^2/(xa + xb - 1)] - RadpNLLabl[lambda, a, b2] logXV \
-          + RadpNLLabl[lambda, a, b2] logd2bar;
+        leg1res = (-g2[lambda, a, b1]
+                   -alphas beta0 lambda g2p[lambda, a, b1] Log[xmuR^2/(xa + xb - 1)]
+                   -RadpNLLabl[lambda, a, b1] logXV
+                   +RadpNLLabl[lambda, a, b1] logd1bar
+                   +lambda RadsNNLLabl[lambda, alphas, a, b2] logd1bar Log[xmuR^2/(xa + xb - 1)]);
+        leg2res = (-g2[lambda, a, b2]
+                   -alphas beta0 lambda g2p[lambda, a, b2] Log[xmuR^2/(xa + xb - 1)]
+                   -RadpNLLabl[lambda, a, b2] logXV
+                   +RadpNLLabl[lambda, a, b2] logd2bar
+                   +lambda RadsNNLLabl[lambda, alphas, a, b2] logd2bar Log[xmuR^2/(xa + xb - 1)]);
+
         resNLL = leg1res + leg2res
       ];
   
