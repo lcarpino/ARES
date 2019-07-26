@@ -152,12 +152,14 @@ BeginPackage["ARES`Radiator`SoftRadiator`", "ARES`QCD`Constants`"]
                    -lambda^2 g1p[lambda, a, b1] Log[xmuR^2/(xa + xb - 1)]
                    -alphas beta1/beta0 lambda^2 g1p[lambda, a, b1] Log[xmuR^2/(xa + xb - 1)]
                    -alphas (beta0 lambda^2 g1p[lambda, a, b1]
-                   +beta0/2 lambda^3 g1s[lambda, a, b1]) Log[xmuR^2/(xa + xb - 1)]^2);
+                   +beta0/2 lambda^3 g1s[lambda, a, b1]) Log[xmuR^2/(xa + xb - 1)]^2
+                   +RadpNLLabl[lambda, a, b1] (-logXV) + RadsNNLLabl[lambda, alphas, a, b1]/2 (-logXV)^2);
         leg2res = (-lambda/(alphas beta0) g1[lambda, a, b2]
                    -lambda^2 g1p[lambda, a, b2] Log[xmuR^2/(xa + xb - 1)]
                    -alphas beta1/beta0 lambda^2 g1p[lambda, a, b2] Log[xmuR^2/(xa + xb - 1)]
                    -alphas (beta0 lambda^2 g1p[lambda, a, b2]
-                   +beta0/2 lambda^3 g1s[lambda, a, b2]) Log[xmuR^2/(xa + xb - 1)]^2);
+                   +beta0/2 lambda^3 g1s[lambda, a, b2]) Log[xmuR^2/(xa + xb - 1)]^2
+                   +RadpNLLabl[lambda, a, b2] (-logXV) + RadsNNLLabl[lambda, alphas, a, b2]/2 (-logXV)^2);
 
         resLL = leg1res + leg2res
       ];
@@ -184,15 +186,6 @@ BeginPackage["ARES`Radiator`SoftRadiator`", "ARES`QCD`Constants`"]
         (*  massless and massive contributions to soft radiator *)
         leg1res = -(alphas/Pi) g3[lambda, a, b1] - alphas/Pi gm3[lambda, a, b1] \
 
-        (* alphas running terms from gi functions *)
-        - alphas (beta0 lambda g2p[lambda, a, b1] \
-        + beta1/beta0 lambda^2 g1p[lambda, a, b1]) Log[xmuR^2/(xa + xb - 1)] \
-        - alphas (beta0 lambda^2 g1p[lambda, a, b1] \
-        + beta0/2 lambda^3 g1s[lambda, a, b1]) Log[xmuR^2/(xa + xb - 1)]^2 \
-
-        (* running of RpNLL *)
-        + lambda RadsNNLLabl[lambda, alphas, a, b1] logd1bar Log[xmuR^2/(xa + xb - 1)] \
-
         (* normalisation corrections *)
         + RadpNNLLabl[lambda, alphas, a, b1] logd1bar \
         + RadsNNLLabl[lambda, alphas, a, b1]/2 log2d1bar \
@@ -210,15 +203,6 @@ BeginPackage["ARES`Radiator`SoftRadiator`", "ARES`QCD`Constants`"]
 
         (*  massless and massive contributions to soft radiator *)
         leg2res = -(alphas/Pi) g3[lambda, a, b2] - alphas/Pi gm3[lambda, a, b2] \
-
-        (* alphas running terms from gi functions *)
-        - alphas (beta0 lambda g2p[lambda, a, b2] + \
-        beta1/beta0 lambda^2 g1p[lambda, a, b2]) Log[xmuR^2/(xa + xb - 1)] \
-        - alphas (beta0 lambda^2 g1p[lambda, a, b2] \
-        + beta0/2 lambda^3 g1s[lambda, a, b2]) Log[xmuR^2/(xa + xb - 1)]^2 \
-
-        (* running of RpNLL *)
-        + lambda RadsNNLLabl[lambda, alphas, a, b2] logd2bar Log[xmuR^2/(xa + xb - 1)] \
 
         (* normalisation corrections *)
         + RadpNNLLabl[lambda, alphas, a, b2] logd2bar \
