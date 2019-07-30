@@ -82,7 +82,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         (* Barred and Hatted expansion *)
         mHs12bh  = mHs12;
   
-        res = M3sq[xq, xqb] mHs12hat
+        res = M3sq[xq, xqb] mHs12bh
       ]
  
     H11bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
@@ -134,7 +134,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         mHs12bh  = mHs12;
         mHs11bh  = mHs11 + 2 mHs12 (-logXV);
 
-        res = M3sq[xq, xqb] mHs11hat
+        res = M3sq[xq, xqb] mHs11bh
       ]
 
     H10bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
@@ -225,7 +225,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         mHs11bh  = mHs11 + 2 mHs12 (-logXV);
         mHs10bh  = mHs10 + mHs11 (-logXV) + mHs12 (-logXV)^2;
 
-        res = M3sq[xq, xqb] mHs10hat
+        res = M3sq[xq, xqb] mHs10bh
       ]
 
     H24bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
@@ -265,7 +265,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         mHs12bh  = mHs12;
         mHs24bh  = mHs24;
 
-        res = M3sq[xq, xqb] mHs24hat
+        res = M3sq[xq, xqb] mHs24bh
       ]
 
     H23bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
@@ -330,7 +330,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         mHs24bh  = mHs24;
         mHs23bh  = mHs23 + 4 mHs24 (-logXV);
 
-        res = M3sq[xq, xqb] mHs23hat
+        res = M3sq[xq, xqb] mHs23bh
       ]
 
     H22bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
@@ -475,7 +475,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         mHs23bh  = mHs23 + 4 mHs24 (-logXV);
         mHs22bh  = mHs22 + 3 mHs23 (-logXV) + 6 mHs24 (-logXV)^2 + 2 Pi beta0 mG12.mlogXab;
 
-        res = M3sq[xq, xqb] mHs22hat
+        res = M3sq[xq, xqb] mHs22bh
       ]
 
     H21bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
@@ -639,10 +639,10 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         mHs24bh  = mHs24;
         mHs23bh  = mHs23;
         mHs22bh  = mHs22 + 3 mHs23 (-logXV) + 6 mHs24 (-logXV)^2 + 2 Pi beta0 mG12.mlogXab;
-        mHs21bh  = mHs21 + 2 mHs22 (-logXV) + 3 mHs23 (-logXV)^2 + 4 mHs23 (-logXV)^3 \
+        mHs21bh  = mHs21 + 2 mHs22 (-logXV) + 3 mHs23 (-logXV)^2 + 4 mHs24 (-logXV)^3 \
                          + 2 Pi beta0 (mG11.mlogXab + 2 mG12.mlogXab (-logXV) + mH11.mlogXl);
 
-        res = M3sq[xq, xqb] mHs21hat
+        res = M3sq[xq, xqb] mHs21bh
       ]
 
     H20bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
@@ -791,7 +791,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         mHs10bar = mHs10;
         mHs24bar = mHs24;
         mHs23bar = mHs23;
-        mHs22bar = mHs22 + 2 Pi beta0 mG12.mlogXab;
+        mHs22bar = mHs22 + 2 Pi beta0 (mG12.mlogXab);
         mHs21bar = mHs21 + 2 Pi beta0 (mG11.mlogXab + mH11.mlogXl);
         mHs20bar = mHs20 + 2 Pi beta0 (mG10.mlogXab + mH10.mlogXl);
 
@@ -810,11 +810,13 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         mHs24bh  = mHs24;
         mHs23bh  = mHs23;
         mHs22bh  = mHs22 + 3 mHs23 (-logXV) + 6 mHs24 (-logXV)^2 + 2 Pi beta0 mG12.mlogXab;
-        mHs21bh  = mHs21 + 2 mHs22 (-logXV) + 3 mHs23 (-logXV)^2 + 4 mHs23 (-logXV)^3 \
+        mHs21bh  = mHs21 + 2 mHs22 (-logXV) + 3 mHs23 (-logXV)^2 + 4 mHs24 (-logXV)^3 \
                          + 2 Pi beta0 (mG11.mlogXab + 2 mG12.mlogXab (-logXV) + mH11.mlogXl);
-        mHs20bh  = mHs20 + 1 mHs21 (-logXV) + 1 mHs22 (-logXV)^2 + 1 mHs23 (-logXV)^3 + 1 mHs24 (-logXV)^4;
+        mHs20bh  = mHs20 + 1 mHs21 (-logXV) + 1 mHs22 (-logXV)^2 + 1 mHs23 (-logXV)^3 + 1 mHs24 (-logXV)^4 \
+                         + 2 Pi beta0 (mG10.mlogXab + 1 mG11.mlogXab (-logXV) + 1 mG12.mlogXab (-logXV)^2  \
+                                      + mH10.mlogXl + 1 mH11.mlogXl (-logXV));
 
-        res = M3sq[xq, xqb] mHs20hat
+        res = M3sq[xq, xqb] mHs20bh
       ]
 
   End[]

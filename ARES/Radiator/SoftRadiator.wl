@@ -156,25 +156,25 @@ BeginPackage["ARES`Radiator`SoftRadiator`", "ARES`QCD`Constants`"]
       (* LL contribution *)
       If[order >= 0,
         leg1res = (-lambda/(alphas beta0) g1[lambda, a, b1]
-                   (*
                    -lambda^2 g1p[lambda, a, b1] Log[xmuR^2/(xa + xb - 1)]
                    -alphas beta1/beta0 lambda^2 g1p[lambda, a, b1] Log[xmuR^2/(xa + xb - 1)]
                    -alphas (beta0 lambda^2 g1p[lambda, a, b1]
                    +beta0/2 lambda^3 g1s[lambda, a, b1]) Log[xmuR^2/(xa + xb - 1)]^2
-                   *)
                    -(g1[lambda, a, b1] + lambda g1p[lambda, a, b1]) (-logXV)
-                   - alphas beta0 (g1p[lambda, a, b1] + 1/2 lambda g1s[lambda, a, b1]) (-logXV)^2
-                   - (alphas beta0)^2 (1/2 g1s[lambda, a, b1] + 1/6 lambda g1t[lambda, a, b1]) (-logXV)^3);
+                   - (alphas beta0) (g1p[lambda, a, b1] + 1/2 lambda g1s[lambda, a, b1]) (-logXV)^2
+                   - (alphas beta0)^2 (1/2 g1s[lambda, a, b1] + 1/6 lambda g1t[lambda, a, b1]) (-logXV)^3
+                   - (alphas beta0) (2 lambda g1p[lambda, a, b1] + lambda^2 g1s[lambda, a, b1]) Log[xmuR^2/(xa + xb - 1)] (-logXV)
+                   - (alphas beta0)^2 (g1p[lambda, a, b1] + 2 lambda g1s[lambda, a, b1] + 1/2 lambda^2 g1t[lambda, a, b1]) Log[xmuR^2/(xa + xb - 1)] (-logXV)^2);
         leg2res = (-lambda/(alphas beta0) g1[lambda, a, b2]
-                   (*
                    -lambda^2 g1p[lambda, a, b2] Log[xmuR^2/(xa + xb - 1)]
                    -alphas beta1/beta0 lambda^2 g1p[lambda, a, b2] Log[xmuR^2/(xa + xb - 1)]
                    -alphas (beta0 lambda^2 g1p[lambda, a, b2]
                    +beta0/2 lambda^3 g1s[lambda, a, b2]) Log[xmuR^2/(xa + xb - 1)]^2
-                   *)
                    -(g1[lambda, a, b2] + lambda g1p[lambda, a, b2]) (-logXV)
-                   - alphas beta0 (g1p[lambda, a, b2] + 1/2 lambda g1s[lambda, a, b2]) (-logXV)^2
-                   - (alphas beta0)^2 (1/2 g1s[lambda, a, b2] + 1/6 lambda g1t[lambda, a, b2]) (-logXV)^3);
+                   - (alphas beta0) (g1p[lambda, a, b2] + 1/2 lambda g1s[lambda, a, b2]) (-logXV)^2
+                   - (alphas beta0)^2 (1/2 g1s[lambda, a, b2] + 1/6 lambda g1t[lambda, a, b2]) (-logXV)^3
+                   - (alphas beta0) (2 lambda g1p[lambda, a, b2] + lambda^2 g1s[lambda, a, b2]) Log[xmuR^2/(xa + xb - 1)] (-logXV)
+                   - (alphas beta0)^2 (g1p[lambda, a, b2] + 2 lambda g1s[lambda, a, b2] + 1/2 lambda^2 g1t[lambda, a, b2]) Log[xmuR^2/(xa + xb - 1)] (-logXV)^2);
 
         resLL = leg1res + leg2res
       ];
