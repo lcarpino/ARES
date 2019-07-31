@@ -36,6 +36,9 @@ BeginPackage["ARES`Radiator`HardCollinearRadiator`", "ARES`QCD`Constants`"]
     h2p[lambda_, Ga0_, a_, b_] :=
       -Ga0/(Pi beta0 (a + b - 2 lambda))
 
+    h2s[lambda_, Ga0_, a_, b_] :=
+      -((2 Ga0)/(beta0 (a + b - 2 lambda)^2 Pi))
+
     (* full hard-collinear radiator *)
 
     Radhcl[lambda_, alphas_, xmuR_, logXV_,
@@ -62,7 +65,11 @@ BeginPackage["ARES`Radiator`HardCollinearRadiator`", "ARES`QCD`Constants`"]
    
         If[order >= 1,
           resNLL = ( -h2[lambda, ga0, a, b]
-                     -alphas beta0 lambda h2p[lambda, ga0, a, b] Log[xmuR^2])
+                     -alphas beta0 lambda h2p[lambda, ga0, a, b] Log[xmuR^2]
+                     -alphas beta0 h2p[lambda, ga0, a, b] (-logXV)
+                     -1/2 (alphas beta0)^2 h2s[lambda, ga0, a, b] (-logXV)^2
+                     -(alphas beta0)^2 (h2p[lambda, ga0, a, b]
+                       + lambda h2s[lambda, ga0, a, b]) Log[xmuR^2] (-logXV))
         ];
    
         If[order >= 2,

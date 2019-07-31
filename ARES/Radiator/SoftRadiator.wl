@@ -110,6 +110,13 @@ BeginPackage["ARES`Radiator`SoftRadiator`", "ARES`QCD`Constants`"]
       - (a + b) (a - 2 lambda) Log[1 - (2 lambda)/(a + b)]) beta1) \
       /(b Pi^2 (a - 2 lambda) (a + b - 2 lambda) beta0^3)
 
+  g2s[lambda_, a_, b_] :=
+    ((-b beta0 K1 (a (a + b) - 4 lambda^2) + 
+     2 a beta1 (a + b - 2 lambda)^2 Pi Log[1 - (2 lambda)/a] - 
+     2 (a + b) beta1 (a - 2 lambda)^2 Pi Log[
+     1 - (2 lambda)/(a + b)])/(b beta0^3 (a - 2 lambda)^2 (a + b - 
+     2 lambda)^2 Pi^2))
+
   (* derivative of the massless radiator *)
 
   RadpNLLabl[lambda_, a_, b_] :=
@@ -117,6 +124,9 @@ BeginPackage["ARES`Radiator`SoftRadiator`", "ARES`QCD`Constants`"]
 
   RadsNNLLabl[lambda_, alphas_, a_, b_] := 
     alphas/Pi 2/((a - 2 lambda) (a + b - 2 lambda))
+
+  RadtNNNLLabl[lambda_, alphas_, a_, b_] := 
+    (4 alphas^2 beta0 (2 a + b - 4 lambda))/((a - 2 lambda)^2 (a + b - 2 lambda)^2 Pi)
 
   RadpNNLLabl[lambda_, alphas_, a_, b_] := 
     alphas/(b Pi^2 beta0^2 (a - 2 lambda) (a + b - 2 lambda)) \
@@ -182,15 +192,29 @@ BeginPackage["ARES`Radiator`SoftRadiator`", "ARES`QCD`Constants`"]
       (* NLL contribution *)
       If[order >= 1,
         leg1res = (-g2[lambda, a, b1]
-                   -alphas beta0 lambda g2p[lambda, a, b1] Log[xmuR^2/(xa + xb - 1)]
-                   -RadpNLLabl[lambda, a, b1] logXV
                    +RadpNLLabl[lambda, a, b1] logd1bar
-                   +lambda RadsNNLLabl[lambda, alphas, a, b2] logd1bar Log[xmuR^2/(xa + xb - 1)]);
+                   -alphas beta0 lambda g2p[lambda, a, b1] Log[xmuR^2/(xa + xb - 1)]
+                   +lambda RadsNNLLabl[lambda, alphas, a, b1] logd1bar Log[xmuR^2/(xa + xb -1)]
+                   -alphas beta0 g2p[lambda, a, b1] (-logXV)
+                   -1/2 (alphas beta0)^2 g2s[lambda, a, b1] (-logXV)^2
+                   +RadsNNLLabl[lambda, alphas, a, b1] logd1bar (-logXV)
+                   +1/2 RadtNNNLLabl[lambda, alphas, a, b1] logd1bar (-logXV)^2
+                   -alphas^2 beta0^2 (g2p[lambda, a, b1]
+                     + lambda g2s[lambda, a, b1]) Log[xmuR^2/(xa + xb -1)] (-logXV)
+                   +(alphas beta0 RadsNNLLabl[lambda, alphas, a, b1]
+                     + lambda RadtNNNLLabl[lambda, alphas, a, b1]) logd1bar Log[xmuR^2/(xa + xb -1)] (-logXV));
         leg2res = (-g2[lambda, a, b2]
-                   -alphas beta0 lambda g2p[lambda, a, b2] Log[xmuR^2/(xa + xb - 1)]
-                   -RadpNLLabl[lambda, a, b2] logXV
                    +RadpNLLabl[lambda, a, b2] logd2bar
-                   +lambda RadsNNLLabl[lambda, alphas, a, b2] logd2bar Log[xmuR^2/(xa + xb - 1)]);
+                   -alphas beta0 lambda g2p[lambda, a, b2] Log[xmuR^2/(xa + xb - 1)]
+                   +lambda RadsNNLLabl[lambda, alphas, a, b2] logd2bar Log[xmuR^2/(xa + xb -1)]
+                   -alphas beta0 g2p[lambda, a, b2] (-logXV)
+                   -1/2 (alphas beta0)^2 g2s[lambda, a, b2] (-logXV)^2
+                   +RadsNNLLabl[lambda, alphas, a, b2] logd2bar (-logXV)
+                   +1/2 RadtNNNLLabl[lambda, alphas, a, b2] logd2bar (-logXV)^2
+                   -alphas^2 beta0^2 (g2p[lambda, a, b2]
+                     + lambda g2s[lambda, a, b2]) Log[xmuR^2/(xa + xb -1)] (-logXV)
+                   +(alphas beta0 RadsNNLLabl[lambda, alphas, a, b2]
+                     + lambda RadtNNNLLabl[lambda, alphas, a, b2]) logd2bar Log[xmuR^2/(xa + xb -1)] (-logXV));
 
         resNLL = leg1res + leg2res
       ];

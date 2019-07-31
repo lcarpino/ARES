@@ -97,7 +97,8 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
         Rs =  Rads[lambda, alphaS, xmuR, logXV, 1, dipoles, obsSC];
         Rhc = Radhc[lambda, alphaS, xmuR, logXV, 1, legs, obsSC];
         Rp =  RadpNLL[lambda, legs, obsSC];
-        Fnll = FNLL[Rp];
+        (* Fnll = FNLL[Rp]; *)
+        Fnll = 1;
   
         res = M3sq[xq, xqb] Exp[-Rs-Rhc] Fnll
       ]
