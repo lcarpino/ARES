@@ -97,9 +97,12 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
         Rs =  Rads[lambda, alphaS, xmuR, logXV, 1, dipoles, obsSC];
         Rhc = Radhc[lambda, alphaS, xmuR, logXV, 1, legs, obsSC];
         RpNLL =  RadpNLL[lambda, legs, obsSC];
-        RsNNLL = RadsNNLL[lambda, alphaS, legs, obsSC];
+        (* RsNNLL = RadsNNLL[lambda, alphaS, legs, obsSC]; *)
+        (*
         mFNLL = (FNLL[RpNLL] + alphaS beta0 FpNNLL[RpNLL, RsNNLL, alphaS] (-logXV)
                  + 1/2 (alphaS beta0)^2 FsNNNLL[RpNLL, RsNNLL, alphaS] (-logXV)^2);
+        *)
+        mFNLL = FNLL[RpNLL];
   
         res = M3sq[xq, xqb] Exp[-Rs-Rhc] mFNLL
       ]
@@ -147,8 +150,14 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
         Rs = Rads[lambda, alphaS, xmuR, logXV, 2, dipoles, obsSC];
         RsConst = Rads[0, alphaS, xmuR, logXV, 2, dipoles, obsSC];
         Rhc = Radhc[lambda, alphaS, xmuR, logXV, 2, legs, obsSC];
+
         RpNLL = RadpNLL[lambda, legs, obsSC];
-        mFNLL = FNLL[RpNLL];
+        RsNNLL = RadsNNLL[lambda, alphaS, legs, obsSC];
+        mFNLL = (FNLL[RpNLL]
+                  + alphaS beta0 lambda FpNNLL[RpNLL, RsNNLL, alphaS] Log[xmuR^2]
+                  + alphaS beta0 FpNNLL[RpNLL, RsNNLL, alphaS] (-logXV));
+
+
         mH1 = Virt3[xq, xqb]/M3sq[xq, xqb];
         mC1hc = C1hc[lambda, xq, xqb, legs, obsSC];
   
