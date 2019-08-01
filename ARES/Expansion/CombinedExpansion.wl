@@ -12,15 +12,15 @@
 
 BeginPackage["ARES`Expansion`CombinedExpansion`"]
 
-  H12bar::usage = ""
-  H11bar::usage = ""
-  H10bar::usage = ""
+  Hs12::usage = ""
+  Hs11::usage = ""
+  Hs10::usage = ""
 
-  H24bar::usage = ""
-  H23bar::usage = ""
-  H22bar::usage = ""
-  H21bar::usage = ""
-  H20bar::usage = ""
+  Hs24::usage = ""
+  Hs23::usage = ""
+  Hs22::usage = ""
+  Hs21::usage = ""
+  Hs20::usage = ""
 
   Begin["`Private`"]
 
@@ -34,33 +34,37 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     ExpOpts =
       {
         "Order" -> 2,
+        "xmuRvar" ->True,
         "xmuR" -> 1,
+        "logXVvar" -> True,
         "logXV" -> 0,
         "TransferFunctions" -> Identity,
         "RadiatorScheme" -> "Physical"
       };
 
-    Options[H12bar] = ExpOpts;
-    Options[H11bar] = ExpOpts;
-    Options[H10bar] = ExpOpts;
-    Options[H24bar] = ExpOpts;
-    Options[H23bar] = ExpOpts;
-    Options[H22bar] = ExpOpts;
-    Options[H21bar] = ExpOpts;
-    Options[H20bar] = ExpOpts;
+    Options[Hs12] = ExpOpts;
+    Options[Hs11] = ExpOpts;
+    Options[Hs10] = ExpOpts;
+    Options[Hs24] = ExpOpts;
+    Options[Hs23] = ExpOpts;
+    Options[Hs22] = ExpOpts;
+    Options[Hs21] = ExpOpts;
+    Options[Hs20] = ExpOpts;
 
-    H12bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+    Hs12[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order = OptionValue["Order"],
-          xmuR  = OptionValue["xmuR"],
-          logXV = OptionValue["logXV"],
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
           TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, nlegs, dipoles, ndipoles, xq, xqb,
           mG12,
           mHs12, mHs12bar, mHs12hat, mHs12bh,
-          res
+          mCoeff, res
         },
 
         xq       = Event["xq"];
@@ -84,22 +88,36 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         (* Barred and Hatted expansion *)
         mHs12bh  = mHs12;
   
-        res = M3sq[xq, xqb] mHs12bh
+
+        Which[
+          ((xmuRvar == True) && (logXVvar == True)),
+            mCoeff = mHs12bh,
+          ((xmuRvar == True) && (logXVvar == False)),
+            mCoeff = mHs12bar,
+          ((xmuRvar == False) && (logXVvar == True)),
+            mCoeff = mHs12hat,
+          ((xmuRvar == False) && (logXVvar == False)),
+            mCoeff = mHs12
+        ];
+
+        res = M3sq[xq, xqb] mCoeff
       ]
  
-    H11bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+    Hs11[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order = OptionValue["Order"],
-          xmuR  = OptionValue["xmuR"],
-          logXV = OptionValue["logXV"],
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
           TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, nlegs, dipoles, ndipoles, xq, xqb,
           mG12, mG11, mH11,
           mHs12, mHs12bar, mHs12hat, mHs12bh,
           mHs11, mHs11bar, mHs11hat, mHs11bh,
-          res
+          mCoeff, res
         },
   
         xq       = Event["xq"];
@@ -136,15 +154,29 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         mHs12bh  = mHs12;
         mHs11bh  = mHs11 + 2 mHs12 (-logXV);
 
-        res = M3sq[xq, xqb] mHs11bh
+
+        Which[
+          ((xmuRvar == True) && (logXVvar == True)),
+            mCoeff = mHs11bh,
+          ((xmuRvar == True) && (logXVvar == False)),
+            mCoeff = mHs11bar,
+          ((xmuRvar == False) && (logXVvar == True)),
+            mCoeff = mHs11hat,
+          ((xmuRvar == False) && (logXVvar == False)),
+            mCoeff = mHs11
+        ];
+
+        res = M3sq[xq, xqb] mCoeff
       ]
 
-    H10bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+    Hs10[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order = OptionValue["Order"],
-          xmuR  = OptionValue["xmuR"],
-          logXV = OptionValue["logXV"],
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
           TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, nlegs, dipoles, ndipoles, xq, xqb,
@@ -155,7 +187,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           mHs12, mHs12bar, mHs12hat, mHs12bh,
           mHs11, mHs11bar, mHs11hat, mHs11bh,
           mHs10, mHs10bar, mHs10hat, mHs10bh,
-          res
+          mCoeff, res
         },
 
         xq       = Event["xq"];
@@ -227,15 +259,29 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         mHs11bh  = mHs11 + 2 mHs12 (-logXV);
         mHs10bh  = mHs10 + mHs11 (-logXV) + mHs12 (-logXV)^2;
 
-        res = M3sq[xq, xqb] mHs10bh
+
+        Which[
+          ((xmuRvar == True) && (logXVvar == True)),
+            mCoeff = mHs10bh,
+          ((xmuRvar == True) && (logXVvar == False)),
+            mCoeff = mHs10bar,
+          ((xmuRvar == False) && (logXVvar == True)),
+            mCoeff = mHs10hat,
+          ((xmuRvar == False) && (logXVvar == False)),
+            mCoeff = mHs10
+        ];
+
+        res = M3sq[xq, xqb] mCoeff
       ]
 
-    H24bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+    Hs24[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order = OptionValue["Order"],
-          xmuR  = OptionValue["xmuR"],
-          logXV = OptionValue["logXV"],
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
           TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, nlegs, dipoles, ndipoles, xq, xqb,
@@ -244,7 +290,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           mHs11, mHs11bar, mHs11hat, mHs11bh,
           mHs10, mHs10bar, mHs10hat, mHs10bh,
           mHs24, mHs24bar, mHs24hat, mHs24bh,
-          res
+          mCoeff, res
         },
   
         xq       = Event["xq"];
@@ -269,15 +315,29 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         mHs12bh  = mHs12;
         mHs24bh  = mHs24;
 
-        res = M3sq[xq, xqb] mHs24bh
+
+        Which[
+          ((xmuRvar == True) && (logXVvar == True)),
+            mCoeff = mHs24bh,
+          ((xmuRvar == True) && (logXVvar == False)),
+            mCoeff = mHs24bar,
+          ((xmuRvar == False) && (logXVvar == True)),
+            mCoeff = mHs24hat,
+          ((xmuRvar == False) && (logXVvar == False)),
+            mCoeff = mHs24
+        ];
+
+        res = M3sq[xq, xqb] mCoeff
       ]
 
-    H23bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+    Hs23[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order = OptionValue["Order"],
-          xmuR  = OptionValue["xmuR"],
-          logXV = OptionValue["logXV"],
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
           TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, nlegs, dipoles, ndipoles, xq, xqb,
@@ -287,7 +347,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           mHs10, mHs10bar, mHs10hat, mHs10bh,
           mHs24, mHs24bar, mHs24hat, mHs24bh,
           mHs23, mHs23bar, mHs23hat, mHs23bh,
-          res
+          mCoeff, res
         },
 
         xq       = Event["xq"];
@@ -334,15 +394,29 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         mHs24bh  = mHs24;
         mHs23bh  = mHs23 + 4 mHs24 (-logXV);
 
-        res = M3sq[xq, xqb] mHs23bh
+
+        Which[
+          ((xmuRvar == True) && (logXVvar == True)),
+            mCoeff = mHs23bh,
+          ((xmuRvar == True) && (logXVvar == False)),
+            mCoeff = mHs23bar,
+          ((xmuRvar == False) && (logXVvar == True)),
+            mCoeff = mHs23hat,
+          ((xmuRvar == False) && (logXVvar == False)),
+            mCoeff = mHs23
+        ];
+
+        res = M3sq[xq, xqb] mCoeff
       ]
 
-    H22bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+    Hs22[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order = OptionValue["Order"],
-          xmuR  = OptionValue["xmuR"],
-          logXV = OptionValue["logXV"],
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
           TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, nlegs, dipoles, ndipoles, xq, xqb,
@@ -363,7 +437,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           mHs24, mHs24bar, mHs24hat, mHs24bh,
           mHs23, mHs23bar, mHs23hat, mHs23bh,
           mHs22, mHs22bar, mHs22hat, mHs22bh,
-          res
+          mCoeff, res
         },
   
         xq       = Event["xq"];
@@ -479,15 +553,29 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         mHs23bh  = mHs23 + 4 mHs24 (-logXV);
         mHs22bh  = mHs22 + 3 mHs23 (-logXV) + 6 mHs24 (-logXV)^2 + 2 Pi beta0 mG12.mlogXab;
 
-        res = M3sq[xq, xqb] mHs22bh
+
+        Which[
+          ((xmuRvar == True) && (logXVvar == True)),
+            mCoeff = mHs22bh,
+          ((xmuRvar == True) && (logXVvar == False)),
+            mCoeff = mHs22bar,
+          ((xmuRvar == False) && (logXVvar == True)),
+            mCoeff = mHs22hat,
+          ((xmuRvar == False) && (logXVvar == False)),
+            mCoeff = mHs22
+        ];
+
+        res = M3sq[xq, xqb] mCoeff
       ]
 
-    H21bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+    Hs21[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order = OptionValue["Order"],
-          xmuR  = OptionValue["xmuR"],
-          logXV = OptionValue["logXV"],
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
           TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, nlegs, dipoles, ndipoles, xq, xqb,
@@ -507,7 +595,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           mHs23, mHs23bar, mHs23hat, mHs23bh,
           mHs22, mHs22bar, mHs22hat, mHs22bh,
           mHs21, mHs21bar, mHs21hat, mHs21bh,
-          res
+          mCoeff, res
         },
 
         xq       = Event["xq"];
@@ -646,15 +734,29 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         mHs21bh  = mHs21 + 2 mHs22 (-logXV) + 3 mHs23 (-logXV)^2 + 4 mHs24 (-logXV)^3 \
                          + 2 Pi beta0 (mG11.mlogXab + 2 mG12.mlogXab (-logXV) + mH11.mlogXl);
 
-        res = M3sq[xq, xqb] mHs21bh
+
+        Which[
+          ((xmuRvar == True) && (logXVvar == True)),
+            mCoeff = mHs21bh,
+          ((xmuRvar == True) && (logXVvar == False)),
+            mCoeff = mHs21bar,
+          ((xmuRvar == False) && (logXVvar == True)),
+            mCoeff = mHs21hat,
+          ((xmuRvar == False) && (logXVvar == False)),
+            mCoeff = mHs21
+        ];
+
+        res = M3sq[xq, xqb] mCoeff
       ]
 
-    H20bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+    Hs20[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order = OptionValue["Order"],
-          xmuR  = OptionValue["xmuR"],
-          logXV = OptionValue["logXV"],
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
           TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, nlegs, dipoles, ndipoles, xq, xqb,
@@ -675,7 +777,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           mHs22, mHs22bar, mHs22hat, mHs22bh,
           mHs21, mHs21bar, mHs21hat, mHs21bh,
           mHs20, mHs20bar, mHs20hat, mHs20bh,
-          res
+          mCoeff, res
         },
 
         xq       = Event["xq"];
@@ -820,7 +922,19 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
                          + 2 Pi beta0 (mG10.mlogXab + 1 mG11.mlogXab (-logXV) + 1 mG12.mlogXab (-logXV)^2  \
                                       + mH10.mlogXl + 1 mH11.mlogXl (-logXV));
 
-        res = M3sq[xq, xqb] mHs20bh
+
+        Which[
+          ((xmuRvar == True) && (logXVvar == True)),
+            mCoeff = mHs20bh,
+          ((xmuRvar == True) && (logXVvar == False)),
+            mCoeff = mHs20bar,
+          ((xmuRvar == False) && (logXVvar == True)),
+            mCoeff = mHs20hat,
+          ((xmuRvar == False) && (logXVvar == False)),
+            mCoeff = mHs20
+        ];
+
+        res = M3sq[xq, xqb] mCoeff
       ]
 
   End[]
