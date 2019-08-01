@@ -83,7 +83,7 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
           TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, dipoles, xq, xqb,
-          lambda, Rs, Rhc, Rp, mFNLL,
+          lambda, Rs, Rhc, RpNLL, RsNNLL, mFNLL,
           res
         },
   
@@ -96,11 +96,12 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
   
         Rs =  Rads[lambda, alphaS, xmuR, logXV, 1, dipoles, obsSC];
         Rhc = Radhc[lambda, alphaS, xmuR, logXV, 1, legs, obsSC];
-        Rp =  RadpNLL[lambda, legs, obsSC];
-        (* Fnll = FNLL[Rp]; *)
-        Fnll = 1;
+        RpNLL =  RadpNLL[lambda, legs, obsSC];
+        RsNNLL = RadsNNLL[lambda, alphaS, legs, obsSC];
+        mFNLL = (FNLL[RpNLL] + alphaS beta0 FpNNLL[RpNLL, RsNNLL, alphaS] (-logXV)
+                 + 1/2 (alphaS beta0)^2 FsNNNLL[RpNLL, RsNNLL, alphaS] (-logXV)^2);
   
-        res = M3sq[xq, xqb] Exp[-Rs-Rhc] Fnll
+        res = M3sq[xq, xqb] Exp[-Rs-Rhc] mFNLL
       ]
 
 

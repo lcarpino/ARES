@@ -17,6 +17,8 @@ BeginPackage["ARES`MultipleEmission`AdditiveInterface`",
   }]
 
   FNLL::usage = ""
+  FpNNLL::usage = ""
+  FsNNNLL::usage = ""
   dFsc::usage = ""
   dFrec::usage = ""
   dFhc::usage = ""
@@ -32,6 +34,11 @@ BeginPackage["ARES`MultipleEmission`AdditiveInterface`",
     FNLL[RpNLL_?NumericQ] :=
       Exp[-EulerGamma RpNLL]/Gamma[1 + RpNLL]
 
+    FpNNLL[RpNLL_?NumericQ, RsNNLL_?NumericQ, AlphaS_?NumericQ] :=
+      -FNLL[RpNLL] RsNNLL/(AlphaS beta0) (PolyGamma[0, 1 + RpNLL] + EulerGamma)
+
+    FsNNNLL[RpNLL_?NumericQ, RsNNLL_?NumericQ, AlphaS_?NumericQ] :=
+      (FNLL[RpNLL] (RsNNLL/(AlphaS beta0))^2 ((PolyGamma[0, 1 + RpNLL] + EulerGamma)^2 - PolyGamma[1, 1 + RpNLL]))
 
     (* FNNLL *)
 

@@ -416,7 +416,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
               mH10   = ConstantArray[0, nlegs],
               mH22   = H22[legs, obsSC],
     
-              mF22    = 0 (* FNLL22[RpNLL11] *),
+              mF22    = FNLL22[RpNLL11],
     
               mH1     = 0,
               mC1hc10 = 0,
@@ -437,7 +437,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
               mH10   = ConstantArray[0, nlegs],
               mH22   = H22[legs, obsSC],
     
-              mF22    = 0 (* FNLL22[RpNLL11] *),
+              mF22    = FNLL22[RpNLL11],
     
               mH1     = Virt3[xq, xqb],
               mC1hc10 = C1hc10[legs, obsSC, xq, xqb],
@@ -566,7 +566,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
               mH22   = H22[legs, obsSC],
               mH21   = ConstantArray[0, nlegs],
     
-              mF22    = 0 (* FNLL22[RpNLL11] *),
+              mF22    = FNLL22[RpNLL11],
     
               mH1     = 0,
               mC1hc10 = 0,
@@ -591,7 +591,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
               mH22   = H22[legs, obsSC],
               mH21   = H21[legs, obsSC],
     
-              mF22    = 0 (* FNLL22[RpNLL11] *),
+              mF22    = FNLL22[RpNLL11],
     
               mH1     = Virt3[xq, xqb],
               mC1hc10 = C1hc10[legs, obsSC, xq, xqb],
@@ -734,7 +734,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
               mH22   = H22[legs, obsSC],
               mH21   = ConstantArray[0, nlegs],
     
-              mF22    = 0 (* FNLL22[RpNLL11] *),
+              mF22    = FNLL22[RpNLL11],
     
               mH1     = 0,
               mC1hc10 = 0,
@@ -759,7 +759,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
               mH22   = H22[legs, obsSC],
               mH21   = H21[legs, obsSC],
     
-              mF22    = 0 (* FNLL22[RpNLL11] *),
+              mF22    = FNLL22[RpNLL11],
     
               mH1     = Virt3[xq, xqb],
               mC1hc10 = C1hc10[legs, obsSC, xq, xqb],
