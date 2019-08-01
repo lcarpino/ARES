@@ -12,13 +12,13 @@
 
 BeginPackage["ARES`Observables`ObservableBuilder`"]
 
-  InitialiseObservable::usage = ""
+  BuildObservable::usage = ""
 
   Begin["`Private`"]
     Needs["ARES`Observables`DParameter`Initialise`"];
     Needs["ARES`Observables`CParameter`Initialise`"];
 
-    InitialiseObservable[Observable_] :=
+    BuildObservable[Observable_] :=
       Module[
         {},
 
