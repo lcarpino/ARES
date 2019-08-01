@@ -268,13 +268,22 @@ BeginPackage["ARES`Radiator`SoftRadiator`", "ARES`QCD`Constants`"]
     ]
     *)
 
+  RadsOpts =
+    {
+      "RadiatorScheme" -> "Physical"
+    };
+
+  Options[Rads]   = RadsOpts;
+  Options[Radsab] = RadsOpts;
+
   (* full soft radiator *)
 
   Radsab[lambda_, alphas_, xmuR_, logXV_, order_?IntegerQ,
-         dip_?AssociationQ, obspar_?AssociationQ] :=
+         dip_?AssociationQ, obspar_?AssociationQ, OptionsPattern[]] :=
 
     Module[
       {
+        RadiatorScheme = OptionValue["RadiatorScheme"],
         a, b1, b2,
         xa, xb,
         logd1bar, logd2bar, log2d1bar, log2d2bar,
@@ -379,6 +388,17 @@ BeginPackage["ARES`Radiator`SoftRadiator`", "ARES`QCD`Constants`"]
           (* XV scale variations of RpNLL *)
           + RadsNNLLabl[lambda, alphas, a, b2] logd2bar (-logXV));
 
+
+          (*
+          (* Radiator scheme choice *)
+          If[ RadiatorScheme == "ConstantFree",
+            leg1res = (leg1res - RadsNNLLabl[0, alphas, a, b1]/2 log2d1bar
+                               - RadsNNLLabl[0, alphas, a, b1] logd1bar (-logXV));
+            leg2res = (leg2res - RadsNNLLabl[0, alphas, a, b2]/2 log2d2bar
+                               - RadsNNLLabl[0, alphas, a, b2] logd2bar (-logXV));
+          ];
+          *)
+
         resNNLL = leg1res + leg2res
       ];
 
@@ -388,8 +408,8 @@ BeginPackage["ARES`Radiator`SoftRadiator`", "ARES`QCD`Constants`"]
 
 
   Rads[lambda_?NumericQ, alphas_?NumericQ, xmuR_?NumericQ, logXV_?NumericQ,
-       order_?IntegerQ, dips_?ListQ, obspar_?AssociationQ] :=
-    Total[Map[Radsab[lambda, alphas, xmuR, logXV, order, #, obspar] &, dips]];
+       order_?IntegerQ, dips_?ListQ, obspar_?AssociationQ, Opts: OptionsPattern[]] :=
+    Total[Map[Radsab[lambda, alphas, xmuR, logXV, order, #, obspar, Opts] &, dips]];
 
   End[]
 EndPackage[]

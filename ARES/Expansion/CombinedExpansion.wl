@@ -181,7 +181,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, nlegs, dipoles, ndipoles, xq, xqb,
           mG12, mG11, mG10, mH11, mH10,
-          mH1, mC1hc10,
+          mH1, mC1hc10, mRs10,
           mIsc, mIrec, mIhc, mIwa, mIcorrel, mIclust,
           RpNLL11, mFrec10, mFwa10, mF10,
           mHs12, mHs12bar, mHs12hat, mHs12bh,
@@ -215,8 +215,9 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
               mH11   = ConstantArray[0, nlegs],
               mH10   = ConstantArray[0, nlegs],
               mH1     = 0,
-              mF10    = 0,
-              mC1hc10 = 0
+              mC1hc10 = 0,
+              mRs10   = 0,
+              mF10    = 0
             },
           Order == 1,
             {
@@ -226,26 +227,39 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
               mH11   = H11[legs, obsSC],
               mH10   = ConstantArray[0, nlegs],
               mH1     = 0,
-              mF10    = 0,
-              mC1hc10 = 0
+              mC1hc10 = 0,
+              mRs10   = 0,
+              mF10    = 0
             },
           Order >= 2,
             {
               mG12   = G12[dipoles, obsSC],
               mG11   = G11[dipoles, obsSC],
-              mG10   = G10[dipoles, obsSC],
+              mG10   = Which[
+                         RadiatorScheme == "Physical",
+                           G10[dipoles, obsSC, {"RadiatorScheme" -> "Physical"}],
+                         RadiatorScheme == "ConstantFree",
+                           G10[dipoles, obsSC, {"RadiatorScheme" -> "ConstantFree"}]
+                       ],
               mH11   = H11[legs, obsSC],
               mH10   = ConstantArray[0, nlegs],
               mH1     = Virt3[xq, xqb],
+              mC1hc10 = C1hc10[legs, obsSC, xq, xqb],
+              mRs10 = Which[
+                        RadiatorScheme == "Physical",
+                          0,
+                        RadiatorScheme == "ConstantFree",
+                          Total[G10[dipoles, obsSC]]
+                      ],
               mF10    = (Frec10[RpNLL11, legs, obsSC, mIrecl]
-                         + Fwa10[RpNLL11, dipoles, obsSC, mIwaab]),
-              mC1hc10 = C1hc10[legs, obsSC, xq, xqb]
+                         + Fwa10[RpNLL11, dipoles, obsSC, mIwaab])
+
             }
         ];
   
         mHs12 = Total[mG12];
         mHs11 = Total[mG11] + Total[mH11];
-        mHs10 = Total[mG10] + Total[mH10] + mC1hc10 + mF10 + mH1/M3sq[xq, xqb];
+        mHs10 = Total[mG10] + Total[mH10] + mC1hc10 + mF10 + mRs10 + mH1/M3sq[xq, xqb];
 
         mHs12bar = mHs12;
         mHs11bar = mHs11;
@@ -424,7 +438,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           mG21, mG22, mG23,
           mH10, mH11,
           mH21, mH22,
-          mH1, mC1hc10,
+          mH1, mC1hc10, mRs10,
           RpNLL11,
           mF11, mF22,
           mIsc, mIrec, mIhc, mIwa, mIcorrel, mIclust,
@@ -473,6 +487,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     
               mH1     = 0,
               mC1hc10 = 0,
+              mRs10   = 0,
               mF10    = 0,
 
               mlogXab = LogXdipoles[dipoles, xmuR],
@@ -494,6 +509,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     
               mH1     = 0,
               mC1hc10 = 0,
+              mRs10   = 0,
               mF10    = 0,
 
               mlogXab = LogXdipoles[dipoles, xmuR],
@@ -503,7 +519,12 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
             {
               mG12   = G12[dipoles, obsSC],
               mG11   = G11[dipoles, obsSC],
-              mG10   = G10[dipoles, obsSC],
+              mG10   = Which[
+                         RadiatorScheme == "Physical",
+                           G10[dipoles, obsSC, {"RadiatorScheme" -> "Physical"}],
+                         RadiatorScheme == "ConstantFree",
+                           G10[dipoles, obsSC, {"RadiatorScheme" -> "ConstantFree"}]
+                       ],
               mG23   = G23[dipoles, obsSC],
               mG22   = G22[dipoles, obsSC],
     
@@ -515,8 +536,15 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     
               mH1     = Virt3[xq, xqb],
               mC1hc10 = C1hc10[legs, obsSC, xq, xqb],
+              mRs10 = Which[
+                        RadiatorScheme == "Physical",
+                          0,
+                        RadiatorScheme == "ConstantFree",
+                          Total[G10[dipoles, obsSC]]
+                      ],
               mF10    = (Frec10[RpNLL11, legs, obsSC, mIrecl]
                          + Fwa10[RpNLL11, dipoles, obsSC, mIwaab]),
+
 
               mlogXab = LogXdipoles[dipoles, xmuR],
               mlogXl  = LogXlegs[legs, xmuR]
@@ -525,11 +553,11 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
 
         mHs12 = Total[mG12];
         mHs11 = Total[mG11] + Total[mH11];
-        mHs10 = Total[mG10] + Total[mH10] + mC1hc10 + mF10 + mH1/M3sq[xq, xqb];
+        mHs10 = Total[mG10] + Total[mH10] + mC1hc10 + mRs10 + mF10 + mH1/M3sq[xq, xqb];
         mHs24 = Total[mG12]^2/2;
         mHs23 = Total[mG23] + Total[mG12] (Total[mG11] + Total[mH11]);
         mHs22 = Total[mG22] + Total[mH22] + mF22 \
-                + Total[mG12] (Total[mG10] + mC1hc10 + mF10 + mH1/M3sq[xq, xqb]) \
+                + Total[mG12] (Total[mG10] + mC1hc10 + mRs10 + mF10 + mH1/M3sq[xq, xqb]) \
                 + (Total[mG11] + Total[mH11])^2/2;
 
         mHs12bar = mHs12;
@@ -582,7 +610,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           mG10, mG11, mG12,
           mG21, mG22, mG23,
           mH11, mH10, mH21, mH22,
-          mH1, mC1hc10, mC1hc21, 
+          mH1, mC1hc10, mRs10, mC1hc21, 
           RpNLL11,
           mIsc, mIrec, mIhc, mIwa, mIcorrel, mIclust,
           mFrec10, mFwa10, mF10,
@@ -633,6 +661,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     
               mH1     = 0,
               mC1hc10 = 0,
+              mRs10   = 0,
               mC1hc21 = 0,
               mF10    = 0,
               mF21    = 0,
@@ -658,6 +687,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     
               mH1     = 0,
               mC1hc10 = 0,
+              mRs10   = 0,
               mC1hc21 = 0,
               mF10    = 0,
               mF21    = 0,
@@ -669,7 +699,12 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
             {
               mG12   = G12[dipoles, obsSC],
               mG11   = G11[dipoles, obsSC],
-              mG10   = G10[dipoles, obsSC],
+              mG10   = Which[
+                         RadiatorScheme == "Physical",
+                           G10[dipoles, obsSC, {"RadiatorScheme" -> "Physical"}],
+                         RadiatorScheme == "ConstantFree",
+                           G10[dipoles, obsSC, {"RadiatorScheme" -> "ConstantFree"}]
+                       ],
               mG23   = G23[dipoles, obsSC],
               mG22   = G22[dipoles, obsSC],
               mG21   = G21[dipoles, obsSC],
@@ -683,6 +718,12 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     
               mH1     = Virt3[xq, xqb],
               mC1hc10 = C1hc10[legs, obsSC, xq, xqb],
+              mRs10 = Which[
+                        RadiatorScheme == "Physical",
+                          0,
+                        RadiatorScheme == "ConstantFree",
+                          Total[G10[dipoles, obsSC]]
+                      ],
               mC1hc21 = C1hc21[legs, obsSC, xq, xqb],
               mF10    = (  Frec10[RpNLL11, legs, obsSC, mIrecl]
                          + Fwa10[RpNLL11, dipoles, obsSC, mIwaab]),
@@ -700,14 +741,14 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
 
         mHs12 = Total[mG12];
         mHs11 = Total[mG11] + Total[mH11];
-        mHs10 = Total[mG10] + Total[mH10] + mC1hc10 + mF10 + mH1/M3sq[xq, xqb];
+        mHs10 = Total[mG10] + Total[mH10] + mC1hc10 + mRs10 + mF10 + mH1/M3sq[xq, xqb];
         mHs24 = Total[mG12]^2/2;
         mHs23 = Total[mG23] + Total[mG12] (Total[mG11] + Total[mH11]);
         mHs22 = Total[mG22] + Total[mH22] + mF22 \
-                + Total[mG12] (Total[mG10] + mC1hc10 + mF10 + mH1/M3sq[xq, xqb]) \
+                + Total[mG12] (Total[mG10] + mC1hc10 + mRs10 + mF10 + mH1/M3sq[xq, xqb]) \
                 + (Total[mG11] + Total[mH11])^2/2;
         mHs21 = Total[mG21] + Total[mH21] + mC1hc21 + mF21 \
-                + (Total[mG11] + Total[mH11]) (Total[mG10] + mC1hc10 + mF10 + mH1/M3sq[xq, xqb]);
+                + (Total[mG11] + Total[mH11]) (Total[mG10] + mC1hc10 + mRs10 + mF10 + mH1/M3sq[xq, xqb]);
 
         mHs12bar = mHs12;
         mHs11bar = mHs11;
@@ -763,7 +804,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           mG10, mG11, mG12,
           mG21, mG22, mG23,
           mH11, mH10, mH21, mH22,
-          mH1, mC1hc10, mC1hc21, 
+          mH1, mC1hc10, mRs10, mC1hc21, 
           RpNLL11,
           mIsc, mIrec, mIhc, mIwa, mIcorrel, mIclust,
           mFrec10, mFwa10, mF10,
@@ -815,6 +856,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     
               mH1     = 0,
               mC1hc10 = 0,
+              mRs10   = 0,
               mC1hc21 = 0,
               mF10    = 0,
               mF21    = 0,
@@ -840,6 +882,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     
               mH1     = 0,
               mC1hc10 = 0,
+              mRs10   = 0,
               mC1hc21 = 0,
               mF10    = 0,
               mF21    = 0,
@@ -851,7 +894,12 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
             {
               mG12   = G12[dipoles, obsSC],
               mG11   = G11[dipoles, obsSC],
-              mG10   = G10[dipoles, obsSC],
+              mG10   = Which[
+                         RadiatorScheme == "Physical",
+                           G10[dipoles, obsSC, {"RadiatorScheme" -> "Physical"}],
+                         RadiatorScheme == "ConstantFree",
+                           G10[dipoles, obsSC, {"RadiatorScheme" -> "ConstantFree"}]
+                       ],
               mG23   = G23[dipoles, obsSC],
               mG22   = G22[dipoles, obsSC],
               mG21   = G21[dipoles, obsSC],
@@ -865,6 +913,12 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     
               mH1     = Virt3[xq, xqb],
               mC1hc10 = C1hc10[legs, obsSC, xq, xqb],
+              mRs10 = Which[
+                        RadiatorScheme == "Physical",
+                          0,
+                        RadiatorScheme == "ConstantFree",
+                          Total[G10[dipoles, obsSC]]
+                      ],
               mC1hc21 = C1hc21[legs, obsSC, xq, xqb],
               mF10    = (  Frec10[RpNLL11, legs, obsSC, mIrecl]
                          + Fwa10[RpNLL11, dipoles, obsSC, mIwaab]),
@@ -882,15 +936,15 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
 
         mHs12 = Total[mG12];
         mHs11 = Total[mG11] + Total[mH11];
-        mHs10 = Total[mG10] + Total[mH10] + mC1hc10 + mF10 + mH1/M3sq[xq, xqb];
+        mHs10 = Total[mG10] + Total[mH10] + mC1hc10 + mRs10 + mF10 + mH1/M3sq[xq, xqb];
         mHs24 = Total[mG12]^2/2;
         mHs23 = Total[mG23] + Total[mG12] (Total[mG11] + Total[mH11]);
         mHs22 = Total[mG22] + Total[mH22] + mF22 \
-                + Total[mG12] (Total[mG10] + mC1hc10 + mF10 + mH1/M3sq[xq, xqb]) \
+                + Total[mG12] (Total[mG10] + mC1hc10 + mRs10 + mF10 + mH1/M3sq[xq, xqb]) \
                 + (Total[mG11] + Total[mH11])^2/2;
         mHs21 = Total[mG21] + Total[mH21] + mC1hc21 + mF21 \
-                + (Total[mG11] + Total[mH11]) (Total[mG10] + mC1hc10 + mF10 + mH1/M3sq[xq, xqb]);
-        mHs20 = Total[mG10]^2/2 + Total[mG10] (Total[mG10] + mC1hc10 + mF10 + mH1/M3sq[xq, xqb]);
+                + (Total[mG11] + Total[mH11]) (Total[mG10] + mC1hc10 + mRs10 + mF10 + mH1/M3sq[xq, xqb]);
+        mHs20 = Total[mG10]^2/2 + Total[mG10] (Total[mG10] + mC1hc10 + mRs10 + mF10 + mH1/M3sq[xq, xqb]);
 
         mHs12bar = mHs12;
         mHs11bar = mHs11;
