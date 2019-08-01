@@ -12,15 +12,15 @@
 
 BeginPackage["ARES`Expansion`CombinedExpansion`"]
 
-  H12bar::usage = ""
-  H11bar::usage = ""
-  H10bar::usage = ""
+  Hs12::usage = ""
+  Hs11::usage = ""
+  Hs10::usage = ""
 
-  H24bar::usage = ""
-  H23bar::usage = ""
-  H22bar::usage = ""
-  H21bar::usage = ""
-  H20bar::usage = ""
+  Hs24::usage = ""
+  Hs23::usage = ""
+  Hs22::usage = ""
+  Hs21::usage = ""
+  Hs20::usage = ""
 
   Begin["`Private`"]
 
@@ -34,109 +34,168 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     ExpOpts =
       {
         "Order" -> 2,
+        "xmuRvar" ->True,
         "xmuR" -> 1,
+        "logXVvar" -> True,
         "logXV" -> 0,
         "TransferFunctions" -> Identity,
         "RadiatorScheme" -> "Physical"
       };
 
-    Options[H12bar] = ExpOpts;
-    Options[H11bar] = ExpOpts;
-    Options[H10bar] = ExpOpts;
-    Options[H24bar] = ExpOpts;
-    Options[H23bar] = ExpOpts;
-    Options[H22bar] = ExpOpts;
-    Options[H21bar] = ExpOpts;
-    Options[H20bar] = ExpOpts;
+    Options[Hs12] = ExpOpts;
+    Options[Hs11] = ExpOpts;
+    Options[Hs10] = ExpOpts;
+    Options[Hs24] = ExpOpts;
+    Options[Hs23] = ExpOpts;
+    Options[Hs22] = ExpOpts;
+    Options[Hs21] = ExpOpts;
+    Options[Hs20] = ExpOpts;
 
-    H12bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+    Hs12[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order = OptionValue["Order"],
-          xmuR  = OptionValue["xmuR"],
-          logXV = OptionValue["logXV"],
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
           TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
-          legs, dipoles, xq, xqb,
-          mG12, mH12,
-          mH12bar
+          legs, nlegs, dipoles, ndipoles, xq, xqb,
+          mG12,
+          mHs12, mHs12bar, mHs12hat, mHs12bh,
+          mCoeff, res
         },
 
-        xq      = Event["xq"];
-        xqb     = Event["xqb"];
-        legs    = Event["legs"];
-        dipoles = Event["dipoles"];
+        xq       = Event["xq"];
+        xqb      = Event["xqb"];
+        legs     = Event["legs"];
+        nlegs    = Length[legs];
+        dipoles  = Event["dipoles"];
+        ndipoles = Length[dipoles];
   
-        rmG12 = G12[dipoles, obsSC];
+        mG12 = G12[dipoles, obsSC];
   
-        mH12 = M3sq[xq, xqb] rmG12;
-        mH12bar = mH12;
+        (* Standard expansion *)
+        mHs12 = Total[mG12];
+
+        (* Barred expansion*)
+        mHs12bar = mHs12;
+
+        (* Hatted expansion *)
+        mHs12hat = mHs12;
+
+        (* Barred and Hatted expansion *)
+        mHs12bh  = mHs12;
   
-        mH12bar
+
+        Which[
+          ((xmuRvar == True) && (logXVvar == True)),
+            mCoeff = mHs12bh,
+          ((xmuRvar == True) && (logXVvar == False)),
+            mCoeff = mHs12bar,
+          ((xmuRvar == False) && (logXVvar == True)),
+            mCoeff = mHs12hat,
+          ((xmuRvar == False) && (logXVvar == False)),
+            mCoeff = mHs12
+        ];
+
+        res = M3sq[xq, xqb] mCoeff
       ]
  
-    H11bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+    Hs11[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order = OptionValue["Order"],
-          xmuR  = OptionValue["xmuR"],
-          logXV = OptionValue["logXV"],
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
           TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
-          legs, dipoles, xq, xqb,
-          rmG12, rmG11, rmH11,
-          mH12, mH11,
-          mH11bar
+          legs, nlegs, dipoles, ndipoles, xq, xqb,
+          mG12, mG11, mH11,
+          mHs12, mHs12bar, mHs12hat, mHs12bh,
+          mHs11, mHs11bar, mHs11hat, mHs11bh,
+          mCoeff, res
         },
   
-        xq      = Event["xq"];
-        xqb     = Event["xqb"];
-        legs    = Event["legs"];
-        dipoles = Event["dipoles"];
+        xq       = Event["xq"];
+        xqb      = Event["xqb"];
+        legs     = Event["legs"];
+        nlegs    = Length[legs];
+        dipoles  = Event["dipoles"];
+        ndipoles = Length[dipoles];
 
         Which[
           Order == 0,
             {
-              rmG12 = G12[dipoles, obsSC],
-              rmG11 = 0,
-              rmH11 = 0
+              mG12 = G12[dipoles, obsSC],
+              mG11 = ConstantArray[0, ndipoles],
+              mH11 = ConstantArray[0, nlegs]
             },
           Order >= 1,
             {
-              rmG12 = G12[dipoles, obsSC],
-              rmG11 = G11[dipoles, obsSC],
-              rmH11 = H11[legs, obsSC]
+              mG12 = G12[dipoles, obsSC],
+              mG11 = G11[dipoles, obsSC],
+              mH11 = H11[legs, obsSC]
             }
         ];
   
-        mH12 = M3sq[xq, xqb] rmG12;
-        mH11 = M3sq[xq, xqb] (rmG11 + rmH11);
-        mH11bar = mH11 - 2 mH12 logXV;
-  
-        mH11bar
+        mHs12 = Total[mG12];
+        mHs11 = Total[mG11] + Total[mH11];
+
+        mHs12bar = mHs12;
+        mHs11bar = mHs11;
+
+        mHs12hat = mHs12;
+        mHs11hat = mHs11 + 2 mHs12 (-logXV);
+
+        mHs12bh  = mHs12;
+        mHs11bh  = mHs11 + 2 mHs12 (-logXV);
+
+
+        Which[
+          ((xmuRvar == True) && (logXVvar == True)),
+            mCoeff = mHs11bh,
+          ((xmuRvar == True) && (logXVvar == False)),
+            mCoeff = mHs11bar,
+          ((xmuRvar == False) && (logXVvar == True)),
+            mCoeff = mHs11hat,
+          ((xmuRvar == False) && (logXVvar == False)),
+            mCoeff = mHs11
+        ];
+
+        res = M3sq[xq, xqb] mCoeff
       ]
 
-    H10bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+    Hs10[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order = OptionValue["Order"],
-          xmuR  = OptionValue["xmuR"],
-          logXV = OptionValue["logXV"],
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
           TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
-          legs, dipoles, xq, xqb,
-          rmG12, rmG11, rmG10, rmH11, rmH10,
-          mH1, mC1hc10,
+          legs, nlegs, dipoles, ndipoles, xq, xqb,
+          mG12, mG11, mG10, mH11, mH10,
+          mH1, mC1hc10, mRs10,
           mIsc, mIrec, mIhc, mIwa, mIcorrel, mIclust,
           RpNLL11, mFrec10, mFwa10, mF10,
-          mH12, mH11, mH10,
-          mH10bar
+          mHs12, mHs12bar, mHs12hat, mHs12bh,
+          mHs11, mHs11bar, mHs11hat, mHs11bh,
+          mHs10, mHs10bar, mHs10hat, mHs10bh,
+          mCoeff, res
         },
 
-        xq      = Event["xq"];
-        xqb     = Event["xqb"];
-        legs    = Event["legs"];
-        dipoles = Event["dipoles"];
+        xq       = Event["xq"];
+        xqb      = Event["xqb"];
+        legs     = Event["legs"];
+        nlegs    = Length[legs];
+        dipoles  = Event["dipoles"];
+        ndipoles = Length[dipoles];
  
         mIscl     = TransferFunctions["Iscl"];
         mIrecl    = TransferFunctions["Irecl"];
@@ -150,143 +209,257 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         Which[
           Order == 0,
             {
-              rmG12   = G12[dipoles, obsSC],
-              rmG11   = 0,
-              rmG10   = 0,
-              rmH11   = 0,
-              rmH10   = 0,
+              mG12   = G12[dipoles, obsSC],
+              mG11   = ConstantArray[0, ndipoles],
+              mG10   = ConstantArray[0, ndipoles],
+              mH11   = ConstantArray[0, nlegs],
+              mH10   = ConstantArray[0, nlegs],
               mH1     = 0,
-              mF10    = 0,
-              mC1hc10 = 0
+              mC1hc10 = 0,
+              mRs10   = 0,
+              mF10    = 0
             },
           Order == 1,
             {
-              rmG12   = G12[dipoles, obsSC],
-              rmG11   = G11[dipoles, obsSC],
-              rmG10   = 0,
-              rmH11   = H11[legs, obsSC],
-              rmH10   = 0,
+              mG12   = G12[dipoles, obsSC],
+              mG11   = G11[dipoles, obsSC],
+              mG10   = ConstantArray[0, ndipoles],
+              mH11   = H11[legs, obsSC],
+              mH10   = ConstantArray[0, nlegs],
               mH1     = 0,
-              mF10    = 0,
-              mC1hc10 = 0
+              mC1hc10 = 0,
+              mRs10   = 0,
+              mF10    = 0
             },
           Order >= 2,
             {
-              rmG12   = G12[dipoles, obsSC],
-              rmG11   = G11[dipoles, obsSC],
-              rmG10   = G10[dipoles, obsSC],
-              rmH11   = H11[legs, obsSC],
-              rmH10   = 0,
+              mG12   = G12[dipoles, obsSC],
+              mG11   = G11[dipoles, obsSC],
+              mG10   = Which[
+                         RadiatorScheme == "Physical",
+                           G10[dipoles, obsSC, {"RadiatorScheme" -> "Physical"}],
+                         RadiatorScheme == "ConstantFree",
+                           G10[dipoles, obsSC, {"RadiatorScheme" -> "ConstantFree"}]
+                       ],
+              mH11   = H11[legs, obsSC],
+              mH10   = ConstantArray[0, nlegs],
               mH1     = Virt3[xq, xqb],
+              mC1hc10 = C1hc10[legs, obsSC, xq, xqb],
+              mRs10 = Which[
+                        RadiatorScheme == "Physical",
+                          0,
+                        RadiatorScheme == "ConstantFree",
+                          Total[G10[dipoles, obsSC]]
+                      ],
               mF10    = (Frec10[RpNLL11, legs, obsSC, mIrecl]
-                         + Fwa10[RpNLL11, dipoles, obsSC, mIwaab]),
-              mC1hc10 = C1hc10[legs, obsSC, xq, xqb]
+                         + Fwa10[RpNLL11, dipoles, obsSC, mIwaab])
+
             }
         ];
   
-        mH12 = M3sq[xq, xqb] rmG12;
-        mH11 = M3sq[xq, xqb] (rmG11 + rmH11);
-        mH10 = M3sq[xq, xqb] (rmG10 + rmH10 + mC1hc10 + mF10) + mH1;
-        mH10bar = mH10 - mH11 logXV + mH12 logXV^2;
+        mHs12 = Total[mG12];
+        mHs11 = Total[mG11] + Total[mH11];
+        mHs10 = Total[mG10] + Total[mH10] + mC1hc10 + mF10 + mRs10 + mH1/M3sq[xq, xqb];
+
+        mHs12bar = mHs12;
+        mHs11bar = mHs11;
+        mHs10bar = mHs10;
+
+        mHs12hat = mHs12;
+        mHs11hat = mHs11 + 2 mHs12 (-logXV);
+        mHs10hat = mHs10 + mHs11 (-logXV) + mHs12 (-logXV)^2;
   
-        mH10bar
+        mHs12bh  = mHs12;
+        mHs11bh  = mHs11 + 2 mHs12 (-logXV);
+        mHs10bh  = mHs10 + mHs11 (-logXV) + mHs12 (-logXV)^2;
+
+
+        Which[
+          ((xmuRvar == True) && (logXVvar == True)),
+            mCoeff = mHs10bh,
+          ((xmuRvar == True) && (logXVvar == False)),
+            mCoeff = mHs10bar,
+          ((xmuRvar == False) && (logXVvar == True)),
+            mCoeff = mHs10hat,
+          ((xmuRvar == False) && (logXVvar == False)),
+            mCoeff = mHs10
+        ];
+
+        res = M3sq[xq, xqb] mCoeff
       ]
 
-    H24bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+    Hs24[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order = OptionValue["Order"],
-          xmuR  = OptionValue["xmuR"],
-          logXV = OptionValue["logXV"],
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
           TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
-          legs, dipoles, xq, xqb,
-          rmG12, mH24,
-          mH24bar
+          legs, nlegs, dipoles, ndipoles, xq, xqb,
+          mG12,
+          mHs12, mHs12bar, mHs12hat, mHs12bh,
+          mHs11, mHs11bar, mHs11hat, mHs11bh,
+          mHs10, mHs10bar, mHs10hat, mHs10bh,
+          mHs24, mHs24bar, mHs24hat, mHs24bh,
+          mCoeff, res
         },
   
-        xq      = Event["xq"];
-        xqb     = Event["xqb"];
-        legs    = Event["legs"];
-        dipoles = Event["dipoles"];
+        xq       = Event["xq"];
+        xqb      = Event["xqb"];
+        legs     = Event["legs"];
+        nlegs    = Length[legs];
+        dipoles  = Event["dipoles"];
+        ndipoles = Length[dipoles];
 
-        rmG12 = G12[dipoles, obsSC];
+        mG12 = G12[dipoles, obsSC];
   
-        mH24 = M3sq[xq, xqb] 1/2 rmG12^2;
-        mH24bar = mH24;
-  
-        mH24bar
+        (* Standard expansion *)
+        mHs12 = Total[mG12];
+        mHs24 = mHs12^2/2;
+
+        mHs12bar = mHs12;
+        mHs24bar = mHs24;
+
+        mHs12hat = mHs12;
+        mHs24hat = mHs24;
+
+        mHs12bh  = mHs12;
+        mHs24bh  = mHs24;
+
+
+        Which[
+          ((xmuRvar == True) && (logXVvar == True)),
+            mCoeff = mHs24bh,
+          ((xmuRvar == True) && (logXVvar == False)),
+            mCoeff = mHs24bar,
+          ((xmuRvar == False) && (logXVvar == True)),
+            mCoeff = mHs24hat,
+          ((xmuRvar == False) && (logXVvar == False)),
+            mCoeff = mHs24
+        ];
+
+        res = M3sq[xq, xqb] mCoeff
       ]
 
-    H23bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+    Hs23[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order = OptionValue["Order"],
-          xmuR  = OptionValue["xmuR"],
-          logXV = OptionValue["logXV"],
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
           TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
-          legs, dipoles, xq, xqb,
-          rmG11, rmG12, rmG23, rmH11,
-          mH24, mH23, mH23bar
+          legs, nlegs, dipoles, ndipoles, xq, xqb,
+          mG11, mG12, mG23, mH11,
+          mHs12, mHs12bar, mHs12hat, mHs12bh,
+          mHs11, mHs11bar, mHs11hat, mHs11bh,
+          mHs10, mHs10bar, mHs10hat, mHs10bh,
+          mHs24, mHs24bar, mHs24hat, mHs24bh,
+          mHs23, mHs23bar, mHs23hat, mHs23bh,
+          mCoeff, res
         },
 
-        xq      = Event["xq"];
-        xqb     = Event["xqb"];
-        legs    = Event["legs"];
-        dipoles = Event["dipoles"];
+        xq       = Event["xq"];
+        xqb      = Event["xqb"];
+        legs     = Event["legs"];
+        nlegs    = Length[legs];
+        dipoles  = Event["dipoles"];
+        ndipoles = Length[dipoles];
 
         Which[
           Order == 0,
             {
-              rmG12 = G12[dipoles, obsSC],
-              rmG11 = 0,
-              rmG23 = G23[dipoles, obsSC],
-              rmH11 = 0
+              mG12 = G12[dipoles, obsSC],
+              mG11 = ConstantArray[0, ndipoles],
+              mG23 = G23[dipoles, obsSC],
+              mH11 = ConstantArray[0, nlegs]
             },
           Order >= 1,
             {
-              rmG12 = G12[dipoles, obsSC],
-              rmG11 = G11[dipoles, obsSC],
-              rmG23 = G23[dipoles, obsSC],
-              rmH11 = H11[legs, obsSC]
+              mG12 = G12[dipoles, obsSC],
+              mG11 = G11[dipoles, obsSC],
+              mG23 = G23[dipoles, obsSC],
+              mH11 = H11[legs, obsSC]
             }
         ];
   
-        mH24 = M3sq[xq, xqb] 1/2 rmG12^2;
-        mH23 = M3sq[xq, xqb] (rmG23 + rmG12 (rmG11 + rmH11));
-        mH23bar = mH23 - 4 mH24 logXV;
+        mHs12 = Total[mG12];
+        mHs11 = Total[mG11] + Total[mH11];
+        mHs24 = mHs12^2/2;
+        mHs23 = Total[mG23] + Total[mG12] (Total[mG11] + Total[mH11]);
+
+        mHs12bar = mHs12;
+        mHs11bar = mHs11;
+        mHs24bar = mHs24;
+        mHs23bar = mHs23;
   
-        mH23bar
+        mHs12hat = mHs12;
+        mHs11hat = mHs11 + 2 mHs12 (-logXV);
+        mHs24hat = mHs24;
+        mHs23hat = mHs23 + 4 mHs24 (-logXV);
+
+        mHs12bh  = mHs12;
+        mHs11bh  = mHs11 + 2 mHs12 (-logXV);
+        mHs24bh  = mHs24;
+        mHs23bh  = mHs23 + 4 mHs24 (-logXV);
+
+
+        Which[
+          ((xmuRvar == True) && (logXVvar == True)),
+            mCoeff = mHs23bh,
+          ((xmuRvar == True) && (logXVvar == False)),
+            mCoeff = mHs23bar,
+          ((xmuRvar == False) && (logXVvar == True)),
+            mCoeff = mHs23hat,
+          ((xmuRvar == False) && (logXVvar == False)),
+            mCoeff = mHs23
+        ];
+
+        res = M3sq[xq, xqb] mCoeff
       ]
 
-    H22bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+    Hs22[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order = OptionValue["Order"],
-          xmuR  = OptionValue["xmuR"],
-          logXV = OptionValue["logXV"],
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
           TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
-          legs, dipoles, xq, xqb,
-          rmG10, rmG11, rmG12,
-          rmG21, rmG22, rmG23,
-          rmH10, rmH11,
-          rmH21, rmH22,
-          mH1, mC1hc10,
+          legs, nlegs, dipoles, ndipoles, xq, xqb,
+          mG10, mG11, mG12,
+          mG21, mG22, mG23,
+          mH10, mH11,
+          mH21, mH22,
+          mH1, mC1hc10, mRs10,
           RpNLL11,
           mF11, mF22,
           mIsc, mIrec, mIhc, mIwa, mIcorrel, mIclust,
           mFrec10, mFwa10, mF10,
           mFsc21, mFrec21, mFhc21, mFwa21, mFcorrel21, mF21,
-          mH24, mH23,
-          mH22, mH22bar
+          mlogXab, mlogXl,
+          mHs12, mHs12bar, mHs12hat, mHs12bh,
+          mHs11, mHs11bar, mHs11hat, mHs11bh,
+          mHs10, mHs10bar, mHs10hat, mHs10bh,
+          mHs24, mHs24bar, mHs24hat, mHs24bh,
+          mHs23, mHs23bar, mHs23hat, mHs23bh,
+          mHs22, mHs22bar, mHs22hat, mHs22bh,
+          mCoeff, res
         },
   
-        xq      = Event["xq"];
-        xqb     = Event["xqb"];
-        legs    = Event["legs"];
-        dipoles = Event["dipoles"];
+        xq       = Event["xq"];
+        xqb      = Event["xqb"];
+        legs     = Event["legs"];
+        nlegs    = Length[legs];
+        dipoles  = Event["dipoles"];
+        ndipoles = Length[dipoles];
 
         mIscl     = TransferFunctions["Iscl"];
         mIrecl    = TransferFunctions["Irecl"];
@@ -300,92 +473,165 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         Which[
           Order == 0,
             {
-              rmG12   = G12[dipoles, obsSC],
-              rmG11   = 0,
-              rmG10   = 0,
-              rmG23   = G23[dipoles, obsSC],
-              rmG22   = 0,
+              mG12   = G12[dipoles, obsSC],
+              mG11   = ConstantArray[0, ndipoles],
+              mG10   = ConstantArray[0, ndipoles],
+              mG23   = G23[dipoles, obsSC],
+              mG22   = ConstantArray[0, ndipoles],
     
-              rmH11   = 0,
-              rmH22   = 0,
+              mH11   = ConstantArray[0, nlegs],
+              mH10   = ConstantArray[0, nlegs],
+              mH22   = ConstantArray[0, nlegs],
     
               mF22    = 0,
     
               mH1     = 0,
               mC1hc10 = 0,
-              mF10    = 0
+              mRs10   = 0,
+              mF10    = 0,
+
+              mlogXab = LogXdipoles[dipoles, xmuR],
+              mlogXl  = LogXlegs[legs, xmuR]
             },
           Order == 1,
             {
-              rmG12   = G12[dipoles, obsSC],
-              rmG11   = G11[dipoles, obsSC],
-              rmG10   = 0,
-              rmG23   = G23[dipoles, obsSC],
-              rmG22   = G22[dipoles, obsSC],
+              mG12   = G12[dipoles, obsSC],
+              mG11   = G11[dipoles, obsSC],
+              mG10   = ConstantArray[0, ndipoles],
+              mG23   = G23[dipoles, obsSC],
+              mG22   = G22[dipoles, obsSC],
     
-              rmH11   = H11[legs, obsSC],
-              rmH22   = H22[legs, obsSC],
+              mH11   = H11[legs, obsSC],
+              mH10   = ConstantArray[0, nlegs],
+              mH22   = H22[legs, obsSC],
     
               mF22    = FNLL22[RpNLL11],
     
               mH1     = 0,
               mC1hc10 = 0,
-              mF10    = 0
+              mRs10   = 0,
+              mF10    = 0,
+
+              mlogXab = LogXdipoles[dipoles, xmuR],
+              mlogXl  = LogXlegs[legs, xmuR]
             },
           Order >= 2,
             {
-              rmG12   = G12[dipoles, obsSC],
-              rmG11   = G11[dipoles, obsSC],
-              rmG10   = G10[dipoles, obsSC],
-              rmG23   = G23[dipoles, obsSC],
-              rmG22   = G22[dipoles, obsSC],
+              mG12   = G12[dipoles, obsSC],
+              mG11   = G11[dipoles, obsSC],
+              mG10   = Which[
+                         RadiatorScheme == "Physical",
+                           G10[dipoles, obsSC, {"RadiatorScheme" -> "Physical"}],
+                         RadiatorScheme == "ConstantFree",
+                           G10[dipoles, obsSC, {"RadiatorScheme" -> "ConstantFree"}]
+                       ],
+              mG23   = G23[dipoles, obsSC],
+              mG22   = G22[dipoles, obsSC],
     
-              rmH11   = H11[legs, obsSC],
-              rmH22   = H22[legs, obsSC],
+              mH11   = H11[legs, obsSC],
+              mH10   = ConstantArray[0, nlegs],
+              mH22   = H22[legs, obsSC],
     
               mF22    = FNLL22[RpNLL11],
     
               mH1     = Virt3[xq, xqb],
               mC1hc10 = C1hc10[legs, obsSC, xq, xqb],
+              mRs10 = Which[
+                        RadiatorScheme == "Physical",
+                          0,
+                        RadiatorScheme == "ConstantFree",
+                          Total[G10[dipoles, obsSC]]
+                      ],
               mF10    = (Frec10[RpNLL11, legs, obsSC, mIrecl]
-                         + Fwa10[RpNLL11, dipoles, obsSC, mIwaab])
+                         + Fwa10[RpNLL11, dipoles, obsSC, mIwaab]),
+
+
+              mlogXab = LogXdipoles[dipoles, xmuR],
+              mlogXl  = LogXlegs[legs, xmuR]
             }
         ];
-  
-        mH24 = M3sq[xq, xqb] 1/2 rmG12^2;
-        mH23 = M3sq[xq, xqb] (rmG23 + rmG12 (rmG11 + rmH11));
-        mH22 = M3sq[xq, xqb] (1/2 (rmG11 + rmH11)^2 + rmG12 (rmG10 + mC1hc10 + mF10)
-                              + rmG22 + rmH22 + mF22) + rmG12 mH1;
-        mH22bar = mH22 - 3 mH23 logXV + 6 mH24 logXV^2;
 
-        mH22bar
+        mHs12 = Total[mG12];
+        mHs11 = Total[mG11] + Total[mH11];
+        mHs10 = Total[mG10] + Total[mH10] + mC1hc10 + mRs10 + mF10 + mH1/M3sq[xq, xqb];
+        mHs24 = Total[mG12]^2/2;
+        mHs23 = Total[mG23] + Total[mG12] (Total[mG11] + Total[mH11]);
+        mHs22 = Total[mG22] + Total[mH22] + mF22 \
+                + Total[mG12] (Total[mG10] + mC1hc10 + mRs10 + mF10 + mH1/M3sq[xq, xqb]) \
+                + (Total[mG11] + Total[mH11])^2/2;
+
+        mHs12bar = mHs12;
+        mHs11bar = mHs11;
+        mHs10bar = mHs10;
+        mHs24bar = mHs24;
+        mHs23bar = mHs23;
+        mHs22bar = mHs22 + 2 Pi beta0 mG12.mlogXab;
+
+        mHs12hat = mHs12;
+        mHs11hat = mHs11 + 2 mHs12 (-logXV);
+        mHs10hat = mHs10 + 1 mHs11 (-logXV) + 1 mHs12 (-logXV)^2;
+        mHs24hat = mHs24;
+        mHs23hat = mHs23 + 4 mHs24 (-logXV);
+        mHs22hat = mHs22 + 3 mHs23 (-logXV) + 6 mHs24 (-logXV)^2;
+ 
+        mHs12bh  = mHs12;
+        mHs11bh  = mHs11 + 2 mHs12 (-logXV);
+        mHs10bh  = mHs10 + 1 mHs11 (-logXV) + 1 mHs12 (-logXV)^2;
+        mHs24bh  = mHs24;
+        mHs23bh  = mHs23 + 4 mHs24 (-logXV);
+        mHs22bh  = mHs22 + 3 mHs23 (-logXV) + 6 mHs24 (-logXV)^2 + 2 Pi beta0 mG12.mlogXab;
+
+
+        Which[
+          ((xmuRvar == True) && (logXVvar == True)),
+            mCoeff = mHs22bh,
+          ((xmuRvar == True) && (logXVvar == False)),
+            mCoeff = mHs22bar,
+          ((xmuRvar == False) && (logXVvar == True)),
+            mCoeff = mHs22hat,
+          ((xmuRvar == False) && (logXVvar == False)),
+            mCoeff = mHs22
+        ];
+
+        res = M3sq[xq, xqb] mCoeff
       ]
 
-    H21bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+    Hs21[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order = OptionValue["Order"],
-          xmuR  = OptionValue["xmuR"],
-          logXV = OptionValue["logXV"],
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
           TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
-          legs, dipoles, xq, xqb,
-          rmG10, rmG11, rmG12,
-          rmG21, rmG22, rmG23,
-          rmH11, rmH10, rmH21, rmH22,
-          mH1, mC1hc10, mC1hc21, 
+          legs, nlegs, dipoles, ndipoles, xq, xqb,
+          mG10, mG11, mG12,
+          mG21, mG22, mG23,
+          mH11, mH10, mH21, mH22,
+          mH1, mC1hc10, mRs10, mC1hc21, 
           RpNLL11,
           mIsc, mIrec, mIhc, mIwa, mIcorrel, mIclust,
           mFrec10, mFwa10, mF10,
           mFsc21, mFrec21, mFhc21, mFwa21, mFcorrel21, mF21, mF22,
-          mH24, mH23, mH22, mH21,
-          mH21bar
+          mlogXab, mlogXl,
+          mHs12, mHs12bar, mHs12hat, mHs12bh,
+          mHs11, mHs11bar, mHs11hat, mHs11bh,
+          mHs10, mHs10bar, mHs10hat, mHs10bh,
+          mHs24, mHs24bar, mHs24hat, mHs24bh,
+          mHs23, mHs23bar, mHs23hat, mHs23bh,
+          mHs22, mHs22bar, mHs22hat, mHs22bh,
+          mHs21, mHs21bar, mHs21hat, mHs21bh,
+          mCoeff, res
         },
 
-        xq      = Event["xq"];
-        xqb     = Event["xqb"];
-        legs    = Event["legs"];
-        dipoles = Event["dipoles"];
+        xq       = Event["xq"];
+        xqb      = Event["xqb"];
+        legs     = Event["legs"];
+        nlegs    = Length[legs];
+        dipoles  = Event["dipoles"];
+        ndipoles = Length[dipoles];
 
         mIscl     = TransferFunctions["Iscl"];
         mIrecl    = TransferFunctions["Irecl"];
@@ -399,66 +645,85 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         Which[
           Order == 0,
             {
-              rmG12   = G12[dipoles, obsSC],
-              rmG11   = 0,
-              rmG10   = 0,
-              rmG23   = G23[dipoles, obsSC],
-              rmG22   = 0,
-              rmG21   = 0,
+              mG12   = G12[dipoles, obsSC],
+              mG11   = ConstantArray[0, ndipoles],
+              mG10   = ConstantArray[0, ndipoles],
+              mG23   = G23[dipoles, obsSC],
+              mG22   = ConstantArray[0, ndipoles],
+              mG21   = ConstantArray[0, ndipoles],
     
-              rmH11   = 0,
-              rmH10   = 0,
-              rmH22   = 0,
-              rmH21   = 0,
+              mH11   = ConstantArray[0, nlegs],
+              mH10   = ConstantArray[0, nlegs],
+              mH22   = ConstantArray[0, nlegs],
+              mH21   = ConstantArray[0, nlegs],
     
               mF22    = 0,
     
               mH1     = 0,
               mC1hc10 = 0,
+              mRs10   = 0,
               mC1hc21 = 0,
               mF10    = 0,
-              mF21    = 0
+              mF21    = 0,
+
+              mlogXab = LogXdipoles[dipoles, xmuR],
+              mlogXl  = LogXlegs[legs, xmuR]
             },
           Order == 1,
             {
-              rmG12   = G12[dipoles, obsSC],
-              rmG11   = G11[dipoles, obsSC],
-              rmG10   = 0,
-              rmG23   = G23[dipoles, obsSC],
-              rmG22   = G22[dipoles, obsSC],
-              rmG21   = 0,
+              mG12   = G12[dipoles, obsSC],
+              mG11   = G11[dipoles, obsSC],
+              mG10   = ConstantArray[0, ndipoles],
+              mG23   = G23[dipoles, obsSC],
+              mG22   = G22[dipoles, obsSC],
+              mG21   = ConstantArray[0, ndipoles],
     
-              rmH11   = H11[legs, obsSC],
-              rmH10   = 0,
-              rmH22   = H22[legs, obsSC],
-              rmH21   = 0,
+              mH11   = H11[legs, obsSC],
+              mH10   = ConstantArray[0, nlegs],
+              mH22   = H22[legs, obsSC],
+              mH21   = ConstantArray[0, nlegs],
     
               mF22    = FNLL22[RpNLL11],
     
               mH1     = 0,
               mC1hc10 = 0,
+              mRs10   = 0,
               mC1hc21 = 0,
               mF10    = 0,
-              mF21    = 0
+              mF21    = 0,
+
+              mlogXab = LogXdipoles[dipoles, xmuR],
+              mlogXl  = LogXlegs[legs, xmuR]
             },
           Order >= 2,
             {
-              rmG12   = G12[dipoles, obsSC],
-              rmG11   = G11[dipoles, obsSC],
-              rmG10   = G10[dipoles, obsSC],
-              rmG23   = G23[dipoles, obsSC],
-              rmG22   = G22[dipoles, obsSC],
-              rmG21   = G21[dipoles, obsSC],
+              mG12   = G12[dipoles, obsSC],
+              mG11   = G11[dipoles, obsSC],
+              mG10   = Which[
+                         RadiatorScheme == "Physical",
+                           G10[dipoles, obsSC, {"RadiatorScheme" -> "Physical"}],
+                         RadiatorScheme == "ConstantFree",
+                           G10[dipoles, obsSC, {"RadiatorScheme" -> "ConstantFree"}]
+                       ],
+              mG23   = G23[dipoles, obsSC],
+              mG22   = G22[dipoles, obsSC],
+              mG21   = G21[dipoles, obsSC],
     
-              rmH11   = H11[legs, obsSC],
-              rmH10   = 0,
-              rmH22   = H22[legs, obsSC],
-              rmH21   = H21[legs, obsSC],
+              mH11   = H11[legs, obsSC],
+              mH10   = ConstantArray[0, nlegs],
+              mH22   = H22[legs, obsSC],
+              mH21   = H21[legs, obsSC],
     
               mF22    = FNLL22[RpNLL11],
     
               mH1     = Virt3[xq, xqb],
               mC1hc10 = C1hc10[legs, obsSC, xq, xqb],
+              mRs10 = Which[
+                        RadiatorScheme == "Physical",
+                          0,
+                        RadiatorScheme == "ConstantFree",
+                          Total[G10[dipoles, obsSC]]
+                      ],
               mC1hc21 = C1hc21[legs, obsSC, xq, xqb],
               mF10    = (  Frec10[RpNLL11, legs, obsSC, mIrecl]
                          + Fwa10[RpNLL11, dipoles, obsSC, mIwaab]),
@@ -467,47 +732,101 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
                          + Fhc21[RpNLL11, legs, obsSC]
                          + Fwa21[RpNLL11, dipoles, obsSC, mIwaab]
                          + Fcorrel21[RpNLL11, legs, obsSC, mIcorrell]
-                         + Fclust21[RpNLL11, legs, obsSC, mIclustl])
+                         + Fclust21[RpNLL11, legs, obsSC, mIclustl]),
+
+              mlogXab = LogXdipoles[dipoles, xmuR],
+              mlogXl  = LogXlegs[legs, xmuR]
             }
         ];
 
-        mH24 = M3sq[xq, xqb] 1/2 rmG12^2;
-        mH23 = M3sq[xq, xqb] (rmG23 + rmG12 (rmG11 + rmH11));
-        mH22 = M3sq[xq, xqb] (1/2 (rmG11 + rmH11)^2 + rmG12 (rmG10 + mC1hc10 + mF10)
-                              + rmG22 + rmH22 + mF22) + rmG12 mH1;
-        mH21 = M3sq[xq, xqb] ((rmG11 + rmH11) (rmG10 + mC1hc10 + mF10) + mC1hc21
-                              + (rmG21 + rmH21) + mF21) + (rmG11 + rmH11) mH1;
+        mHs12 = Total[mG12];
+        mHs11 = Total[mG11] + Total[mH11];
+        mHs10 = Total[mG10] + Total[mH10] + mC1hc10 + mRs10 + mF10 + mH1/M3sq[xq, xqb];
+        mHs24 = Total[mG12]^2/2;
+        mHs23 = Total[mG23] + Total[mG12] (Total[mG11] + Total[mH11]);
+        mHs22 = Total[mG22] + Total[mH22] + mF22 \
+                + Total[mG12] (Total[mG10] + mC1hc10 + mRs10 + mF10 + mH1/M3sq[xq, xqb]) \
+                + (Total[mG11] + Total[mH11])^2/2;
+        mHs21 = Total[mG21] + Total[mH21] + mC1hc21 + mF21 \
+                + (Total[mG11] + Total[mH11]) (Total[mG10] + mC1hc10 + mRs10 + mF10 + mH1/M3sq[xq, xqb]);
+
+        mHs12bar = mHs12;
+        mHs11bar = mHs11;
+        mHs10bar = mHs10;
+        mHs24bar = mHs24;
+        mHs23bar = mHs23;
+        mHs22bar = mHs22 + 2 Pi beta0 mG12.mlogXab;
+        mHs21bar = mHs21 + 2 Pi beta0 (mG11.mlogXab + mH11.mlogXl);
+
+        mHs12hat = mHs12;
+        mHs11hat = mHs11 + 2 mHs12 (-logXV);
+        mHs10hat = mHs10 + 1 mHs11 (-logXV) + 1 mHs12 (-logXV)^2;
+        mHs24hat = mHs24;
+        mHs23hat = mHs23;
+        mHs22hat = mHs22 + 3 mHs23 (-logXV) + 6 mHs24 (-logXV)^2;
+        mHs21hat = mHs21 + 2 mHs22 (-logXV) + 3 mHs23 (-logXV)^2 + 4 mHs24 (-logXV)^3;
   
-        mH21bar = mH21 - 2 mH22 logXV + 3 mH23 logXV^2 - 4 mH24 logXV^3;
-  
-        mH21bar
+        mHs12bh  = mHs12;
+        mHs11bh  = mHs11 + 2 mHs12 (-logXV);
+        mHs10bh  = mHs10 + 1 mHs11 (-logXV) + 1 mHs12 (-logXV)^2;
+        mHs24bh  = mHs24;
+        mHs23bh  = mHs23;
+        mHs22bh  = mHs22 + 3 mHs23 (-logXV) + 6 mHs24 (-logXV)^2 + 2 Pi beta0 mG12.mlogXab;
+        mHs21bh  = mHs21 + 2 mHs22 (-logXV) + 3 mHs23 (-logXV)^2 + 4 mHs24 (-logXV)^3 \
+                         + 2 Pi beta0 (mG11.mlogXab + 2 mG12.mlogXab (-logXV) + mH11.mlogXl);
+
+
+        Which[
+          ((xmuRvar == True) && (logXVvar == True)),
+            mCoeff = mHs21bh,
+          ((xmuRvar == True) && (logXVvar == False)),
+            mCoeff = mHs21bar,
+          ((xmuRvar == False) && (logXVvar == True)),
+            mCoeff = mHs21hat,
+          ((xmuRvar == False) && (logXVvar == False)),
+            mCoeff = mHs21
+        ];
+
+        res = M3sq[xq, xqb] mCoeff
       ]
 
-    H20bar[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+    Hs20[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order = OptionValue["Order"],
-          xmuR  = OptionValue["xmuR"],
-          logXV = OptionValue["logXV"],
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
           TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
-          legs, dipoles, xq, xqb,
-          rmG10, rmG11, rmG12,
-          rmG21, rmG22, rmG23,
-          rmH11, rmH10, rmH21, rmH22,
-          mH1, mC1hc10, mC1hc21, 
+          legs, nlegs, dipoles, ndipoles, xq, xqb,
+          mG10, mG11, mG12,
+          mG21, mG22, mG23,
+          mH11, mH10, mH21, mH22,
+          mH1, mC1hc10, mRs10, mC1hc21, 
           RpNLL11,
           mIsc, mIrec, mIhc, mIwa, mIcorrel, mIclust,
           mFrec10, mFwa10, mF10,
           mFsc21, mFrec21, mFhc21, mFwa21, mFcorrel21, mF21, mF22,
-          mH24, mH23, mH22, mH21, mH20,
-          mH20bar
+          mlogXab, mlogXl,
+          mHs12, mHs12bar, mHs12hat, mHs12bh,
+          mHs11, mHs11bar, mHs11hat, mHs11bh,
+          mHs10, mHs10bar, mHs10hat, mHs10bh,
+          mHs24, mHs24bar, mHs24hat, mHs24bh,
+          mHs23, mHs23bar, mHs23hat, mHs23bh,
+          mHs22, mHs22bar, mHs22hat, mHs22bh,
+          mHs21, mHs21bar, mHs21hat, mHs21bh,
+          mHs20, mHs20bar, mHs20hat, mHs20bh,
+          mCoeff, res
         },
 
-        xq      = Event["xq"];
-        xqb     = Event["xqb"];
-        legs    = Event["legs"];
-        dipoles = Event["dipoles"];
+        xq       = Event["xq"];
+        xqb      = Event["xqb"];
+        legs     = Event["legs"];
+        nlegs    = Length[legs];
+        dipoles  = Event["dipoles"];
+        ndipoles = Length[dipoles];
 
         mIscl     = TransferFunctions["Iscl"];
         mIrecl    = TransferFunctions["Irecl"];
@@ -521,94 +840,155 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         Which[
           Order == 0,
             {
-              rmG12   = G12[dipoles, obsSC],
-              rmG11   = 0,
-              rmG10   = 0,
-              rmG23   = G23[dipoles, obsSC],
-              rmG22   = 0,
-              rmG21   = 0,
+              mG12   = G12[dipoles, obsSC],
+              mG11   = ConstantArray[0, ndipoles],
+              mG10   = ConstantArray[0, ndipoles],
+              mG23   = G23[dipoles, obsSC],
+              mG22   = ConstantArray[0, ndipoles],
+              mG21   = ConstantArray[0, ndipoles],
     
-              rmH11   = 0,
-              rmH10   = 0,
-              rmH22   = 0,
-              rmH21   = 0,
+              mH11   = ConstantArray[0, nlegs],
+              mH10   = ConstantArray[0, nlegs],
+              mH22   = ConstantArray[0, nlegs],
+              mH21   = ConstantArray[0, nlegs],
     
               mF22    = 0,
     
               mH1     = 0,
               mC1hc10 = 0,
+              mRs10   = 0,
               mC1hc21 = 0,
               mF10    = 0,
-              mF21    = 0
+              mF21    = 0,
+
+              mlogXab = LogXdipoles[dipoles, xmuR],
+              mlogXl  = LogXlegs[legs, xmuR]
             },
           Order == 1,
             {
-              rmG12   = G12[dipoles, obsSC],
-              rmG11   = G11[dipoles, obsSC],
-              rmG10   = 0,
-              rmG23   = G23[dipoles, obsSC],
-              rmG22   = G22[dipoles, obsSC],
-              rmG21   = 0,
+              mG12   = G12[dipoles, obsSC],
+              mG11   = G11[dipoles, obsSC],
+              mG10   = ConstantArray[0, nlegs],
+              mG23   = G23[dipoles, obsSC],
+              mG22   = G22[dipoles, obsSC],
+              mG21   = ConstantArray[0, nlegs],
     
-              rmH11   = H11[legs, obsSC],
-              rmH10   = 0,
-              rmH22   = H22[legs, obsSC],
-              rmH21   = 0,
+              mH11   = H11[legs, obsSC],
+              mH10   = ConstantArray[0, nlegs],
+              mH22   = H22[legs, obsSC],
+              mH21   = ConstantArray[0, nlegs],
     
               mF22    = FNLL22[RpNLL11],
     
               mH1     = 0,
               mC1hc10 = 0,
+              mRs10   = 0,
               mC1hc21 = 0,
               mF10    = 0,
-              mF21    = 0
+              mF21    = 0,
+
+              mlogXab = LogXdipoles[dipoles, xmuR],
+              mlogXl  = LogXlegs[legs, xmuR]
             },
           Order >= 2,
             {
-              rmG12   = G12[dipoles, obsSC],
-              rmG11   = G11[dipoles, obsSC],
-              rmG10   = G10[dipoles, obsSC],
-              rmG23   = G23[dipoles, obsSC],
-              rmG22   = G22[dipoles, obsSC],
-              rmG21   = G21[dipoles, obsSC],
+              mG12   = G12[dipoles, obsSC],
+              mG11   = G11[dipoles, obsSC],
+              mG10   = Which[
+                         RadiatorScheme == "Physical",
+                           G10[dipoles, obsSC, {"RadiatorScheme" -> "Physical"}],
+                         RadiatorScheme == "ConstantFree",
+                           G10[dipoles, obsSC, {"RadiatorScheme" -> "ConstantFree"}]
+                       ],
+              mG23   = G23[dipoles, obsSC],
+              mG22   = G22[dipoles, obsSC],
+              mG21   = G21[dipoles, obsSC],
     
-              rmH11   = H11[legs, obsSC],
-              rmH10   = 0,
-              rmH22   = H22[legs, obsSC],
-              rmH21   = H21[legs, obsSC],
+              mH11   = H11[legs, obsSC],
+              mH10   = ConstantArray[0, nlegs],
+              mH22   = H22[legs, obsSC],
+              mH21   = H21[legs, obsSC],
     
-              mF22    = FNLL22[legs, obsSC],
+              mF22    = FNLL22[RpNLL11],
     
               mH1     = Virt3[xq, xqb],
               mC1hc10 = C1hc10[legs, obsSC, xq, xqb],
+              mRs10 = Which[
+                        RadiatorScheme == "Physical",
+                          0,
+                        RadiatorScheme == "ConstantFree",
+                          Total[G10[dipoles, obsSC]]
+                      ],
               mC1hc21 = C1hc21[legs, obsSC, xq, xqb],
-              mF10    = (  Frec10[RpNLL11, legs, obsSC, Irecl]
-                         + Fwa10[RpNLL11, dipoles, obsSC, Iwaab]),
+              mF10    = (  Frec10[RpNLL11, legs, obsSC, mIrecl]
+                         + Fwa10[RpNLL11, dipoles, obsSC, mIwaab]),
               mF21    = (  Fsc21[RpNLL11, legs, obsSC]
-                         + Frec21[RpNLL11, legs, obsSC, Irecl]
+                         + Frec21[RpNLL11, legs, obsSC, mIrecl]
                          + Fhc21[RpNLL11, legs, obsSC]
-                         + Fwa21[RpNLL11, dipoles, obsSC, Iwaab]
-                         + Fcorrel21[RpNLL11, legs, obsSC, Icorrell]
-                         + Fclust21[RpNLL11, legs, obsSC])
+                         + Fwa21[RpNLL11, dipoles, obsSC, mIwaab]
+                         + Fcorrel21[RpNLL11, legs, obsSC, mIcorrell]
+                         + Fclust21[RpNLL11, legs, obsSC, mIclustl]),
+
+              mlogXab = LogXdipoles[dipoles, xmuR],
+              mlogXl  = LogXlegs[legs, xmuR]
             }
         ];
+
+        mHs12 = Total[mG12];
+        mHs11 = Total[mG11] + Total[mH11];
+        mHs10 = Total[mG10] + Total[mH10] + mC1hc10 + mRs10 + mF10 + mH1/M3sq[xq, xqb];
+        mHs24 = Total[mG12]^2/2;
+        mHs23 = Total[mG23] + Total[mG12] (Total[mG11] + Total[mH11]);
+        mHs22 = Total[mG22] + Total[mH22] + mF22 \
+                + Total[mG12] (Total[mG10] + mC1hc10 + mRs10 + mF10 + mH1/M3sq[xq, xqb]) \
+                + (Total[mG11] + Total[mH11])^2/2;
+        mHs21 = Total[mG21] + Total[mH21] + mC1hc21 + mF21 \
+                + (Total[mG11] + Total[mH11]) (Total[mG10] + mC1hc10 + mRs10 + mF10 + mH1/M3sq[xq, xqb]);
+        mHs20 = Total[mG10]^2/2 + Total[mG10] (Total[mG10] + mC1hc10 + mRs10 + mF10 + mH1/M3sq[xq, xqb]);
+
+        mHs12bar = mHs12;
+        mHs11bar = mHs11;
+        mHs10bar = mHs10;
+        mHs24bar = mHs24;
+        mHs23bar = mHs23;
+        mHs22bar = mHs22 + 2 Pi beta0 (mG12.mlogXab);
+        mHs21bar = mHs21 + 2 Pi beta0 (mG11.mlogXab + mH11.mlogXl);
+        mHs20bar = mHs20 + 2 Pi beta0 (mG10.mlogXab + mH10.mlogXl);
+
+        mHs12hat = mHs12;
+        mHs11hat = mHs11 + 2 mHs12 (-logXV);
+        mHs10hat = mHs10 + 1 mHs11 (-logXV) + 1 mHs12 (-logXV)^2;
+        mHs24hat = mHs24;
+        mHs23hat = mHs23;
+        mHs22hat = mHs22 + 3 mHs23 (-logXV) + 6 mHs24 (-logXV)^2;
+        mHs21hat = mHs21 + 2 mHs22 (-logXV) + 3 mHs23 (-logXV)^2 + 4 mHs24 (-logXV)^3;
+        mHs20hat = mHs20 + 1 mHs21 (-logXV) + 1 mHs22 (-logXV)^2 + 1 mHs23 (-logXV)^3 + 1 mHs24 (-logXV)^4;
   
-        mH24 = M3sq[xq, xqb] 1/2 rmG12^2;
-        mH23 = M3sq[xq, xqb] (rmG23 + rmG12 (rmG11 + rmH11));
-        mH22 = M3sq[xq, xqb] (1/2 (rmG11 + rmH11)^2 + rmG12 (rmG10 + mC1hc10 + mF10)
-                              + rmG22 + rmH22 + mF22) + rmG12 mH1;
-        mH21 = M3sq[xq, xqb] ((rmG11 + rmH11) (rmG10 + mC1hc10 + mF10) + mC1hc21
-                              + (rmG21 + rmH21) + mF21) + (rmG11 + rmH11) mH1;
-  
-        mH21bar = mH21 - 2 mH22 logXV + 3 mH23 logXV^2 - 4 mH24 logXV^3;
-        mH20 = 0;
+        mHs12bh  = mHs12;
+        mHs11bh  = mHs11 + 2 mHs12 (-logXV);
+        mHs10bh  = mHs10 + 1 mHs11 (-logXV) + 1 mHs12 (-logXV)^2;
+        mHs24bh  = mHs24;
+        mHs23bh  = mHs23;
+        mHs22bh  = mHs22 + 3 mHs23 (-logXV) + 6 mHs24 (-logXV)^2 + 2 Pi beta0 mG12.mlogXab;
+        mHs21bh  = mHs21 + 2 mHs22 (-logXV) + 3 mHs23 (-logXV)^2 + 4 mHs24 (-logXV)^3 \
+                         + 2 Pi beta0 (mG11.mlogXab + 2 mG12.mlogXab (-logXV) + mH11.mlogXl);
+        mHs20bh  = mHs20 + 1 mHs21 (-logXV) + 1 mHs22 (-logXV)^2 + 1 mHs23 (-logXV)^3 + 1 mHs24 (-logXV)^4 \
+                         + 2 Pi beta0 (mG10.mlogXab + 1 mG11.mlogXab (-logXV) + 1 mG12.mlogXab (-logXV)^2  \
+                                      + mH10.mlogXl + 1 mH11.mlogXl (-logXV));
 
-        (* this term is formally N3LL so set to zero, it's useful for some other checks *)
-        (* mH20 = M3sq[xq,xqb] 1/2 mG10^2 + M3sq[xq,xqb] mG10 (mC1hc10 + mF10) + mG10 mH1; *)
 
-        mH20bar = mH20 - mH21 logXV + mH22 logXV^2 - mH23 logXV^3 + mH24 logXV^4;
+        Which[
+          ((xmuRvar == True) && (logXVvar == True)),
+            mCoeff = mHs20bh,
+          ((xmuRvar == True) && (logXVvar == False)),
+            mCoeff = mHs20bar,
+          ((xmuRvar == False) && (logXVvar == True)),
+            mCoeff = mHs20hat,
+          ((xmuRvar == False) && (logXVvar == False)),
+            mCoeff = mHs20
+        ];
 
-        mH20bar 
+        res = M3sq[xq, xqb] mCoeff
       ]
 
   End[]
