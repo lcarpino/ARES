@@ -41,6 +41,7 @@ BeginPackage["ARES`Radiator`HardCollinearRadiator`", "ARES`QCD`Constants`"]
 
     (* full hard-collinear radiator *)
 
+    (*
     Radhcl[lambda_, alphas_, xmuR_, logXV_,
            order_?IntegerQ, leg_?AssociationQ, obspar_?AssociationQ] :=
 
@@ -81,6 +82,51 @@ BeginPackage["ARES`Radiator`HardCollinearRadiator`", "ARES`QCD`Constants`"]
 
         res = resNLL + resNNLL
     ];
+    *)
+
+    Radhcl[lambda_, alphas_, xmuR_, logXV_,
+           order_?IntegerQ, leg_?AssociationQ, obspar_?AssociationQ] :=
+
+      Module[
+        {
+          a, b,
+          ga0, ga1,
+          resNLL = 0, resNNLL = 0, res = 0
+        },
+   
+        a = obspar["ktpow"];
+        b = obspar["etapow"][[leg["num"]]];
+   
+        (* lambda < a/2 *)
+        If[lambda > a/2, Return[0, Module]];
+   
+        (* determine hard leg "colour factor" *)
+        Which[
+          leg["flav"] == "q" || leg["flav"] == "qb", {ga0 = Ga0q, ga1 = Ga1q},
+          leg["flav"] == "g", {ga0 = Ga0g, ga1 = Ga1g}
+        ];
+   
+        If[order >= 1,
+          resNLL = -h2[lambda, ga0, a, b]
+        ];
+   
+        If[order >= 2,
+          resNNLL = (
+            (* normal contribution to hard-collinear radiator *)
+            - (alphas/Pi) h3[lambda, ga0, ga1, a, b]
+
+            (* muR scale variations of h *)
+            - alphas beta0 lambda h2p[lambda, ga0, a, b] Log[xmuR^2]
+
+            (* XV scale variations of h *)
+            - alphas beta0 h2p[lambda, ga0, a, b] (-logXV));
+        ];
+   
+
+
+        res = resNLL + resNNLL
+    ];
+
 
     Radhc[lambda_?NumericQ, alphas_?NumericQ, xmuR_?NumericQ,
           logXV_?NumericQ, order_?IntegerQ, legs_?ListQ, obspar_?AssociationQ] := 
