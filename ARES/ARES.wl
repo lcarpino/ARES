@@ -17,6 +17,7 @@ context =
 
     (* Drivers *)
     "ARES`Driver`Resummation`",
+    "ARES`Driver`Expansion`",
 
     (* QCD *)
     "ARES`QCD`Constants`",
