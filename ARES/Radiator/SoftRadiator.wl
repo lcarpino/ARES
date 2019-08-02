@@ -79,6 +79,9 @@ BeginPackage["ARES`Radiator`SoftRadiator`", "ARES`QCD`Constants`"]
     (a Log[1 - (2 lambda)/a] - (a + b) Log[1 - (2 lambda)/(a + b)]) \
       /(2 b Pi lambda^2 beta0)
 
+  g1p[lambda_?PossibleZeroQ, a_?NumericQ, b_?NumericQ] :=
+    -1/(Pi beta0 a(a+b))
+
   g1p[lambda_?NumericQ, a_?NumericQ, b_?NumericQ] := 
     If[lambda == 0,
       0,
@@ -89,6 +92,9 @@ BeginPackage["ARES`Radiator`SoftRadiator`", "ARES`QCD`Constants`"]
     -(2/(Pi (a - 2 lambda) (a + b - 2 lambda) lambda beta0)) \
       - (a Log[1 - (2 lambda)/a] - (a + b) Log[1 - (2 lambda)/(a + b)]) \
       /(b Pi lambda^3 beta0)
+
+  g1s[lambda_?PossibleZeroQ, a_?NumericQ, b_?NumericQ] := 
+    -4/(Pi beta0 3 a^2) (2 a + b)/(a + b)^2
 
   g1s[lambda_?NumericQ, a_?NumericQ, b_?NumericQ] := 
     If[lambda == 0, 

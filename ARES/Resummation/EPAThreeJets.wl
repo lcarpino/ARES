@@ -125,7 +125,7 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
           TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
           legs, dipoles, xq, xqb,
-          lambda, Rs, RsConst, Rhc, RpNLL, RpNNLL, RsNNLL,
+          lambda, Rs, RsConst, Rhc, RhcConst, RpNLL, RpNNLL, RsNNLL,
           mFNLL,
           mIsc, mIrec, mIhc, mIwa, mIcorrel, mIclust,
           mdFsc, mdFrec, mdFhc, mdFwa, mdFcorrel, mdFclust, mdFNNLL,
@@ -147,9 +147,10 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
 
         lambda = alphaS beta0 LtildePT[Exp[-logV], Exp[logXV]];
   
-        Rs = Rads[lambda, alphaS, xmuR, logXV, 2, dipoles, obsSC];
-        RsConst = Rads[0, alphaS, xmuR, logXV, 2, dipoles, obsSC];
+        Rs  = Rads[lambda, alphaS, xmuR, logXV, 2, dipoles, obsSC];
         Rhc = Radhc[lambda, alphaS, xmuR, logXV, 2, legs, obsSC];
+        RsConst  = Rads[0., alphaS, xmuR, logXV, 2, dipoles, obsSC];
+        RhcConst = Radhc[0, alphaS, xmuR, logXV, 2, legs, obsSC];
 
         RpNLL = RadpNLL[lambda, legs, obsSC];
         RsNNLL = RadsNNLL[lambda, alphaS, legs, obsSC];
@@ -176,8 +177,8 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
                      + alphaS/(2 Pi) mC1hc + alphaS/(2 Pi) mH1)
                      + alphaS/Pi mdFNNLL)),
           RadiatorScheme == "ConstantFree",
-            res = (M3sq[xq, xqb] Exp[-(Rs-RsConst)-Rhc] (mFNLL (1
-                     + alphaS/(2 Pi) mC1hc + alphaS/(2 Pi) mH1 - RsConst)
+            res = (M3sq[xq, xqb] Exp[-(Rs-RsConst)-(Rhc-RhcConst)] (mFNLL (1
+                     + alphaS/(2 Pi) mC1hc + alphaS/(2 Pi) mH1 - RsConst - RhcConst)
                      + alphaS/Pi mdFNNLL))
         ];
 
