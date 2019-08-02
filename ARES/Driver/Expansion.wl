@@ -30,6 +30,7 @@ BeginPackage["ARES`Driver`Expansion`"]
     Options[Expansion] =
       {
         "Order" -> "NNLL",
+        "AlphaSOrder" -> "All",
         "Q" -> MZ,
         "RadiatorScheme" -> "Physical",
         "muRstrategy"  -> muRConst,  "muR0" -> 1, 
@@ -43,6 +44,7 @@ BeginPackage["ARES`Driver`Expansion`"]
       Module[
         {
           Order = OptionValue["Order"],
+          asOrder = OptionValue["AlphaSOrder"],
           Q = OptionValue["Q"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
           muRstrategy = OptionValue["muRstrategy"], 
@@ -123,7 +125,20 @@ BeginPackage["ARES`Driver`Expansion`"]
                +Hs22[event, obsSC, ExpansionOpts] Ltilde^2
                +Hs21[event, obsSC, ExpansionOpts] Ltilde);
 
-        res = res0 + (alphaS/(2 Pi)) res1 + (alphaS/(2 Pi))^2 res2
+        Which[
+          asOrder == "All",
+            res = res0 + (alphaS/(2 Pi)) res1 + (alphaS/(2 Pi))^2 res2,
+          asOrder == 0,
+            res = M3sq[xq, xqb],
+          asOrder == 1,
+            res = (alphaS/(2 Pi)) res1,
+          asOrder == 2,
+            res = (alphaS/(2 Pi))^2 res2,
+          True,
+            res = 0
+        ];
+
+        res
       ]
 
 

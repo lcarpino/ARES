@@ -25,6 +25,9 @@ context =
     "ARES`QCD`ScaleChoices`",
     "ARES`EPA`MatrixElements`",
 
+    (* Logarithms *)
+    "ARES`Logarithms`ScaleChoices`",
+
     (* Event Geometry *)
     "ARES`Event`EventThreeJets`",
 
