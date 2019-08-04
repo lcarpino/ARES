@@ -33,7 +33,7 @@ BeginPackage["ARES`Driver`Expansion`"]
         "AlphaSOrder" -> "All",
         "Q" -> MZ,
         "RadiatorScheme" -> "Physical",
-        "muRstrategy"  -> muRConst,  "muR0" -> 1, 
+        "muRstrategy"  -> muRConst,  "muR0" -> 1,
         "logXstrategy" -> LogXConst, "X0"   -> 1,
         "refscale" -> MZ, "refalphas" -> AlphaSMZ
       };
@@ -47,11 +47,11 @@ BeginPackage["ARES`Driver`Expansion`"]
           asOrder = OptionValue["AlphaSOrder"],
           Q = OptionValue["Q"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
-          muRstrategy = OptionValue["muRstrategy"], 
+          muRstrategy = OptionValue["muRstrategy"],
           muR0 = OptionValue["muR0"],
-          logXstrategy = OptionValue["logXstrategy"], 
+          logXstrategy = OptionValue["logXstrategy"],
           X0 = OptionValue["X0"],
-          refscale = OptionValue["refscale"], 
+          refscale = OptionValue["refscale"],
           refalphas = OptionValue["refalphas"],
           event, dipoles, legs,
           obsSC,
@@ -114,26 +114,33 @@ BeginPackage["ARES`Driver`Expansion`"]
         (* set up the logarithm *)
         Ltilde = LtildePT[Exp[-logV], Exp[logXV]];
 
+        (* LL contributions to expansion *)
         res0 = M3sq[xq, xqb];
-
-        res1 = (Hs12[event, obsSC, ExpansionOpts] Ltilde^2
-               +Hs11[event, obsSC, ExpansionOpts] Ltilde
-               +Hs10[event, obsSC, ExpansionOpts]);
-
+        res1 = Hs12[event, obsSC, ExpansionOpts] Ltilde^2;
         res2 = (Hs24[event, obsSC, ExpansionOpts] Ltilde^4
-               +Hs23[event, obsSC, ExpansionOpts] Ltilde^3
-               +Hs22[event, obsSC, ExpansionOpts] Ltilde^2
-               +Hs21[event, obsSC, ExpansionOpts] Ltilde);
+               +Hs23[event, obsSC, ExpansionOpts] Ltilde^3);
+
+        (* NLL contributions to expansion *)
+        If[OrderExpansion >= 1,
+          res1 = res1 + Hs11[event, obsSC, ExpansionOpts] Ltilde;
+          res2 = res2 + Hs22[event, obsSC, ExpansionOpts] Ltilde^2;
+        ];
+
+        (* NNLL contributions to expansion *)
+        If[OrderExpansion >= 2,
+          res1 = res1 + Hs10[event, obsSC, ExpansionOpts];
+          res2 = res2 + Hs21[event, obsSC, ExpansionOpts] Ltilde;
+        ];
 
         Which[
-          asOrder == "All",
-            res = res0 + (alphaS/(2 Pi)) res1 + (alphaS/(2 Pi))^2 res2,
           asOrder == 0,
             res = M3sq[xq, xqb],
           asOrder == 1,
             res = (alphaS/(2 Pi)) res1,
           asOrder == 2,
             res = (alphaS/(2 Pi))^2 res2,
+          asOrder == "All",
+            res = res0 + (alphaS/(2 Pi)) res1 + (alphaS/(2 Pi))^2 res2,
           True,
             res = 0
         ];
@@ -147,7 +154,7 @@ BeginPackage["ARES`Driver`Expansion`"]
         "Order" -> "NNLL",
         "Q" -> MZ,
         "RadiatorScheme" -> "Physical",
-        "muRstrategy"  -> muRConst,  "muR0" -> 1, 
+        "muRstrategy"  -> muRConst,  "muR0" -> 1,
         "logXstrategy" -> LogXConst, "X0"   -> 1,
         "refscale" -> MZ, "refalphas" -> AlphaSMZ
       };
@@ -160,11 +167,11 @@ BeginPackage["ARES`Driver`Expansion`"]
           Order = OptionValue["Order"],
           Q = OptionValue["Q"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
-          muRstrategy = OptionValue["muRstrategy"], 
+          muRstrategy = OptionValue["muRstrategy"],
           muR0 = OptionValue["muR0"],
-          logXstrategy = OptionValue["logXstrategy"], 
+          logXstrategy = OptionValue["logXstrategy"],
           X0 = OptionValue["X0"],
-          refscale = OptionValue["refscale"], 
+          refscale = OptionValue["refscale"],
           refalphas = OptionValue["refalphas"],
           event, dipoles, legs,
           obsSC,
