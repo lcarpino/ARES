@@ -19,12 +19,14 @@ BeginPackage["ARES`Observables`DParameter`Initialise`"]
 
     Needs["ARES`Observables`DParameter`SoftCollinearParametrisation`"]
     Needs["ARES`Observables`DParameter`SoftCollinearCorrections`"]
+    Needs["ARES`Observables`DParameter`NPCorrections`"]
 
     InitialiseDParameter[] :=
       Module[
         {},
         InitialiseSoftCollinearParametrisation[];
         InitialiseCorrections[];
+        InitialiseNPCorrections[];
       ]
 
     Additive = True;
@@ -35,7 +37,8 @@ BeginPackage["ARES`Observables`DParameter`Initialise`"]
         "Additive" -> Additive,
         "NJets"    -> NJets,
         "SCParametrisation" -> BuildMapDParameter,
-        "TransferFunctions" -> BuildMapICorrection[]
+        "TransferFunctions" -> BuildMapICorrection[],
+        "DeltaNP"           -> DeltaNP
       ]
 
   End[]
