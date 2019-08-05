@@ -47,7 +47,10 @@ context =
     "ARES`Expansion`CombinedExpansion`",
 
     (* Observables *)
-    "ARES`Observables`ObservableBuilder`"
+    "ARES`Observables`ObservableBuilder`",
+
+    (* Matching *)
+    "ARES`Matching`Matching`"
   };
 
 BeginPackage["ARES`", context]
