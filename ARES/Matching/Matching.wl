@@ -24,7 +24,7 @@ BeginPackage["ARES`Matching`Matching`"]
           order, matching, res
         },
 
-        order = Length[Sigmabar];
+        order = Length[SigmaBar];
         (* order = Length[ResumExpanded]; *)
 
         (* perform the matching *)
@@ -32,7 +32,7 @@ BeginPackage["ARES`Matching`Matching`"]
 
         If[order >= 2,
           matching = (matching Exp[(SigmaBar[[2]]-ResumExpanded[[2]])/sigma[[1]]]
-                      Exp[-(SigmaBar[[1]]^2 - ResumExpanded[[1]]^2)/(2 sigma[[1]])]);
+                      Exp[-(SigmaBar[[1]]^2 - ResumExpanded[[1]]^2)/(2 sigma[[1]]^2)]);
         ];
 
         matching = Resum matching;
@@ -47,7 +47,7 @@ BeginPackage["ARES`Matching`Matching`"]
           order, Z, matching, res
         },
 
-        order = Length[Sigmabar];
+        order = Length[SigmaBar];
         (* order = Length[ResumExpanded]; *)
 
         Z = (1 - v/v[[-1]]);
