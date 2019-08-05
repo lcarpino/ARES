@@ -48,11 +48,14 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
           logXV = OptionValue["logXV"],
           TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
+          a,
           legs, dipoles, xq, xqb,
           lambda, Rs,
           res
         },
   
+        a = obsSC["ktpow"];
+
         xq      = Event["xq"];
         xqb     = Event["xqb"];
         legs    = Event["legs"];
@@ -60,6 +63,9 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
 
         lambda = alphaS beta0 LtildePT[Exp[-logV], Exp[logXV]];
   
+        (* check Landau pole *)
+        If[lambda > a/2, Return[0, Module]];
+
         Rs = Rads[lambda, alphaS, xmuR, logXV, 0, dipoles, obsSC];
   
         res = M3sq[xq, xqb] Exp[-Rs]
@@ -82,18 +88,24 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
           logXV = OptionValue["logXV"],
           TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
+          a,
           legs, dipoles, xq, xqb,
           lambda, Rs, Rhc, RpNLL, RsNNLL, mFNLL,
           res
         },
   
+        a = obsSC["ktpow"];
+
         xq      = Event["xq"];
         xqb     = Event["xqb"];
         legs    = Event["legs"];
         dipoles = Event["dipoles"];
 
         lambda = alphaS beta0 LtildePT[Exp[-logV], Exp[logXV]];
-  
+
+        (* check Landau pole *)
+        If[lambda > a/2, Return[0, Module]];
+
         Rs =  Rads[lambda, alphaS, xmuR, logXV, 1, dipoles, obsSC];
         Rhc = Radhc[lambda, alphaS, xmuR, logXV, 1, legs, obsSC];
         RpNLL =  RadpNLL[lambda, legs, obsSC];
@@ -124,6 +136,7 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
           logXV = OptionValue["logXV"],
           TransferFunctions = OptionValue["TransferFunctions"],
           RadiatorScheme = OptionValue["RadiatorScheme"],
+          a,
           legs, dipoles, xq, xqb,
           lambda, Rs, RsConst, Rhc, RhcConst, RpNLL, RpNNLL, RsNNLL,
           mFNLL,
@@ -132,6 +145,8 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
           mH1, mC1hc,
           res
         },
+
+        a = obsSC["ktpow"];
 
         xq      = Event["xq"];
         xqb     = Event["xqb"];
@@ -146,7 +161,10 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
         mIclustl  = TransferFunctions["Iclustl"];
 
         lambda = alphaS beta0 LtildePT[Exp[-logV], Exp[logXV]];
-  
+
+        (* check Landau pole *)
+        If[lambda > a/2, Return[0, Module]];
+ 
         Rs  = Rads[lambda, alphaS, xmuR, logXV, 2, dipoles, obsSC];
         Rhc = Radhc[lambda, alphaS, xmuR, logXV, 2, legs, obsSC];
         RsConst  = Rads[0., alphaS, xmuR, logXV, 2, dipoles, obsSC];
