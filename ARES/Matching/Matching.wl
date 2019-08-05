@@ -31,7 +31,7 @@ BeginPackage["ARES`Matching`Matching`"]
         matching = Exp[(SigmaBar[[1]]-ResumExpanded[[1]])/sigma[[1]]];
 
         If[order >= 2,
-          matching = (matching Exp[(SigmaBar[[2]]-ResumExpanded[[2]])^2/sigma[[1]]]
+          matching = (matching Exp[(SigmaBar[[2]]-ResumExpanded[[2]])/sigma[[1]]]
                       Exp[-(SigmaBar[[1]]^2 - ResumExpanded[[1]]^2)/(2 sigma[[1]])]);
         ];
 
