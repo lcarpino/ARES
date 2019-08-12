@@ -113,7 +113,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           Order == "NLL",
             Hs11NLL[Event, obsSC, ExpOpts],
           Order == "NNLL",
-            Hs11NNLL[Event, obsSC, ExpOpts]
+            Hs11NLL[Event, obsSC, ExpOpts]
         ]
       ]
 
@@ -491,26 +491,26 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
 
         RpNLL11 = RadpNLL11[legs, obsSC];
 
-        mG12   = G12[dipoles, obsSC],
-        mG11   = G11[dipoles, obsSC],
+        mG12   = G12[dipoles, obsSC];
+        mG11   = G11[dipoles, obsSC];
         mG10   = Which[
                     RadiatorScheme == "Physical",
                       G10[dipoles, obsSC, {"RadiatorScheme" -> "Physical"}],
                     RadiatorScheme == "ConstantFree",
                       G10[dipoles, obsSC, {"RadiatorScheme" -> "ConstantFree"}]
-                  ],
-        mH11   = H11[legs, obsSC],
-        mH10   = ConstantArray[0, nlegs],
-        mH1     = Virt3[xq, xqb]/M3sq[xq, xqb],
-        mC1hc10 = C1hc10[legs, obsSC, xq, xqb],
+                  ];
+        mH11   = H11[legs, obsSC];
+        mH10   = ConstantArray[0, nlegs];
+        mH1     = Virt3[xq, xqb]/M3sq[xq, xqb];
+        mC1hc10 = C1hc10[legs, obsSC, xq, xqb];
         mRs10 = Which[
                   RadiatorScheme == "Physical",
                     0,
                   RadiatorScheme == "ConstantFree",
                     Total[G10[dipoles, obsSC]]
-                ],
+                ];
         mF10    = (Frec10[RpNLL11, legs, obsSC, mIrecl]
-                    + Fwa10[RpNLL11, dipoles, obsSC, mIwaab])
+                    + Fwa10[RpNLL11, dipoles, obsSC, mIwaab]);
 
         mHs12 = Total[mG12];
         mHs11 = Total[mG11] + Total[mH11];
