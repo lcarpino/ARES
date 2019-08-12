@@ -70,8 +70,8 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
             "xmuR"     -> xmuR,
             "logXVvar" -> logXVvar,
             "logXV"    -> logXV,
-            "TransferFunctions" -> Identity,
-            "RadiatorScheme"    -> "Physical"
+            "TransferFunctions" -> TransferFunctions,
+            "RadiatorScheme"    -> RadiatorScheme
           };
 
         Which[
@@ -103,8 +103,8 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
             "xmuR"     -> xmuR,
             "logXVvar" -> logXVvar,
             "logXV"    -> logXV,
-            "TransferFunctions" -> Identity,
-            "RadiatorScheme"    -> "Physical"
+            "TransferFunctions" -> TransferFunctions,
+            "RadiatorScheme"    -> RadiatorScheme
           };
 
         Which[
@@ -136,8 +136,8 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
             "xmuR"     -> xmuR,
             "logXVvar" -> logXVvar,
             "logXV"    -> logXV,
-            "TransferFunctions" -> Identity,
-            "RadiatorScheme"    -> "Physical"
+            "TransferFunctions" -> TransferFunctions,
+            "RadiatorScheme"    -> RadiatorScheme
           };
 
         Which[
@@ -169,8 +169,8 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
             "xmuR"     -> xmuR,
             "logXVvar" -> logXVvar,
             "logXV"    -> logXV,
-            "TransferFunctions" -> Identity,
-            "RadiatorScheme"    -> "Physical"
+            "TransferFunctions" -> TransferFunctions,
+            "RadiatorScheme"    -> RadiatorScheme
           };
 
         Which[
@@ -202,8 +202,8 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
             "xmuR"     -> xmuR,
             "logXVvar" -> logXVvar,
             "logXV"    -> logXV,
-            "TransferFunctions" -> Identity,
-            "RadiatorScheme"    -> "Physical"
+            "TransferFunctions" -> TransferFunctions,
+            "RadiatorScheme"    -> RadiatorScheme
           };
 
         Which[
@@ -212,7 +212,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           Order == "NLL",
             Hs23NLL[Event, obsSC, ExpOpts],
           Order == "NNLL",
-            Hs23NNLL[Event, obsSC, ExpOpts]
+            Hs23NLL[Event, obsSC, ExpOpts]
         ]
       ]
 
@@ -235,8 +235,8 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
             "xmuR"     -> xmuR,
             "logXVvar" -> logXVvar,
             "logXV"    -> logXV,
-            "TransferFunctions" -> Identity,
-            "RadiatorScheme"    -> "Physical"
+            "TransferFunctions" -> TransferFunctions,
+            "RadiatorScheme"    -> RadiatorScheme
           };
 
         Which[
@@ -268,8 +268,8 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
             "xmuR"     -> xmuR,
             "logXVvar" -> logXVvar,
             "logXV"    -> logXV,
-            "TransferFunctions" -> Identity,
-            "RadiatorScheme"    -> "Physical"
+            "TransferFunctions" -> TransferFunctions,
+            "RadiatorScheme"    -> RadiatorScheme
           };
 
         Which[
@@ -301,8 +301,8 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
             "xmuR"     -> xmuR,
             "logXVvar" -> logXVvar,
             "logXV"    -> logXV,
-            "TransferFunctions" -> Identity,
-            "RadiatorScheme"    -> "Physical"
+            "TransferFunctions" -> TransferFunctions,
+            "RadiatorScheme"    -> RadiatorScheme
           };
 
         Which[
@@ -400,13 +400,6 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
 
         res = M3sq[xq, xqb] mCoeff
       ]
- 
-    Hs12NLL[Event_?AssociationQ, obsSC_?AssociationQ, opts: OptionsPattern[]] :=
-      Hs12LL[Event, obsSC, opts]
-
-    Hs12NNLL[Event_?AssociationQ, obsSC_?AssociationQ, opts: OptionsPattern[]] :=
-      Hs12LL[Event, obsSC, opts]
-
 
     Hs11NLL[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
