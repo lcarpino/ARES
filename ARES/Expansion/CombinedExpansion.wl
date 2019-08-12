@@ -902,15 +902,18 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         mHs10hat = mHs10 + 1 mHs11 (-logXV) + 1 mHs12 (-logXV)^2;
         mHs24hat = mHs24;
         mHs23hat = mHs23 + 4 mHs24 (-logXV);
-        mHs22hat = mHs22 + 3 mHs23 (-logXV) + 6 mHs24 (-logXV)^2;
+        mHs22hat = (mHs22 + 6 Total[mG12]^2/2 (-logXV)^2
+                          + (3 Total[mG23] + 3 Total[mG12] (Total[mG11] + Total[mH11])) (-logXV));
  
         mHs12bh  = mHs12;
         mHs11bh  = mHs11 + 2 mHs12 (-logXV);
         mHs10bh  = mHs10 + 1 mHs11 (-logXV) + 1 mHs12 (-logXV)^2;
         mHs24bh  = mHs24;
         mHs23bh  = mHs23 + 4 mHs24 (-logXV);
-        mHs22bh  = mHs22 + 3 mHs23 (-logXV) + 6 mHs24 (-logXV)^2 + 2 Pi beta0 mG12.mlogXab;
-
+        mHs22bh = (mHs22
+                   + (6 Total[mG12]^2/2) (-logXV)^2
+                   + (3 Total[mG23] + 3 Total[mG12] (Total[mG11] + Total[mH11])) (-logXV)
+                   + 2 Pi beta0 mG12.mlogXab);
 
         Which[
           ((xmuRvar == True) && (logXVvar == True)),
@@ -1036,7 +1039,12 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         mHs24hat = mHs24;
         mHs23hat = mHs23;
         mHs22hat = mHs22 + 3 mHs23 (-logXV) + 6 mHs24 (-logXV)^2;
-        mHs21hat = mHs21 + 2 mHs22 (-logXV) + 3 mHs23 (-logXV)^2 + 4 mHs24 (-logXV)^3;
+        mHs21hat = (mHs21
+                    + (4 Total[mG12]^2/2) (-logXV)^3 
+                    + (3 Total[mG23] + 3 Total[mG12] (Total[mG11] + Total[mH11])) (-logXV)^2
+                    + (2 Total[mG22] + 2 Total[mH22] + 2 mF22
+                       + 2 Total[mG12] (Total[mG10] + mC1hc10 + mRs10 + mF10 + mH1)
+                       + 2 (Total[mG11] + Total[mH11])^2/2) (-logXV));
   
         mHs12bh  = mHs12;
         mHs11bh  = mHs11 + 2 mHs12 (-logXV);
@@ -1044,9 +1052,13 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         mHs24bh  = mHs24;
         mHs23bh  = mHs23;
         mHs22bh  = mHs22 + 3 mHs23 (-logXV) + 6 mHs24 (-logXV)^2 + 2 Pi beta0 mG12.mlogXab;
-        mHs21bh  = mHs21 + 2 mHs22 (-logXV) + 3 mHs23 (-logXV)^2 + 4 mHs24 (-logXV)^3 \
-                         + 2 Pi beta0 (mG11.mlogXab + 2 mG12.mlogXab (-logXV) + mH11.mlogXl);
-
+        mHs21bh = (mHs21
+                    + (4 Total[mG12]^2/2) (-logXV)^3 
+                    + (3 Total[mG23] + 3 Total[mG12] (Total[mG11] + Total[mH11])) (-logXV)^2
+                    + (2 Total[mG22] + 2 Total[mH22] + 2 mF22
+                       + 2 Total[mG12] (Total[mG10] + mC1hc10 + mRs10 + mF10 + mH1)
+                       + 2 (Total[mG11] + Total[mH11])^2/2) (-logXV)
+                    + 2 Pi beta0 (mG11.mlogXab + 2 mG12.mlogXab (-logXV) + mH11.mlogXl));
 
         Which[
           ((xmuRvar == True) && (logXVvar == True)),
