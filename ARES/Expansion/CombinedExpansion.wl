@@ -31,9 +31,9 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     Needs["ARES`Expansion`CollinearConstant`"]
     Needs["ARES`Expansion`AdditiveInterface`"]
 
-    ExpOpts =
+    MasterExpOpts =
       {
-        "Order" -> 2,
+        "Order"   -> "NNLL",
         "xmuRvar" ->True,
         "xmuR" -> 1,
         "logXVvar" -> True,
@@ -42,19 +42,317 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         "RadiatorScheme" -> "Physical"
       };
 
-    Options[Hs12] = ExpOpts;
-    Options[Hs11] = ExpOpts;
-    Options[Hs10] = ExpOpts;
-    Options[Hs24] = ExpOpts;
-    Options[Hs23] = ExpOpts;
-    Options[Hs22] = ExpOpts;
-    Options[Hs21] = ExpOpts;
-    Options[Hs20] = ExpOpts;
+    Options[Hs12] = MasterExpOpts;
+    Options[Hs11] = MasterExpOpts;
+    Options[Hs10] = MasterExpOpts;
+    Options[Hs24] = MasterExpOpts;
+    Options[Hs23] = MasterExpOpts;
+    Options[Hs22] = MasterExpOpts;
+    Options[Hs21] = MasterExpOpts;
+    Options[Hs20] = MasterExpOpts;
+
+    Hs12[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+      Module[
+        {
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
+          TransferFunctions = OptionValue["TransferFunctions"],
+          RadiatorScheme = OptionValue["RadiatorScheme"],
+          ExpOpts
+        },
+
+        ExpOpts =
+          {
+            "xmuRvar"  -> xmuRvar,
+            "xmuR"     -> xmuR,
+            "logXVvar" -> logXVvar,
+            "logXV"    -> logXV,
+            "TransferFunctions" -> Identity,
+            "RadiatorScheme"    -> "Physical"
+          };
+
+        Which[
+          Order == "LL",
+            Hs12LL[Event, obsSC, ExpOpts],
+          Order == "NLL",
+            Hs12LL[Event, obsSC, ExpOpts],
+          Order == "NNLL",
+            Hs12LL[Event, obsSC, ExpOpts]
+        ]
+      ]
+
+    Hs11[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+      Module[
+        {
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
+          TransferFunctions = OptionValue["TransferFunctions"],
+          RadiatorScheme = OptionValue["RadiatorScheme"],
+          ExpOpts
+        },
+
+        ExpOpts =
+          {
+            "xmuRvar"  -> xmuRvar,
+            "xmuR"     -> xmuR,
+            "logXVvar" -> logXVvar,
+            "logXV"    -> logXV,
+            "TransferFunctions" -> Identity,
+            "RadiatorScheme"    -> "Physical"
+          };
+
+        Which[
+          Order == "LL",
+            0,
+          Order == "NLL",
+            Hs11NLL[Event, obsSC, ExpOpts],
+          Order == "NNLL",
+            Hs11NNLL[Event, obsSC, ExpOpts]
+        ]
+      ]
+
+    Hs10[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+      Module[
+        {
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
+          TransferFunctions = OptionValue["TransferFunctions"],
+          RadiatorScheme = OptionValue["RadiatorScheme"],
+          ExpOpts
+        },
+
+        ExpOpts =
+          {
+            "xmuRvar"  -> xmuRvar,
+            "xmuR"     -> xmuR,
+            "logXVvar" -> logXVvar,
+            "logXV"    -> logXV,
+            "TransferFunctions" -> Identity,
+            "RadiatorScheme"    -> "Physical"
+          };
+
+        Which[
+          Order == "LL",
+            0,
+          Order == "NLL",
+            0,
+          Order == "NNLL",
+            Hs10NNLL[Event, obsSC, ExpOpts]
+        ]
+      ]
+
+    Hs24[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+      Module[
+        {
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
+          TransferFunctions = OptionValue["TransferFunctions"],
+          RadiatorScheme = OptionValue["RadiatorScheme"],
+          ExpOpts
+        },
+
+        ExpOpts =
+          {
+            "xmuRvar"  -> xmuRvar,
+            "xmuR"     -> xmuR,
+            "logXVvar" -> logXVvar,
+            "logXV"    -> logXV,
+            "TransferFunctions" -> Identity,
+            "RadiatorScheme"    -> "Physical"
+          };
+
+        Which[
+          Order == "LL",
+            Hs24LL[Event, obsSC, ExpOpts],
+          Order == "NLL",
+            Hs24LL[Event, obsSC, ExpOpts],
+          Order == "NNLL",
+            Hs24LL[Event, obsSC, ExpOpts]
+        ]
+      ]
+
+    Hs23[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+      Module[
+        {
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
+          TransferFunctions = OptionValue["TransferFunctions"],
+          RadiatorScheme = OptionValue["RadiatorScheme"],
+          ExpOpts
+        },
+
+        ExpOpts =
+          {
+            "xmuRvar"  -> xmuRvar,
+            "xmuR"     -> xmuR,
+            "logXVvar" -> logXVvar,
+            "logXV"    -> logXV,
+            "TransferFunctions" -> Identity,
+            "RadiatorScheme"    -> "Physical"
+          };
+
+        Which[
+          Order == "LL",
+            Hs23LL[Event, obsSC, ExpOpts],
+          Order == "NLL",
+            Hs23NLL[Event, obsSC, ExpOpts],
+          Order == "NNLL",
+            Hs23NNLL[Event, obsSC, ExpOpts]
+        ]
+      ]
+
+    Hs22[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+      Module[
+        {
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
+          TransferFunctions = OptionValue["TransferFunctions"],
+          RadiatorScheme = OptionValue["RadiatorScheme"],
+          ExpOpts
+        },
+
+        ExpOpts =
+          {
+            "xmuRvar"  -> xmuRvar,
+            "xmuR"     -> xmuR,
+            "logXVvar" -> logXVvar,
+            "logXV"    -> logXV,
+            "TransferFunctions" -> Identity,
+            "RadiatorScheme"    -> "Physical"
+          };
+
+        Which[
+          Order == "LL",
+            0,
+          Order == "NLL",
+            Hs22NLL[Event, obsSC, ExpOpts],
+          Order == "NNLL",
+            Hs22NNLL[Event, obsSC, ExpOpts]
+        ]
+      ]
+
+    Hs21[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+      Module[
+        {
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
+          TransferFunctions = OptionValue["TransferFunctions"],
+          RadiatorScheme = OptionValue["RadiatorScheme"],
+          ExpOpts
+        },
+
+        ExpOpts =
+          {
+            "xmuRvar"  -> xmuRvar,
+            "xmuR"     -> xmuR,
+            "logXVvar" -> logXVvar,
+            "logXV"    -> logXV,
+            "TransferFunctions" -> Identity,
+            "RadiatorScheme"    -> "Physical"
+          };
+
+        Which[
+          Order == "LL",
+            0,
+          Order == "NLL",
+            0,
+          Order == "NNLL",
+            Hs21NNLL[Event, obsSC, ExpOpts]
+        ]
+      ]
+
+    Hs20[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
+      Module[
+        {
+          Order    = OptionValue["Order"],
+          xmuRvar  = OptionValue["xmuRvar"],
+          xmuR     = OptionValue["xmuR"],
+          logXVvar = OptionValue["logXVvar"],
+          logXV    = OptionValue["logXV"],
+          TransferFunctions = OptionValue["TransferFunctions"],
+          RadiatorScheme = OptionValue["RadiatorScheme"],
+          ExpOpts
+        },
+
+        ExpOpts =
+          {
+            "xmuRvar"  -> xmuRvar,
+            "xmuR"     -> xmuR,
+            "logXVvar" -> logXVvar,
+            "logXV"    -> logXV,
+            "TransferFunctions" -> Identity,
+            "RadiatorScheme"    -> "Physical"
+          };
+
+        Which[
+          Order == "LL",
+            0,
+          Order == "NLL",
+            0,
+          Order == "NNLL",
+            0           
+        ]
+      ]
+
+
+    ExpOpts =
+      {
+        "xmuRvar" ->True,
+        "xmuR" -> 1,
+        "logXVvar" -> True,
+        "logXV" -> 0,
+        "TransferFunctions" -> Identity,
+        "RadiatorScheme" -> "Physical"
+      };
+
+    Options[Hs12LL]    = ExpOpts;
+    Options[Hs12NLL]   = ExpOpts;
+    Options[Hs12NNLL]  = ExpOpts;
+
+    Options[Hs11NLL]   = ExpOpts;
+    Options[Hs11NNLL]  = ExpOpts;
+
+    Options[Hs10NNLL]  = ExpOpts;
+
+    Options[Hs24LL]    = ExpOpts;
+    Options[Hs24NLL]   = ExpOpts;
+    Options[Hs24NNLL]  = ExpOpts;
+
+    Options[Hs23LL]    = ExpOpts;
+    Options[Hs23NLL]   = ExpOpts;
+    Options[Hs23NNLL]  = ExpOpts;
+
+    Options[Hs22NLL]   = ExpOpts;
+    Options[Hs22NNLL]  = ExpOpts;
+
+    Options[Hs21NNLL]  = ExpOpts;
+
+    Options[Hs20NNNLL] = ExpOpts;
 
     Hs12LL[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order    = OptionValue["Order"],
           xmuRvar  = OptionValue["xmuRvar"],
           xmuR     = OptionValue["xmuR"],
           logXVvar = OptionValue["logXVvar"],
@@ -103,10 +401,16 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         res = M3sq[xq, xqb] mCoeff
       ]
  
+    Hs12NLL[Event_?AssociationQ, obsSC_?AssociationQ, opts: OptionsPattern[]] :=
+      Hs12LL[Event, obsSC, opts]
+
+    Hs12NNLL[Event_?AssociationQ, obsSC_?AssociationQ, opts: OptionsPattern[]] :=
+      Hs12LL[Event, obsSC, opts]
+
+
     Hs11NLL[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order    = OptionValue["Order"],
           xmuRvar  = OptionValue["xmuRvar"],
           xmuR     = OptionValue["xmuR"],
           logXVvar = OptionValue["logXVvar"],
@@ -138,10 +442,10 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         mHs11bar = mHs11;
 
         mHs12hat = mHs12;
-        mHs11hat = mHs11 + 2 mHs12 (-logXV);
+        mHs11hat = mHs11 + 2 Total[mG12] (-logXV);
 
         mHs12bh  = mHs12;
-        mHs11bh  = mHs11 + 2 mHs12 (-logXV);
+        mHs11bh  = mHs11 + 2 Total[mG12] (-logXV);
 
 
         Which[
@@ -161,7 +465,6 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     Hs10NNLL[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order    = OptionValue["Order"],
           xmuRvar  = OptionValue["xmuRvar"],
           xmuR     = OptionValue["xmuR"],
           logXVvar = OptionValue["logXVvar"],
@@ -225,12 +528,12 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         mHs10bar = mHs10;
 
         mHs12hat = mHs12;
-        mHs11hat = mHs11 + 2 mHs12 (-logXV);
-        mHs10hat = mHs10 + mHs11 (-logXV) + mHs12 (-logXV)^2;
+        mHs11hat = mHs11 + 2 Total[mG12] (-logXV);
+        mHs10hat = mHs10 + (Total[mG11] + Total[mH11]) (-logXV) + Total[mG12] (-logXV)^2;
   
         mHs12bh  = mHs12;
-        mHs11bh  = mHs11 + 2 mHs12 (-logXV);
-        mHs10bh  = mHs10 + mHs11 (-logXV) + mHs12 (-logXV)^2;
+        mHs11bh  = mHs11 + 2 Total[mG12] (-logXV);
+        mHs10bh  = mHs10 + (Total[mG11] + Total[mH11]) (-logXV) + Total[mG12] (-logXV)^2;
 
 
         Which[
@@ -250,7 +553,6 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     Hs24LL[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order    = OptionValue["Order"],
           xmuRvar  = OptionValue["xmuRvar"],
           xmuR     = OptionValue["xmuR"],
           logXVvar = OptionValue["logXVvar"],
@@ -307,7 +609,6 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     Hs23LL[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order    = OptionValue["Order"],
           xmuRvar  = OptionValue["xmuRvar"],
           xmuR     = OptionValue["xmuR"],
           logXVvar = OptionValue["logXVvar"],
@@ -354,7 +655,6 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     Hs23NLL[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order    = OptionValue["Order"],
           xmuRvar  = OptionValue["xmuRvar"],
           xmuR     = OptionValue["xmuR"],
           logXVvar = OptionValue["logXVvar"],
@@ -394,14 +694,14 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         mHs23bar = mHs23;
   
         mHs12hat = mHs12;
-        mHs11hat = mHs11 + 2 mHs12 (-logXV);
+        mHs11hat = mHs11 + 2 Total[mG12] (-logXV);
         mHs24hat = mHs24;
-        mHs23hat = mHs23 + 4 mHs24 (-logXV);
+        mHs23hat = mHs23 + 4 Total[mG12]^2/2 (-logXV);
 
         mHs12bh  = mHs12;
-        mHs11bh  = mHs11 + 2 mHs12 (-logXV);
+        mHs11bh  = mHs11 + 2 Total[mG12] (-logXV);
         mHs24bh  = mHs24;
-        mHs23bh  = mHs23 + 4 mHs24 (-logXV);
+        mHs23bh  = mHs23 + 4 Total[mG12]^2/2 (-logXV);
 
 
         Which[
@@ -421,7 +721,6 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     Hs22NLL[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order    = OptionValue["Order"],
           xmuRvar  = OptionValue["xmuRvar"],
           xmuR     = OptionValue["xmuR"],
           logXVvar = OptionValue["logXVvar"],
@@ -458,18 +757,18 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
 
         RpNLL11 = RadpNLL11[legs, obsSC];
 
-        mG12   = G12[dipoles, obsSC],
-        mG11   = G11[dipoles, obsSC],
-        mG23   = G23[dipoles, obsSC],
-        mG22   = G22[dipoles, obsSC],
+        mG12   = G12[dipoles, obsSC];
+        mG11   = G11[dipoles, obsSC];
+        mG23   = G23[dipoles, obsSC];
+        mG22   = G22[dipoles, obsSC];
 
-        mH11   = H11[legs, obsSC],
-        mH22   = H22[legs, obsSC],
+        mH11   = H11[legs, obsSC];
+        mH22   = H22[legs, obsSC];
 
-        mF22    = FNLL22[RpNLL11],
+        mF22    = FNLL22[RpNLL11];
 
-        mlogXab = LogXdipoles[dipoles, xmuR],
-        mlogXl  = LogXlegs[legs, xmuR]
+        mlogXab = LogXdipoles[dipoles, xmuR];
+        mlogXl  = LogXlegs[legs, xmuR];
 
         mHs12 = Total[mG12];
         mHs11 = Total[mG11] + Total[mH11];
@@ -487,14 +786,16 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
         mHs11hat = mHs11 + 2 mHs12 (-logXV);
         mHs24hat = mHs24;
         mHs23hat = mHs23 + 4 mHs24 (-logXV);
-        mHs22hat = mHs22 + 3 mHs23 (-logXV) + 4 mHs24 (-logXV)^2;
+        mHs22hat = (mHs22 + 4 Total[mG12]^2/2 (-logXV)^2
+                          + (3 Total[mG23] + 2 Total[mG12] (Total[mG11] + Total[mH11])) (-logXV));
  
         mHs12bh  = mHs12;
         mHs11bh  = mHs11 + 2 mHs12 (-logXV);
         mHs24bh  = mHs24;
         mHs23bh  = mHs23 + 4 mHs24 (-logXV);
-        mHs22bh  = mHs22 + 3 mHs23 (-logXV) + 4 mHs24 (-logXV)^2 + 2 Pi beta0 mG12.mlogXab;
-
+        mHs22bh  = (mHs22 + 4 Total[mG12]^2/2 (-logXV)^2
+                          + (3 Total[mG23] + 2 Total[mG12] (Total[mG11] + Total[mH11])) (-logXV)
+                          + 2 Pi beta0 mG12.mlogXab);
 
         Which[
           ((xmuRvar == True) && (logXVvar == True)),
@@ -513,7 +814,6 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     Hs22NNLL[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order    = OptionValue["Order"],
           xmuRvar  = OptionValue["xmuRvar"],
           xmuR     = OptionValue["xmuR"],
           logXVvar = OptionValue["logXVvar"],
@@ -636,7 +936,6 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
     Hs21NNLL[Event_?AssociationQ, obsSC_?AssociationQ, OptionsPattern[]] :=
       Module[
         {
-          Order    = OptionValue["Order"],
           xmuRvar  = OptionValue["xmuRvar"],
           xmuR     = OptionValue["xmuR"],
           logXVvar = OptionValue["logXVvar"],
