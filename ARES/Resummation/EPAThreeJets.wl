@@ -166,7 +166,7 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
  
         Rs  = Rads[lambda, alphaS, xmuR, logXV, 2, dipoles, obsSC];
         Rhc = Radhc[lambda, alphaS, xmuR, logXV, 2, legs, obsSC];
-        RsConst  = Rads[0., alphaS, xmuR, logXV, 2, dipoles, obsSC];
+        RsConst  = Rads[0, alphaS, xmuR, logXV, 2, dipoles, obsSC];
         RhcConst = Radhc[0, alphaS, xmuR, logXV, 2, legs, obsSC];
 
         RpNLL = RadpNLL[lambda, legs, obsSC];

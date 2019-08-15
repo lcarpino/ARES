@@ -92,6 +92,7 @@ BeginPackage["ARES`Driver`Expansion`"]
         logX0 = Log[X0];
         logXV = logXstrategy[dipoles, legs, obsSC] + logX0;
 
+        (*
         (* set up expansion options*)
         Which[
           Order == "LL",
@@ -101,10 +102,11 @@ BeginPackage["ARES`Driver`Expansion`"]
           Order == "NNLL",
             OrderExpansion = 2
         ];
+        *)
 
         ExpansionOpts =
           {
-            "Order" -> OrderExpansion,
+            "Order" -> Order,
             "xmuR"  -> xmuR,
             "logXV" -> logXV,
             "TransferFunctions" -> obs["TransferFunctions"],
@@ -114,6 +116,7 @@ BeginPackage["ARES`Driver`Expansion`"]
         (* set up the logarithm *)
         Ltilde = LtildePT[Exp[-logV], Exp[logXV]];
 
+        (*
         (* LL contributions to expansion *)
         res0 = M3sq[xq, xqb];
         res1 = Hs12[event, obsSC, ExpansionOpts] Ltilde^2;
@@ -131,6 +134,16 @@ BeginPackage["ARES`Driver`Expansion`"]
           res1 = res1 + Hs10[event, obsSC, ExpansionOpts];
           res2 = res2 + Hs21[event, obsSC, ExpansionOpts] Ltilde;
         ];
+        *)
+
+        res0 = M3sq[xq, xqb];
+        res1 = (Hs12[event, obsSC, ExpansionOpts] Ltilde^2
+               +Hs11[event, obsSC, ExpansionOpts] Ltilde
+               +Hs10[event, obsSC, ExpansionOpts]);
+        res2 = (Hs24[event, obsSC, ExpansionOpts] Ltilde^4
+               +Hs23[event, obsSC, ExpansionOpts] Ltilde^3
+               +Hs22[event, obsSC, ExpansionOpts] Ltilde^2
+               +Hs21[event, obsSC, ExpansionOpts] Ltilde);
 
         Which[
           asOrder == 0,
@@ -211,6 +224,7 @@ BeginPackage["ARES`Driver`Expansion`"]
         logX0 = Log[X0];
         logXV = logXstrategy[dipoles, legs, obsSC] + logX0;
 
+        (*
         (* set up expansion options*)
         Which[
           Order == "LL",
@@ -220,10 +234,11 @@ BeginPackage["ARES`Driver`Expansion`"]
           Order == "NNLL",
             OrderExpansion = 2
         ];
+        *)
 
         ExpansionOpts =
           {
-            "Order" -> OrderExpansion,
+            "Order" -> Order,
             "xmuR"  -> xmuR,
             "logXV" -> logXV,
             "TransferFunctions" -> obs["TransferFunctions"],
