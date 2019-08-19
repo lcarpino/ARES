@@ -35,7 +35,8 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearParametrisation`"]
           xq, xqb,
           diplogdabbar, diplog2dabbar,
           diplogdbar, diplog2dbar,
-          leglogdlbar, leglog2dlbar
+          leglogdlbar, leglog2dlbar,
+          mlogd, mlogdbar
         },
   
         (* find q flavour leg *)
@@ -51,6 +52,9 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearParametrisation`"]
           legs[[2]]["flav"] == "qb", xqb = legs[[2]]["x"],
           legs[[3]]["flav"] == "qb", xqb = legs[[3]]["x"]
         ];
+
+        mlogd = Map[logd[xq, xqb] &, legs];
+        mlogdbar = Map[logdbar[xq, xqb] &, legs];
 
         diplogdabbar = Map[logdabbar[#] &, dipoles];
         diplog2dabbar = Map[log2dabbar[#] &, dipoles];
@@ -78,11 +82,22 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearParametrisation`"]
           "ktpow" -> ktpow,
           "etapow" -> etapow,
           "spow" -> spow,
+          "logd" -> mlogd,
+          "logdbar" -> mlogdbar,
           "logdabbar" -> diplogdbar,
           "log2dabbar" -> diplog2dbar,
           "logdlbar" -> leglogdlbar,
           "log2dlbar" -> leglog2dlbar
         ]
+      ]
+
+    d[xq_?NumericQ, xqb_?NumericQ] :=
+      Module[
+        {lambda12, xl, xg = 2 - xq - xqb},
+
+        lambda12 = (2 (1 - xq) (1 - xqb) (1 - xg))/(xq xqb xg);
+
+        54 lambda12
       ]
 
     dl[leg_?AssociationQ, xq_?NumericQ, xqb_?NumericQ] :=
@@ -110,6 +125,12 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearParametrisation`"]
   
         {daba, dabb}
       ]
+
+    logd[xq_?NumericQ, xqb_?NumericQ] :=
+      Log[d[xq, xqb]]
+
+    logdbar[xq_?NumericQ, xqb_?NumericQ] :=
+      Log[d[xq, xqb]] - spow Log[2]
 
     logdlbar[leg_?AssociationQ, xq_?NumericQ, xqb_?NumericQ] := 
       Log[dl[leg, xq, xqb]] - spow Log[2]

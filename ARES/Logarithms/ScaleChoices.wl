@@ -13,12 +13,21 @@
 BeginPackage["ARES`Logarithms`ScaleChoices`"]
 
   LogXConst::usage = ""
+  LogXproddbarcwt::usage = ""
   LogXproddlbarcwt::usage = ""
   LogXproddabbarcwt::usage = ""
 
   Begin["`Private`"]
 
     LogXConst[dip_?ListQ, leg_?ListQ, obspar_?AssociationQ] := 0
+
+    LogXproddbarcwt[dips_?ListQ, legs_?ListQ, obspar_?AssociationQ] :=
+      Module[
+        {ct, res},
+
+        ct = Total[Map[#["col"] &, legs]];
+        res = 1/ct Total[Map[LogXproddbarcwtl[#, obspar] &, legs]]
+      ]
 
     LogXproddlbarcwt[dips_?ListQ, legs_?ListQ, obspar_?AssociationQ] :=
       Module[
@@ -34,6 +43,15 @@ BeginPackage["ARES`Logarithms`ScaleChoices`"]
 
         ct = Total[Map[#["col"] &, dips]];
         res = 1/ct Total[Map[LogXproddabbarcwtab[#, obspar] &, dips]]
+      ]
+
+    LogXproddbarcwtl[leg_?AssociationQ, obspar_?AssociationQ] :=
+      Module[
+        {logdbar, res},
+
+        logdbar = obspar["logdbar"][[leg["num"]]];
+
+        res = leg["col"] logdbar
       ]
 
     LogXproddlbarcwtl[leg_?AssociationQ, obspar_?AssociationQ] :=
