@@ -12,7 +12,7 @@
 
 BeginPackage["ARES`Logarithms`ScaleChoices`"]
 
-  LogXConst::usage = ""
+  LogXconst::usage = ""
   LogXproddcwt::usage = ""
   LogXproddbarcwt::usage = ""
   LogXproddlbarcwt::usage = ""
@@ -20,7 +20,7 @@ BeginPackage["ARES`Logarithms`ScaleChoices`"]
 
   Begin["`Private`"]
 
-    LogXConst[dip_?ListQ, leg_?ListQ, obspar_?AssociationQ] := 0
+    LogXconst[dip_?ListQ, leg_?ListQ, obspar_?AssociationQ] := 0
 
     LogXproddcwt[dips_?ListQ, legs_?ListQ, obspar_?AssociationQ] :=
       Module[

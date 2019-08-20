@@ -31,7 +31,7 @@ BeginPackage["ARES`Driver`Resummation`"]
         "Q" -> MZ,
         "RadiatorScheme" -> "Physical",
         "muRstrategy"  -> muRConst,  "muR0" -> 1, 
-        "logXstrategy" -> LogXConst, "X0"   -> 1,
+        "LogXstrategy" -> LogXconst, "X0"   -> 1,
         "refscale" -> MZ, "refalphas" -> AlphaSMZ,
         "muI" -> 2.0, "alpha0" -> 0.52
       };
@@ -47,7 +47,7 @@ BeginPackage["ARES`Driver`Resummation`"]
           RadiatorScheme = OptionValue["RadiatorScheme"],
           muRstrategy = OptionValue["muRstrategy"], 
           muR0 = OptionValue["muR0"],
-          logXstrategy = OptionValue["logXstrategy"], 
+          LogXstrategy = OptionValue["LogXstrategy"], 
           X0 = OptionValue["X0"],
           refscale = OptionValue["refscale"], 
           refalphas = OptionValue["refalphas"],
@@ -86,7 +86,7 @@ BeginPackage["ARES`Driver`Resummation`"]
 
         (* set up logarithm scales *)
         logX0 = Log[X0];
-        logXV = logXstrategy[dipoles, legs, obsSC] + logX0;
+        logXV = LogXstrategy[dipoles, legs, obsSC] + logX0;
 
         Which[
           Contribution == "PT",

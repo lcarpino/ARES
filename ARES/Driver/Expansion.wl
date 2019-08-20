@@ -34,7 +34,7 @@ BeginPackage["ARES`Driver`Expansion`"]
         "Q" -> MZ,
         "RadiatorScheme" -> "Physical",
         "muRstrategy"  -> muRConst,  "muR0" -> 1,
-        "logXstrategy" -> LogXConst, "X0"   -> 1,
+        "LogXstrategy" -> LogXconst, "X0"   -> 1,
         "refscale" -> MZ, "refalphas" -> AlphaSMZ
       };
 
@@ -49,7 +49,7 @@ BeginPackage["ARES`Driver`Expansion`"]
           RadiatorScheme = OptionValue["RadiatorScheme"],
           muRstrategy = OptionValue["muRstrategy"],
           muR0 = OptionValue["muR0"],
-          logXstrategy = OptionValue["logXstrategy"],
+          LogXstrategy = OptionValue["LogXstrategy"],
           X0 = OptionValue["X0"],
           refscale = OptionValue["refscale"],
           refalphas = OptionValue["refalphas"],
@@ -90,7 +90,7 @@ BeginPackage["ARES`Driver`Expansion`"]
 
         (* set up logarithm scales *)
         logX0 = Log[X0];
-        logXV = logXstrategy[dipoles, legs, obsSC] + logX0;
+        logXV = LogXstrategy[dipoles, legs, obsSC] + logX0;
 
         (*
         (* set up expansion options*)
@@ -168,7 +168,7 @@ BeginPackage["ARES`Driver`Expansion`"]
         "Q" -> MZ,
         "RadiatorScheme" -> "Physical",
         "muRstrategy"  -> muRConst,  "muR0" -> 1,
-        "logXstrategy" -> LogXConst, "X0"   -> 1,
+        "LogXstrategy" -> LogXconst, "X0"   -> 1,
         "refscale" -> MZ, "refalphas" -> AlphaSMZ
       };
 
@@ -182,7 +182,7 @@ BeginPackage["ARES`Driver`Expansion`"]
           RadiatorScheme = OptionValue["RadiatorScheme"],
           muRstrategy = OptionValue["muRstrategy"],
           muR0 = OptionValue["muR0"],
-          logXstrategy = OptionValue["logXstrategy"],
+          LogXstrategy = OptionValue["LogXstrategy"],
           X0 = OptionValue["X0"],
           refscale = OptionValue["refscale"],
           refalphas = OptionValue["refalphas"],
@@ -222,7 +222,7 @@ BeginPackage["ARES`Driver`Expansion`"]
 
         (* set up logarithm scales *)
         logX0 = Log[X0];
-        logXV = logXstrategy[dipoles, legs, obsSC] + logX0;
+        logXV = LogXstrategy[dipoles, legs, obsSC] + logX0;
 
         (*
         (* set up expansion options*)
