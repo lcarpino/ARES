@@ -30,7 +30,7 @@ BeginPackage["ARES`Driver`Resummation`"]
         "Order" -> "NNLL",
         "Q" -> MZ,
         "RadiatorScheme" -> "Physical",
-        "muRstrategy"  -> muRConst,  "muR0" -> 1, 
+        "muRstrategy"  -> muRconst,  "muR0" -> 1, 
         "LogXstrategy" -> LogXconst, "X0"   -> 1,
         "refscale" -> MZ, "refalphas" -> AlphaSMZ,
         "muI" -> 2.0, "alpha0" -> 0.52
@@ -51,6 +51,8 @@ BeginPackage["ARES`Driver`Resummation`"]
           X0 = OptionValue["X0"],
           refscale = OptionValue["refscale"], 
           refalphas = OptionValue["refalphas"],
+          muI = OptionValue["muI"],
+          alpha0 = OptionValue["alpha0"],
           event, dipoles, legs,
           obsSC,
           muR, xmuR, logX0, logXV,
@@ -118,8 +120,8 @@ BeginPackage["ARES`Driver`Resummation`"]
                 "RadiatorScheme" -> RadiatorScheme,
                 "DeltaNP" -> obs["DeltaNP"][event],
                 "Q" -> Q,
-                "alpha0" -> 0.52,
-                "muI" -> 2.0
+                "alpha0" -> alpha0,
+                "muI" -> muI
               };
 
             Which[

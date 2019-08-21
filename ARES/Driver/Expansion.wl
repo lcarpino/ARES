@@ -33,7 +33,7 @@ BeginPackage["ARES`Driver`Expansion`"]
         "AlphaSOrder" -> "All",
         "Q" -> MZ,
         "RadiatorScheme" -> "Physical",
-        "muRstrategy"  -> muRConst,  "muR0" -> 1,
+        "muRstrategy"  -> muRconst,  "muR0" -> 1,
         "LogXstrategy" -> LogXconst, "X0"   -> 1,
         "refscale" -> MZ, "refalphas" -> AlphaSMZ
       };
@@ -167,7 +167,7 @@ BeginPackage["ARES`Driver`Expansion`"]
         "Order" -> "NNLL",
         "Q" -> MZ,
         "RadiatorScheme" -> "Physical",
-        "muRstrategy"  -> muRConst,  "muR0" -> 1,
+        "muRstrategy"  -> muRconst,  "muR0" -> 1,
         "LogXstrategy" -> LogXconst, "X0"   -> 1,
         "refscale" -> MZ, "refalphas" -> AlphaSMZ
       };
