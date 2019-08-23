@@ -17,10 +17,31 @@ BeginPackage["ARES`HardConstants`CollinearConstant`", "ARES`QCD`Constants`"]
 
   Begin["`Private`"]
 
+    C1hc[lambda_?NumericQ, legs_?ListQ, obspar_?AssociationQ] :=
+      Total[Map[C1hcl[lambda, #, obspar] &, legs]]
+
     C1hc[lambda_?NumericQ, xq_?NumericQ, xqb_?NumericQ, 
          legs_?ListQ, obspar_?AssociationQ] :=
       Total[Map[C1hcl[lambda, xq, xqb, #, obspar] &, legs]]
 
+    C1hcl[lambda_?NumericQ, leg_?AssociationQ, obspar_?AssociationQ] :=
+      Module[
+        {a, b, logdlbar, spow, res},
+  
+        a = obspar["ktpow"];
+        b = obspar["etapow"][[leg["num"]]];
+        logdlbar = obspar["logdlbar"][[leg["num"]]];
+  
+        Which[
+          leg["flav"] == "q" || leg["flav"] == "qb",
+            {res = CF (7/2 b/(a + b) + 1/(a + b) 3 logdlbar + 1/2)},
+          leg["flav"] == "g",
+            {res = ((67/18 CA - 13/9 TF NF) b/(a + b)
+                    + 1/(a + b) (11/3 CA - 4/3 TF NF) logdlbar + 1/3 TF NF)}
+        ];
+
+        1/(1 - (2 lambda)/(a + b)) res
+      ]
 
     C1hcl[lambda_?NumericQ, xq_?NumericQ, xqb_?NumericQ, 
           leg_?AssociationQ, obspar_?AssociationQ] :=

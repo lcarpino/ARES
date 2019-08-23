@@ -29,6 +29,7 @@ context =
     "ARES`Logarithms`ScaleChoices`",
 
     (* Event Geometry *)
+    "ARES`Event`EventTwoJets`",
     "ARES`Event`EventThreeJets`",
 
     (* Radiator *)
@@ -40,6 +41,7 @@ context =
     "ARES`MultipleEmission`AdditiveInterface`",
 
     (* Resummation *)
+    "ARES`Resummation`EPATwoJets`",
     "ARES`Resummation`EPAThreeJets`",
 
     (* Expansion of the resummation *)
