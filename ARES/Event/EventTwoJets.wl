@@ -43,7 +43,7 @@ BeginPackage["ARES`Event`EventTwoJets`",
         },
   
         x1 = 1;
-        x2 = 2;
+        x2 = 1;
         legmap = Association["q" -> 1, "qb" -> 2, 1 -> "q", 2 -> "qb"];
   
         colmap = Association["q" -> CF, "qb" -> CF];
