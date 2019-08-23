@@ -21,31 +21,88 @@ BeginPackage["ARES`Observables`CParameter`SoftCollinearParametrisation`"]
     etapow = {1, 1};
     spow = 0;
 
-    BuildMapCParameter[] :=
+    BuildMapCParameter[dipoles_?ListQ, legs_?ListQ] :=
+      Module[
+        {
+          diplogdabbar, diplog2dabbar,
+          diplogdbar, diplog2dbar,
+          leglogdlbar, leglog2dlbar,
+          mlogd, mlogdbar
+        },
+
+        mlogd = Map[logd[] &, legs];
+        mlogdbar = Map[logdbar[] &, legs];
+
+        diplogdabbar = Map[logdabbar[] &, dipoles];
+        diplog2dabbar = Map[log2dabbar[] &, dipoles];
+  
+        diplogdbar =
+          Association[
+            Table[
+              dipoles[[i]]["num"] -> diplogdabbar[[i]],
+            {i, Length[dipoles]}
+            ]
+          ];
+  
+        diplog2dbar =
+          Association[
+            Table[
+              dipoles[[i]]["num"] -> diplog2dabbar[[i]],
+              {i, Length[dipoles]}
+            ]
+          ];
+  
+        leglogdlbar = Map[logdlbar[] &, legs];
+        leglog2dlbar = Map[log2dlbar[] &, legs];
+   
+        Association[
+          "ktpow" -> ktpow,
+          "etapow" -> etapow,
+          "spow" -> spow,
+          "logd" -> mlogd,
+          "logdbar" -> mlogdbar,
+          "logdabbar" -> diplogdbar,
+          "log2dabbar" -> diplog2dbar,
+          "logdlbar" -> leglogdlbar,
+          "log2dlbar" -> leglog2dlbar
+        ]
+      ]
+
+    d[] :=
       Module[
         {},
-        0
+        6
       ]
 
     dl[] :=
       Module[
         {},
-        0
+        6
       ]
 
     dab[] :=
       Module[
         {},
-        0
+        {6, 6}
       ]
 
-    logdlbar[] := 0
+    logd[] :=
+      Log[d[]]
 
-    log2dlbar[] := 0
+    logdbar[] :=
+      Log[d[]] - spow Log[2]
 
-    logdabbar[] := 0
+    logdlbar[] :=
+      Log[dl[]] - spow Log[2]
 
-    log2dabbar[] := 0
+    log2dlbar[] :=
+      (Log[dl[]] - spow Log[2])^2 + spow^2/2 Zeta[2]
+
+    logdabbar[] :=
+      Log[dab[]] - spow Log[2]
+
+    log2dabbar[] :=
+      (Log[dab[]] - spow Log[2])^2 + spow^2/2 Zeta[2]
 
   End[]
 
