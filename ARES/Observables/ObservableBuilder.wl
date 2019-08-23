@@ -17,6 +17,7 @@ BeginPackage["ARES`Observables`ObservableBuilder`"]
   Begin["`Private`"]
     Needs["ARES`Observables`DParameter`Initialise`"];
     Needs["ARES`Observables`CParameter`Initialise`"];
+    Needs["ARES`Observables`Thrust`Initialise`"];
 
     BuildObservable[Observable_] :=
       Module[
@@ -28,7 +29,10 @@ BeginPackage["ARES`Observables`ObservableBuilder`"]
             BuildDParameter[],
           Observable == "CParameter",
             InitialiseCParameter[];
-            BuildCParameter[]
+            BuildCParameter[],
+          Observable == "Thrust",
+            InitialiseThrust[];
+            BuildThrust[]
         ]
       ]
 
