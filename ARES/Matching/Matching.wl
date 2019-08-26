@@ -28,11 +28,11 @@ BeginPackage["ARES`Matching`Matching`"]
         (* order = Length[ResumExpanded]; *)
 
         (* perform the matching *)
-        matching = Exp[(SigmaBar[[1]]-ResumExpanded[[1]])/sigma[[1]]];
+        matching = Exp[(SigmaBar[[1]]-ResumExpanded[[1]])];
 
         If[order >= 2,
-          matching = (matching Exp[(SigmaBar[[2]]-ResumExpanded[[2]])/sigma[[1]]]
-                      Exp[-(SigmaBar[[1]]^2 - ResumExpanded[[1]]^2)/(2 sigma[[1]]^2)]);
+          matching = (matching Exp[(SigmaBar[[2]]-ResumExpanded[[2]])]
+                      Exp[-(SigmaBar[[1]]^2 - ResumExpanded[[1]]^2)/2]);
         ];
 
         matching = Resum matching;
@@ -53,7 +53,7 @@ BeginPackage["ARES`Matching`Matching`"]
         Z = (1 - v/v[[-1]]);
 
         (* perform the matching *)
-        matching = sigma[[1]];
+        matching = 1;
 
         If[order >= 1,
           matching = matching + SigmaBar[[1]] - Z ResumExpanded[[1]];
@@ -61,10 +61,10 @@ BeginPackage["ARES`Matching`Matching`"]
 
         If[order >= 2,
           matching = (matching + SigmaBar[[2]] - Z ResumExpanded[[2]]
-                      - Z ResumExpanded[[1]]/sigma[[1]] (SigmaBar[[1]] - (Z+1)/2 ResumExpanded[[1]]));
+                      - Z ResumExpanded[[1]] (SigmaBar[[1]] - (Z+1)/2 ResumExpanded[[1]]));
         ];
 
-        matching = (Resum/sigma[[1]])^Z matching;
+        matching = Resum^Z matching;
 
         (* normalise distribution to one at end point *)
         res = matching/matching[[-1]]
