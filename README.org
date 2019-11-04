@@ -1,2 +1,24 @@
 #+TITLE: ARES
 #+AUTHOR: Luke Arpino
+
+ARES is a Mathematica package for resumming event-shape variables at
+next-to-next-to-leading-logarithmic accuracy.
+
+* Download
+
+You can obtain ARES releases directly from the github repository:
+
+https://github.com/lcarpino/ARES/releases
+
+For the latest development version you can clone the master:
+#+BEGIN_SRC sh
+git clone https://github.com/lcarpino/ARES.git
+#+END_SRC
+
+For the latest tag:
+#+BEGIN_SRC sh
+git tag -l
+git checkout tags/tag_name
+#+END_SRC
+
+* Installation
