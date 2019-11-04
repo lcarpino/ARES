@@ -106,11 +106,6 @@ BeginPackage["ARES`Resummation`EPATwoJets`"]
         Rs =  Rads[lambda, alphaS, xmuR, logXV, 1, dipoles, obsSC];
         Rhc = Radhc[lambda, alphaS, xmuR, logXV, 1, legs, obsSC];
         RpNLL =  RadpNLL[lambda, legs, obsSC];
-        (* RsNNLL = RadsNNLL[lambda, alphaS, legs, obsSC]; *)
-        (*
-        mFNLL = (FNLL[RpNLL] + alphaS beta0 FpNNLL[RpNLL, RsNNLL, alphaS] (-logXV)
-                 + 1/2 (alphaS beta0)^2 FsNNNLL[RpNLL, RsNNLL, alphaS] (-logXV)^2);
-        *)
         mFNLL = FNLL[RpNLL];
   
         res = Exp[-Rs-Rhc] mFNLL
