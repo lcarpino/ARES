@@ -23,14 +23,13 @@ context =
     "ARES`QCD`Constants`",
     "ARES`QCD`AlphaS`",
     "ARES`QCD`ScaleChoices`",
-    "ARES`EPA`MatrixElements`",
+    "ARES`MatrixElements`EPA`",
 
     (* Logarithms *)
     "ARES`Logarithms`ScaleChoices`",
 
     (* Event Geometry *)
-    "ARES`Event`EventTwoJets`",
-    "ARES`Event`EventThreeJets`",
+    "ARES`Event`Event`",
 
     (* Radiator *)
     "ARES`Radiator`SoftRadiator`",
@@ -41,8 +40,7 @@ context =
     "ARES`MultipleEmission`AdditiveInterface`",
 
     (* Resummation *)
-    "ARES`Resummation`EPATwoJets`",
-    "ARES`Resummation`EPAThreeJets`",
+    "ARES`Resum`Resum`",
 
     (* Expansion of the resummation *)
     "ARES`Expansion`SoftRadiatorExpansion`",

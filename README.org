@@ -22,3 +22,32 @@ git checkout tags/tag_name
 #+END_SRC
 
 * Installation
+
+To install, simply copy the ARES directory into
+#+BEGIN_SRC sh
+/home/$USER/.Mathematica/Applications
+#+END_SRC
+Alternatively one may link to the ARES directory instead
+#+BEGIN_SRC sh
+ln -s ARES /home/$USER/.Mathematica/Applications/ARES
+#+END_SRC
+
+* Usage
+
+To use ARES in a Mathematica notebook or package include
+#+BEGIN_SRC Mathematica
+<<ARES`
+#+END_SRC
+
+An example of standard usage
+#+BEGIN_SRC Mathematica
+(* Load the ARES package *)
+<<ARES`
+
+(* declare an observable of interest, the D-parameter here *)
+dpar = BuildObservable["DParameter"];
+
+(* Resum the D-parameter for the event configuration given by {xq, xqb}, 
+   where the observable takes the value v *)
+Resum[{xq, xqb}, Log[1/v], dpar, {"Order" -> "NNLL"}]
+#+END_SRC

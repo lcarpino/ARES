@@ -17,12 +17,12 @@ BeginPackage["ARES`Driver`Resummation`"]
 
   Begin["`Private`"]
 
-    Needs["ARES`Event`EventThreeJets`"]
+    Needs["ARES`Event`Event`"]
     Needs["ARES`QCD`Constants`"]
     Needs["ARES`QCD`AlphaS`"]
     Needs["ARES`QCD`ScaleChoices`"]
     Needs["ARES`Logarithms`ScaleChoices`"]
-    Needs["ARES`Resummation`EPAThreeJets`"]
+    Needs["ARES`Resum`Resum`"]
 
     Options[Resum] =
       {
@@ -36,7 +36,7 @@ BeginPackage["ARES`Driver`Resummation`"]
         "muI" -> 2.0, "alpha0" -> 0.52
       };
 
-    Resum[xq_?NumericQ, xqb_?NumericQ, logV_?NumericQ, obs_?AssociationQ,
+    Resum[eventConfig_List, logV_?NumericQ, obs_?AssociationQ,
           OptionsPattern[]] :=
 
       Module[
@@ -60,7 +60,7 @@ BeginPackage["ARES`Driver`Resummation`"]
         },
 
         (* set up the event *)
-        event = BuildEvent[xq, xqb];
+        event = BuildEvent[eventConfig];
         legs = event["legs"];
         dipoles = event["dipoles"];
 
@@ -74,7 +74,7 @@ BeginPackage["ARES`Driver`Resummation`"]
             "refalphas" -> refalphas
           };
 
-        muR = muRstrategy[xq, xqb] muR0 Q;
+        muR = muRstrategy[eventConfig] muR0 Q;
         xmuR = muR/Q;
         Which[
           Order == "LL",

@@ -2,7 +2,7 @@
 
 (* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ *)
 
-(* :Title: EventThreeJets *)
+(* :Title: EventEPAThreeJet *)
 
 (* :Author: *)
 
@@ -10,19 +10,21 @@
 
 (* ------------------------------------------------------------------------ *)
 
-BeginPackage["ARES`Event`EventThreeJets`",
+BeginPackage["ARES`Event`EventEPAThreeJet`",
   {
     "ARES`QCD`Constants`"
   }]
 
-  BuildEvent::usage = ""
+  BuildEventEPAThreeJet::usage = ""
 
   Begin["`Private`"]
 
-    BuildEvent[xq_?NumericQ, xqb_?NumericQ] :=
+    BuildEventEPAThreeJet[eventConfig_List] :=
       Module[
-        {legs, dipoles},
+        {xq, xqb, legs, dipoles},
 
+        xq  = eventConfig[[1]];
+        xqb = eventConfig[[2]];
         legs = BuildMapThreeLegs[xq, xqb];
         dipoles = BuildMapDipoles[legs];
 
@@ -30,7 +32,9 @@ BeginPackage["ARES`Event`EventThreeJets`",
           "xq"  -> xq,
           "xqb" -> xqb,
           "legs" -> legs,
-          "dipoles" -> dipoles
+          "dipoles" -> dipoles,
+          "njets" -> 3,
+          "type" -> "EPA"
         ]
       ]
 

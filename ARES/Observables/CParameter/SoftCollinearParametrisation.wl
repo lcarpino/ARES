@@ -12,14 +12,22 @@
 
 BeginPackage["ARES`Observables`CParameter`SoftCollinearParametrisation`"]
 
-  BuildMapCParameter::usage = ""
+  InitialiseSoftCollinearParametrisation::usage = ""
+
+  BuildMapCParameter::usage =
+    ""
 
   Begin["`Private`"]
 
-    (* Constant parameters of the D-parameter *)
+    (* Constant parameters of the C-parameter *)
     ktpow = 1;
     etapow = {1, 1};
     spow = 0;
+
+    InitialiseSoftCollinearParametrisation[] := 0;
+
+    BuildMapCParameter[Event_?AssociationQ] :=
+      BuildMapCParameter[Event["dipoles"], Event["legs"]]
 
     BuildMapCParameter[dipoles_?ListQ, legs_?ListQ] :=
       Module[

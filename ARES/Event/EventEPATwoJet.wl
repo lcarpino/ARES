@@ -2,7 +2,7 @@
 
 (* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ *)
 
-(* :Title: EventTwoJets *)
+(* :Title: EventEPATwoJet *)
 
 (* :Author: *)
 
@@ -10,16 +10,16 @@
 
 (* ------------------------------------------------------------------------ *)
 
-BeginPackage["ARES`Event`EventTwoJets`",
+BeginPackage["ARES`Event`EventEPATwoJet`",
   {
     "ARES`QCD`Constants`"
   }]
 
-  BuildTwoJetEvent::usage = ""
+  BuildEventEPATwoJet::usage = ""
 
   Begin["`Private`"]
 
-    BuildTwoJetEvent[] :=
+    BuildEventEPATwoJet[eventConfig_List] :=
       Module[
         {legs, dipoles},
 
@@ -28,7 +28,9 @@ BeginPackage["ARES`Event`EventTwoJets`",
 
         Association[
           "legs" -> legs,
-          "dipoles" -> dipoles
+          "dipoles" -> dipoles,
+          "njets" -> 2,
+          "type" -> "EPA"
         ]
       ]
 

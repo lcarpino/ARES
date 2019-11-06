@@ -69,6 +69,16 @@ BeginPackage["ARES`MultipleEmission`AdditiveInterface`",
       Total[Map[dFhcl[lambda, RpNLL, AlphaS, #, obspar, Ihc] &, legs]]
 
 
+    (* soft correction *)
+    dFs[lambda_?NumericQ, RpNLL_?NumericQ, AlphaS_?NumericQ,
+         dips_?ListQ, obspar_?AssociationQ] := 
+      Total[Map[dFsab[lambda, RpNLL, AlphaS, #, obspar] &, legs]]
+
+    dFs[lambda_?NumericQ, RpNLL_?NumericQ, AlphaS_?NumericQ,
+         dips_?ListQ, obspar_?AssociationQ, Ihc_] := 
+      Total[Map[dFsab[lambda, RpNLL, AlphaS, #, obspar, Is] &, legs]]
+
+
     (* wide-angle correction *)
     dFwa[lambda_?NumericQ, RpNLL_?NumericQ, AlphaS_?NumericQ,
          dips_?ListQ, obspar_?AssociationQ, Iwa_] := 
