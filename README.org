@@ -22,3 +22,18 @@ git checkout tags/tag_name
 #+END_SRC
 
 * Installation
+
+To install, simply copy the ARES directory into
+#+BEGIN_SRC sh
+/home/$USER/.Mathematica/Applications
+#+END_SRC
+Alternatively one may link to the ARES directory instead
+#+BEGIN_SRC sh
+ln -s ARES /home/$USER/.Mathematica/Applications/ARES
+#+END_SRC
+
+* Usage
+
+#+BEGIN_SRC Mathematica
+<<ARES`
+#+END_SRC
