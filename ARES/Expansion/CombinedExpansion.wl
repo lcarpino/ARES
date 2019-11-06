@@ -730,7 +730,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           mF11, mF22,
           mIsc, mIrec, mIhc, mIwa, mIcorrel, mIclust,
           mFrec10, mFwa10, mF10,
-          mFsc21, mFrec21, mFhc21, mFwa21, mFcorrel21, mF21,
+          mFsc21, mFrec21, mFhc21, mFwa21, mFs21, mFcorrel21, mFclust21, mF21,
           mlogXab, mlogXl,
           mHs12, mHs12bar, mHs12hat, mHs12bh,
           mHs11, mHs11bar, mHs11hat, mHs11bh,
@@ -823,7 +823,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           mF11, mF22,
           mIsc, mIrec, mIhc, mIwa, mIcorrel, mIclust,
           mFrec10, mFwa10, mF10,
-          mFsc21, mFrec21, mFhc21, mFwa21, mFcorrel21, mF21,
+          mFsc21, mFrec21, mFhc21, mFwa21, mFs21, mFcorrel21, mFclust21, mF21,
           mlogXab, mlogXl,
           mHs12, mHs12bar, mHs12hat, mHs12bh,
           mHs11, mHs11bar, mHs11hat, mHs11bh,
@@ -946,7 +946,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
           RpNLL11,
           mIsc, mIrec, mIhc, mIwa, mIcorrel, mIclust,
           mFrec10, mFwa10, mF10,
-          mFsc21, mFrec21, mFhc21, mFwa21, mFcorrel21, mF21, mF22,
+          mFsc21, mFrec21, mFhc21, mFwa21, mFs21, mFcorrel21, mFclust21, mF21, mF22,
           mlogXab, mlogXl,
           mHs12, mHs12bar, mHs12hat, mHs12bh,
           mHs11, mHs11bar, mHs11hat, mHs11bh,
@@ -1008,6 +1008,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
                     + Frec21[RpNLL11, legs, obsSC, mIrecl]
                     + Fhc21[RpNLL11, legs, obsSC]
                     + Fwa21[RpNLL11, dipoles, obsSC, mIwaab]
+                    + Fs21[RpNLL11, dipoles, obsSC]
                     + Fcorrel21[RpNLL11, legs, obsSC, mIcorrell]
                     + Fclust21[RpNLL11, legs, obsSC, mIclustl]);
 
@@ -1210,6 +1211,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
                          + Frec21[RpNLL11, legs, obsSC, mIrecl]
                          + Fhc21[RpNLL11, legs, obsSC]
                          + Fwa21[RpNLL11, dipoles, obsSC, mIwaab]
+                         + Fs21[RpNLL11, dipoles, obsSC]
                          + Fcorrel21[RpNLL11, legs, obsSC, mIcorrell]
                          + Fclust21[RpNLL11, legs, obsSC, mIclustl]),
 

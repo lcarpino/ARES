@@ -19,6 +19,7 @@ BeginPackage["ARES`Expansion`AdditiveInterface`"]
   Fhc21::usage = ""
   Fwa10::usage = ""
   Fwa21::usage = ""
+  Fs21::usage = ""
   Fcorrel21::usage = ""
   Fclust21::usage = ""
 
