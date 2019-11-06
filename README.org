@@ -44,10 +44,10 @@ An example of standard usage
 (* Load the ARES package *)
 <<ARES`
 
-(* declare an observable of interest, for example the D-parameter *)
+(* declare an observable of interest, the D-parameter here *)
 dpar = BuildObservable["DParameter"];
 
-(* Resum the D-parameter for the event configuration given by {xq, xqb}, where the observable takes the value v *)
+(* Resum the D-parameter for the event configuration given by {xq, xqb}, 
+   where the observable takes the value v *)
 Resum[{xq, xqb}, Log[1/v], dpar, {"Order" -> "NNLL"}]
-
 #+END_SRC
