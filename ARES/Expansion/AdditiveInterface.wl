@@ -37,7 +37,7 @@ BeginPackage["ARES`Expansion`AdditiveInterface`"]
         -Pi^2/12 RpNLL11^2
       ]
 
-    (* FNNLL *) 
+    (* FNNLL *)
 
     (* soft-collinear correction *)
     Fsc21[RpNLL11_?NumericQ, legs_?ListQ, obsSC_?AssociationQ] :=
@@ -60,6 +60,10 @@ BeginPackage["ARES`Expansion`AdditiveInterface`"]
 
     Fwa21[RpNLL11_?NumericQ, dipoles_?ListQ, obsSC_?AssociationQ, Iwa_] :=
       Total[Map[Fwa21ab[RpNLL11, #, obsSC, Iwa] &, dipoles]]
+
+    (* soft correction *)
+    Fs21[RpNLL11_?NumericQ, dipoles_?ListQ, obsSC_?AssociationQ] :=
+      Total[Map[Fs21ab[RpNLL11, #, obsSC] &, dipoles]]
 
     (* correlated correction *)
     Fcorrel21[RpNLL11_?NumericQ, legs_?ListQ, obsSC_?AssociationQ, Icorrel_] :=
@@ -111,15 +115,15 @@ BeginPackage["ARES`Expansion`AdditiveInterface`"]
         res = (8 Pi beta0)/(a + b)^2 I[leg, obsSC]
       ]
 
-    Fhc21l[RpNLL11_?NumericQ, leg_?AssociationQ, obsSC_?AssociationQ] := 
+    Fhc21l[RpNLL11_?NumericQ, leg_?AssociationQ, obsSC_?AssociationQ] :=
       Module[
         {
           a, b, ga0, res
         },
-  
+
         a = obsSC["ktpow"];
         b = obsSC["etapow"][[leg["num"]]];
-  
+
         Which[
           leg["flav"] == "q" || leg["flav"] == "qb", {ga0 = Ga0q},
           leg["flav"] == "g", {ga0 = Ga0g}
@@ -133,20 +137,33 @@ BeginPackage["ARES`Expansion`AdditiveInterface`"]
         {
           a, res
         },
-   
+
         a = obsSC["ktpow"];
-   
+
         res = dipole["col"] 2/a I[dipole, obsSC]
       ]
 
     Fwa21ab[RpNLL11_?NumericQ, dipole_?AssociationQ, obsSC_?AssociationQ, I_] :=
       Module[
         {
+          a, xa, xb, res
+        },
+
+        a = obsSC["ktpow"];
+        xa = dipole["x"][[1]];
+        xb = dipole["x"][[2]];
+
+        res = dipole["col"] (8 Pi beta0)/a^2 I[dipole, obsSC]
+      ]
+
+    Fs21ab[RpNLL11_?NumericQ, dipole_?AssociationQ, obsSC_?AssociationQ] :=
+      Module[
+        {
           a, res
         },
-   
+
         a = obsSC["ktpow"];
-   
+
         res = dipole["col"] (8 Pi beta0)/a^2 I[dipole, obsSC]
       ]
 
@@ -155,10 +172,10 @@ BeginPackage["ARES`Expansion`AdditiveInterface`"]
         {
           a, b, res
         },
-  
+
         a = obsSC["ktpow"];
         b = obsSC["etapow"][[leg["num"]]];
-  
+
         res = -(1/a) RadsNNLL10l[leg, obsSC] I[leg, obsSC]
       ]
 

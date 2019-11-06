@@ -140,7 +140,7 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
           lambda, Rs, RsConst, Rhc, RhcConst, RpNLL, RpNNLL, RsNNLL,
           mFNLL,
           mIsc, mIrec, mIhc, mIwa, mIcorrel, mIclust,
-          mdFsc, mdFrec, mdFhc, mdFwa, mdFcorrel, mdFclust, mdFNNLL,
+          mdFsc, mdFrec, mdFhc, mdFwa, mdFs, mdFcorrel, mdFclust, mdFNNLL,
           mH1, mC1hc,
           res
         },
@@ -183,10 +183,11 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
         mdFrec    = dFrec[lambda, RpNLL, alphaS, legs, obsSC, mIrecl];
         mdFhc     = dFhc[lambda, RpNLL, alphaS, legs, obsSC];
         mdFwa     = dFwa[lambda, RpNLL, alphaS, dipoles, obsSC, mIwaab];
+        mdFs      = dFs[lambda, RpNLL, alphaS, dipoles, obsSC];
         mdFcorrel = dFcorrel[lambda, RpNLL, alphaS, legs, obsSC, mIcorrell];
         mdFclust  = dFclust[lambda, RpNLL, alphaS, legs, obsSC, mIclustl];
   
-        mdFNNLL = mdFsc + mdFrec + mdFhc + mdFwa + mdFcorrel + mdFclust;
+        mdFNNLL = mdFsc + mdFrec + mdFhc + mdFwa + mdFs + mdFcorrel + mdFclust;
 
         Which[
           RadiatorScheme == "Physical",

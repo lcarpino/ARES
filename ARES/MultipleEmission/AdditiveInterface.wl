@@ -23,6 +23,7 @@ BeginPackage["ARES`MultipleEmission`AdditiveInterface`",
   dFrec::usage = ""
   dFhc::usage = ""
   dFwa::usage = ""
+  dFs::usage = ""
   dFcorrel::usage = ""
   dFclust::usage = ""
 
@@ -72,6 +73,16 @@ BeginPackage["ARES`MultipleEmission`AdditiveInterface`",
     dFwa[lambda_?NumericQ, RpNLL_?NumericQ, AlphaS_?NumericQ,
          dips_?ListQ, obspar_?AssociationQ, Iwa_] := 
       Total[Map[dFwaab[lambda, RpNLL, AlphaS, #, obspar, Iwa] &, dips]]
+
+
+    (* soft correction *)
+    dFs[lambda_?NumericQ, RpNLL_?NumericQ, AlphaS_?NumericQ,
+         dips_?ListQ, obspar_?AssociationQ] := 
+      Total[Map[dFsab[lambda, RpNLL, AlphaS, #, obspar] &, dips]]
+
+    dFs[lambda_?NumericQ, RpNLL_?NumericQ, AlphaS_?NumericQ,
+         dips_?ListQ, obspar_?AssociationQ, Is_] := 
+      Total[Map[dFsab[lambda, RpNLL, AlphaS, #, obspar, Is] &, dips]]
 
 
     (* correlated correction *)
@@ -166,6 +177,23 @@ BeginPackage["ARES`MultipleEmission`AdditiveInterface`",
           I = Iwaab[dip, obspar];
   
           res = FNLL[RpNLL] dip["col"]/a 1/(1 - (2 lambda)/a) I
+      ]
+
+
+    (* soft correction *)
+    dFsab[lambda_?NumericQ, RpNLL_?NumericQ, AlphaS_?NumericQ,
+          dip_?AssociationQ, obspar_?AssociationQ] :=
+
+      Module[
+        {a, xa, xb, I, res},
+  
+        a = obspar["ktpow"];
+        xa = dip["legs"][[1]]["x"];
+        xb = dip["legs"][[2]]["x"];
+  
+        I = - Log[xa + xb - 1] (PolyGamma[0, 1 + RpNLL] + EulerGamma);
+
+        res = FNLL[RpNLL] dip["col"]/a 1/(1 - (2 lambda)/a) I
       ]
 
 
