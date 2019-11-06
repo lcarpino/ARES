@@ -24,7 +24,7 @@ BeginPackage["ARES`Expansion`CombinedExpansion`"]
 
   Begin["`Private`"]
 
-    Needs["ARES`EPA`MatrixElements`"]
+    Needs["ARES`MatrixElements`EPA`"]
     Needs["ARES`Expansion`SoftRadiatorExpansion`"]
     Needs["ARES`Expansion`HardCollinearRadiatorExpansion`"]
     Needs["ARES`Expansion`DerivativeRadiatorExpansion`"]

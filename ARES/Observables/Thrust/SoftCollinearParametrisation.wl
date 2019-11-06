@@ -12,14 +12,22 @@
 
 BeginPackage["ARES`Observables`Thrust`SoftCollinearParametrisation`"]
 
-  BuildMapThrust::usage = ""
+  InitialiseSoftCollinearParametrisation::usage = ""
+
+  BuildMapThrust::usage =
+    ""
 
   Begin["`Private`"]
 
-    (* Constant parameters of the D-parameter *)
+    (* Constant parameters of the Thrust *)
     ktpow = 1;
     etapow = {1, 1};
     spow = 0;
+
+    InitialiseSoftCollinearParametrisation[] := 0;
+
+    BuildMapThrust[Event_?AssociationQ] :=
+      BuildMapThrust[Event["dipoles"], Event["legs"]]
 
     BuildMapThrust[dipoles_?ListQ, legs_?ListQ] :=
       Module[

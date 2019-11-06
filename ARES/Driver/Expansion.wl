@@ -18,8 +18,8 @@ BeginPackage["ARES`Driver`Expansion`"]
 
   Begin["`Private`"]
 
-    Needs["ARES`Event`EventThreeJets`"]
-    Needs["ARES`EPA`MatrixElements`"]
+    Needs["ARES`Event`Event`"]
+    Needs["ARES`MatrixElements`EPA`"]
     Needs["ARES`QCD`Constants`"]
     Needs["ARES`QCD`AlphaS`"]
     Needs["ARES`QCD`ScaleChoices`"]
@@ -38,7 +38,7 @@ BeginPackage["ARES`Driver`Expansion`"]
         "refscale" -> MZ, "refalphas" -> AlphaSMZ
       };
 
-    Expansion[xq_?NumericQ, xqb_?NumericQ, logV_?NumericQ,
+    Expansion[eventConfig_List, logV_?NumericQ,
               obs_?AssociationQ, OptionsPattern[]] :=
 
       Module[
@@ -62,7 +62,7 @@ BeginPackage["ARES`Driver`Expansion`"]
         },
 
         (* set up the event *)
-        event = BuildEvent[xq, xqb];
+        event = BuildEvent[eventConfig];
         legs = event["legs"];
         dipoles = event["dipoles"];
 
@@ -76,7 +76,7 @@ BeginPackage["ARES`Driver`Expansion`"]
             "refalphas" -> refalphas
           };
 
-        muR = muRstrategy[xq, xqb] muR0 Q;
+        muR = muRstrategy[eventConfig] muR0 Q;
         xmuR = muR/Q;
         Which[
           Order == "LL",
@@ -172,7 +172,7 @@ BeginPackage["ARES`Driver`Expansion`"]
         "refscale" -> MZ, "refalphas" -> AlphaSMZ
       };
 
-    ExpansionCoefficient[xq_?NumericQ, xqb_?NumericQ, aspow_?IntegerQ, lpow_?IntegerQ,
+    ExpansionCoefficient[eventConfig_List, aspow_?IntegerQ, lpow_?IntegerQ,
                          obs_?AssociationQ, OptionsPattern[]] :=
 
       Module[
@@ -194,7 +194,7 @@ BeginPackage["ARES`Driver`Expansion`"]
         },
 
         (* set up the event *)
-        event = BuildEvent[xq, xqb];
+        event = BuildEvent[eventConfig];
         legs = event["legs"];
         dipoles = event["dipoles"];
 

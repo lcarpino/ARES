@@ -2,7 +2,7 @@
 
 (* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ *)
 
-(* :Title: EPATwoJets *)
+(* :Title: ResumEPATwoJet *)
 
 (* :Author: *)
 
@@ -11,11 +11,11 @@
 (* ------------------------------------------------------------------------ *)
 
 
-BeginPackage["ARES`Resummation`EPATwoJets`"]
+BeginPackage["ARES`Resum`ResumEPATwoJet`"]
 
-  ResumLLPT::usage = ""
-  ResumNLLPT::usage = ""
-  ResumNNLLPT::usage = ""
+  ResumLLPTEPATwoJet::usage = ""
+  ResumNLLPTEPATwoJet::usage = ""
+  ResumNNLLPTEPATwoJet::usage = ""
 
   Begin["`Private`"]
 
@@ -26,7 +26,7 @@ BeginPackage["ARES`Resummation`EPATwoJets`"]
     Needs["ARES`NPShift`MilanFactor`"]
     Needs["ARES`Logarithms`LogarithmNP`"]
     Needs["ARES`Logarithms`ScaleChoices`"]
-    Needs["ARES`EPA`MatrixElements`"]
+    Needs["ARES`MatrixElements`EPA`"]
     Needs["ARES`Radiator`SoftRadiator`"]
     Needs["ARES`Radiator`HardCollinearRadiator`"]
     Needs["ARES`Radiator`DerivativeRadiator`"]
@@ -44,9 +44,9 @@ BeginPackage["ARES`Resummation`EPATwoJets`"]
       };
    
 
-    Options[ResumLLPT] = PTOpts;
+    Options[ResumLLPTEPATwoJet] = PTOpts;
 
-    ResumLLPT[alphaS_?NumericQ, logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
+    ResumLLPTEPATwoJet[alphaS_?NumericQ, logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
        OptionsPattern[]] :=
 
       Module[
@@ -77,9 +77,9 @@ BeginPackage["ARES`Resummation`EPATwoJets`"]
       ]
 
 
-    Options[ResumNLLPT] = PTOpts;
+    Options[ResumNLLPTEPATwoJet] = PTOpts;
 
-    ResumNLLPT[alphaS_?NumericQ, logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
+    ResumNLLPTEPATwoJet[alphaS_?NumericQ, logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
         OptionsPattern[]] :=
       Module[
         {
@@ -112,9 +112,9 @@ BeginPackage["ARES`Resummation`EPATwoJets`"]
       ]
 
 
-    Options[ResumNNLLPT] = PTOpts;
+    Options[ResumNNLLPTEPATwoJet] = PTOpts;
 
-    ResumNNLLPT[alphaS_?NumericQ, logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
+    ResumNNLLPTEPATwoJet[alphaS_?NumericQ, logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
          OptionsPattern[]] :=
       Module[
         {

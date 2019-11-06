@@ -17,7 +17,7 @@ BeginPackage["ARES`QCD`ScaleChoices`"]
 
   Begin["`Private`"]
 
-    muRconst[xq_?NumericQ, xqb_?NumericQ] := 1
+    muRconst[eventConfig_List] := 1
 
     muRgluonKT[xq_?NumericQ, xqb_?NumericQ] := Sqrt[((1 - xq) (1 - xqb))/(xq + xqb - 1)]
 

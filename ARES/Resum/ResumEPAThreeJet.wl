@@ -2,7 +2,7 @@
 
 (* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ *)
 
-(* :Title: EPAThreeJets *)
+(* :Title: ResumEPAThreeJet *)
 
 (* :Author: *)
 
@@ -11,15 +11,15 @@
 (* ------------------------------------------------------------------------ *)
 
 
-BeginPackage["ARES`Resummation`EPAThreeJets`"]
+BeginPackage["ARES`Resum`ResumEPAThreeJet`"]
 
-  ResumLLPT::usage = ""
-  ResumNLLPT::usage = ""
-  ResumNNLLPT::usage = ""
+  ResumLLPTEPAThreeJet::usage = ""
+  ResumNLLPTEPAThreeJet::usage = ""
+  ResumNNLLPTEPAThreeJet::usage = ""
 
-  ResumLLNP::usage = ""
-  ResumNLLNP::usage = ""
-  ResumNNLLNP::usage = ""
+  ResumLLNPEPAThreeJet::usage = ""
+  ResumNLLNPEPAThreeJet::usage = ""
+  ResumNNLLNPEPAThreeJet::usage = ""
 
   Begin["`Private`"]
 
@@ -30,7 +30,7 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
     Needs["ARES`NPShift`MilanFactor`"]
     Needs["ARES`Logarithms`LogarithmNP`"]
     Needs["ARES`Logarithms`ScaleChoices`"]
-    Needs["ARES`EPA`MatrixElements`"]
+    Needs["ARES`MatrixElements`EPA`"]
     Needs["ARES`Radiator`SoftRadiator`"]
     Needs["ARES`Radiator`HardCollinearRadiator`"]
     Needs["ARES`Radiator`DerivativeRadiator`"]
@@ -48,9 +48,9 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
       };
    
 
-    Options[ResumLLPT] = PTOpts;
+    Options[ResumLLPTEPAThreeJet] = PTOpts;
 
-    ResumLLPT[alphaS_?NumericQ, logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
+    ResumLLPTEPAThreeJet[alphaS_?NumericQ, logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
        OptionsPattern[]] :=
 
       Module[
@@ -83,9 +83,9 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
       ]
 
 
-    Options[ResumNLLPT] = PTOpts;
+    Options[ResumNLLPTEPAThreeJet] = PTOpts;
 
-    ResumNLLPT[alphaS_?NumericQ, logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
+    ResumNLLPTEPAThreeJet[alphaS_?NumericQ, logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
         OptionsPattern[]] :=
       Module[
         {
@@ -125,9 +125,9 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
       ]
 
 
-    Options[ResumNNLLPT] = PTOpts;
+    Options[ResumNNLLPTEPAThreeJet] = PTOpts;
 
-    ResumNNLLPT[alphaS_?NumericQ, logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
+    ResumNNLLPTEPAThreeJet[alphaS_?NumericQ, logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
          OptionsPattern[]] :=
       Module[
         {
@@ -216,9 +216,9 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
         "muI"    -> 2.0
       };
 
-    Options[ResumLLNP] = NPOpts;
+    Options[ResumLLNPEPAThreeJet] = NPOpts;
 
-    ResumLLNP[alphaS_?NumericQ, logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
+    ResumLLNPEPAThreeJet[alphaS_?NumericQ, logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
        OptionsPattern[]] :=
 
       Module[
@@ -259,9 +259,9 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
         res = M3sq[xq, xqb] Exp[-Rs]
       ]
 
-    Options[ResumNLLNP] = NPOpts;
+    Options[ResumNLLNPEPAThreeJet] = NPOpts;
 
-    ResumNLLNP[alphaS_?NumericQ, logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
+    ResumNLLNPEPAThreeJet[alphaS_?NumericQ, logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
         OptionsPattern[]] :=
       Module[
         {
@@ -310,9 +310,9 @@ BeginPackage["ARES`Resummation`EPAThreeJets`"]
       ]
 
 
-    Options[ResumNNLLNP] = NPOpts;
+    Options[ResumNNLLNPEPAThreeJet] = NPOpts;
 
-    ResumNNLLNP[alphaS_?NumericQ, logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
+    ResumNNLLNPEPAThreeJet[alphaS_?NumericQ, logV_?NumericQ, Event_?AssociationQ, obsSC_?AssociationQ,
          OptionsPattern[]] :=
       Module[
         {
