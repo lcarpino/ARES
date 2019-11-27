@@ -58,13 +58,16 @@ BeginPackage["ARES`Driver`Expansion`"]
           muR, xmuR, logX0, logXV,
           OrderExpansion, Ltilde,
           ExpansionOpts, alphaSOpts,
-          res0, res1, res2, res
+          res0, res1, res2, res,
+          xq, xqb
         },
 
         (* set up the event *)
         event = BuildEvent[eventConfig];
         legs = event["legs"];
         dipoles = event["dipoles"];
+        xq  = eventConfig[[1]];
+        xqb = eventConfig[[2]];
 
         (* set up the observable parametrisation for this event geometry *)
         obsSC = obs["SCParametrisation"][event];

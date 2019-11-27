@@ -160,12 +160,16 @@ BeginPackage["ARES`Expansion`AdditiveInterface`"]
     Fs21ab[RpNLL11_?NumericQ, dipole_?AssociationQ, obsSC_?AssociationQ] :=
       Module[
         {
-          a, res
+          a, xa, xb, I, res
         },
 
         a = obsSC["ktpow"];
+        xa = dipole["legs"][[1]]["x"];
+        xb = dipole["legs"][[2]]["x"];
 
-        res = dipole["col"] (8 Pi beta0)/a^2 I[dipole, obsSC]
+        I = - Log[xa + xb - 1] Pi^2/6 RpNLL11;
+
+        res = dipole["col"] 2/a I
       ]
 
     Fcorrel21l[RpNLL11_?NumericQ, leg_?AssociationQ, obsSC_?AssociationQ, I_] :=
