@@ -13,6 +13,7 @@
 BeginPackage["ARES`Observables`DParameter`SoftCollinearCorrections`",
   {
     "ARES`Config`",
+    "ARES`Observables`Config`",
     "ARES`QCD`Constants`",
     "ARES`Radiator`DerivativeRadiator`"
   }]
@@ -35,18 +36,21 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearCorrections`",
     Iwa13Interpolation;
     Iwa23Interpolation;
 
-    InitialiseCorrections[] :=
+    InitialiseCorrections[OptionsPattern[$ObsInitOpt]] :=
       Module[
-        {Iwa12Grid},
+        {UseGrids, Iwa12Grid},
 
-        Iwa12Grid = Import["DParameter-Iwa12.mx", Path -> $ARESGrids];
+        UseGrids = OptionValue["UseGrids"];
 
-        Iwa12Interpolation = Interpolation[
-                              Flatten[
-                                Iwa12Grid, 1], InterpolationOrder -> 1];
+        If[UseGrids,
+          Iwa12Grid = Import["DParameter-Iwa12.mx", Path -> $ARESGrids];
 
-        Iwa13Interpolation = Iwa12Interpolation;
-        Iwa23Interpolation = Iwa12Interpolation;
+          Iwa12Interpolation = Interpolation[
+                                 Flatten[Iwa12Grid, 1], InterpolationOrder -> 1];
+
+          Iwa13Interpolation = Iwa12Interpolation;
+          Iwa23Interpolation = Iwa12Interpolation;
+        ];
 
       ];
 
@@ -121,6 +125,19 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearCorrections`",
         xa = dip["legs"][[1]]["x"];
         xb = dip["legs"][[2]]["x"];
    
+        csq = (1 - xa) (1 - xb) / (xa xb);
+        ssq = (xa + xb -1) / (xa xb);
+        eta0 = Log[xa / xb]/2;
+
+        res = (eta0^2
+               + 2 NIntegrate[Log[Exp[-eta] (Cosh[eta] + Sqrt[Cosh[eta]^2 - csq])],
+                    {eta, 0,Infinity},
+                    MinRecursion -> 2, MaxRecursion -> 24, PrecisionGoal -> 8, 
+                    AccuracyGoal -> 8, WorkingPrecision -> $MachinePrecision, 
+                    Method -> {"GlobalAdaptive", "SymbolicProcessing" -> 0, 
+                    "SingularityHandler" -> None}]);
+
+        (*
         Which[
           dip["num"] == "12",
             res = Iwa12Interpolation[xa, xb],
@@ -129,6 +146,7 @@ BeginPackage["ARES`Observables`DParameter`SoftCollinearCorrections`",
           dip["num"] == "23",
             res = Iwa23Interpolation[xa, xb]
         ];
+        *)
 
         res
       ]

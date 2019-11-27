@@ -17,10 +17,11 @@ BeginPackage["ARES`Observables`Thrust`Initialise`"]
 
   Begin["`Private`"]
 
+    Needs["ARES`Observables`Config`"];
     Needs["ARES`Observables`Thrust`SoftCollinearParametrisation`"]
     Needs["ARES`Observables`Thrust`SoftCollinearCorrections`"]
 
-    InitialiseThrust[] :=
+    InitialiseThrust[opt: OptionsPattern[$ObsInitOpt]] :=
       Module[
         {},
         InitialiseSoftCollinearParametrisation[];

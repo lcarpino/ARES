@@ -15,23 +15,24 @@ BeginPackage["ARES`Observables`ObservableBuilder`"]
   BuildObservable::usage = ""
 
   Begin["`Private`"]
+    Needs["ARES`Observables`Config`"];
     Needs["ARES`Observables`DParameter`Initialise`"];
     Needs["ARES`Observables`CParameter`Initialise`"];
     Needs["ARES`Observables`Thrust`Initialise`"];
 
-    BuildObservable[Observable_] :=
+    BuildObservable[Observable_, opt: OptionsPattern[$ObsInitOpt]] :=
       Module[
         {},
 
         Which[
           Observable == "DParameter",
-            InitialiseDParameter[];
+            InitialiseDParameter[opt];
             BuildDParameter[],
           Observable == "CParameter",
-            InitialiseCParameter[];
+            InitialiseCParameter[opt];
             BuildCParameter[],
           Observable == "Thrust",
-            InitialiseThrust[];
+            InitialiseThrust[opt];
             BuildThrust[]
         ]
       ]

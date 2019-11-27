@@ -17,10 +17,11 @@ BeginPackage["ARES`Observables`CParameter`Initialise`"]
 
   Begin["`Private`"]
 
+    Needs["ARES`Observables`Config`"];
     Needs["ARES`Observables`CParameter`SoftCollinearParametrisation`"]
     Needs["ARES`Observables`CParameter`SoftCollinearCorrections`"]
 
-    InitialiseCParameter[] :=
+    InitialiseCParameter[opt: OptionsPattern[$ObsInitOpt]] :=
       Module[
         {},
         InitialiseSoftCollinearParametrisation[];

@@ -17,16 +17,17 @@ BeginPackage["ARES`Observables`DParameter`Initialise`"]
 
   Begin["`Private`"]
 
+    Needs["ARES`Observables`Config`"];
     Needs["ARES`Observables`DParameter`SoftCollinearParametrisation`"]
     Needs["ARES`Observables`DParameter`SoftCollinearCorrections`"]
     Needs["ARES`Observables`DParameter`NPCorrections`"]
 
-    InitialiseDParameter[] :=
+    InitialiseDParameter[opt: OptionsPattern[$ObsInitOpt]] :=
       Module[
         {},
-        InitialiseSoftCollinearParametrisation[];
-        InitialiseCorrections[];
-        InitialiseNPCorrections[];
+        InitialiseSoftCollinearParametrisation[opt];
+        InitialiseCorrections[opt];
+        InitialiseNPCorrections[opt];
       ]
 
     Additive = True;
