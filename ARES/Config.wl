@@ -12,7 +12,7 @@
 
 BeginPackage["ARES`Config`"]
 
-  $ARESDirectory = ""
+  $ARESDirectory::usage = ""
   $ARESGrids::usage = ""
 
   Begin["`Private`"]
