@@ -21,6 +21,10 @@ BeginPackage["ARES`Observables`DParameter`NPCorrections`"]
     Needs["ARES`Config`"]
 
     (* variables to hold any grids *)
+    gNP12Interpolation;
+    gNP13Interpolation;
+    gNP23Interpolation;
+
     InitialiseNPCorrections[] :=
       Module[
         {gNP12Grid},

@@ -36,8 +36,8 @@ BeginPackage["ARES`Driver`Resummation`"]
         "muI" -> 2.0, "alpha0" -> 0.52
       };
 
-    Resum[eventConfig_List, logV_?NumericQ, obs_?AssociationQ,
-          OptionsPattern[]] :=
+    Resum[eventConfig_List /; VectorQ[eventConfig, NumericQ], logV_?NumericQ,
+          obs_?AssociationQ, OptionsPattern[]] :=
 
       Module[
         {
