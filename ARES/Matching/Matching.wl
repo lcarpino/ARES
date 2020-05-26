@@ -44,13 +44,18 @@ BeginPackage["ARES`Matching`Matching`"]
     MatchingModR[v_?ListQ, sigma_?ListQ, SigmaBar_?ListQ, ResumExpanded_?ListQ, Resum_?ListQ] :=
       Module[
         {
-          order, Z, matching, res
+          order, Z, u, h, v0, matching, res
         },
 
         order = Length[SigmaBar];
         (* order = Length[ResumExpanded]; *)
 
-        Z = (1 - v/v[[-1]]);
+        u = 1;
+        h = 3;
+        v0 = v[[50]];
+        (* v0 = 1; *)
+
+        Z = (1 - (v/v0)^u)^h (Boole[# < v0]& /@ v);
 
         (* perform the matching *)
         matching = 1;
