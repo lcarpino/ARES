@@ -96,6 +96,8 @@ BeginPackage["ARES`Resum`ResumEPAThreeJet`"]
           a,
           legs, dipoles, xq, xqb,
           lambda, Rs, Rhc, RpNLL, RsNNLL, mFNLL,
+          logXS, lambdaS,
+          logXJ, lambdaJ,
           res
         },
   
@@ -106,14 +108,20 @@ BeginPackage["ARES`Resum`ResumEPAThreeJet`"]
         legs    = Event["legs"];
         dipoles = Event["dipoles"];
 
+        logXS = logXV;
+        logXJ = 0;
+        logXV = 0;
+
+        lambdaJ = alphaS beta0 LtildePT[Exp[-logV], Exp[logXJ]];
+        lambdaS = alphaS beta0 LtildePT[Exp[-logV], Exp[logXS]];
         lambda = alphaS beta0 LtildePT[Exp[-logV], Exp[logXV]];
 
         (* check Landau pole *)
         If[lambda > a/2, Return[0, Module]];
 
-        Rs =  Rads[lambda, alphaS, xmuR, logXV, 1, dipoles, obsSC];
-        Rhc = Radhc[lambda, alphaS, xmuR, logXV, 1, legs, obsSC];
-        RpNLL =  RadpNLL[lambda, legs, obsSC];
+        Rs =  Rads[lambdaS, alphaS, xmuR, logXS, 1, dipoles, obsSC];
+        Rhc = Radhc[lambdaJ, alphaS, xmuR, logXJ, 1, legs, obsSC];
+        RpNLL =  RadpNLL[lambdaS, legs, obsSC];
         (* RsNNLL = RadsNNLL[lambda, alphaS, legs, obsSC]; *)
         (*
         mFNLL = (FNLL[RpNLL] + alphaS beta0 FpNNLL[RpNLL, RsNNLL, alphaS] (-logXV)
@@ -142,6 +150,8 @@ BeginPackage["ARES`Resum`ResumEPAThreeJet`"]
           mIsc, mIrec, mIhc, mIwa, mIcorrel, mIclust,
           mdFsc, mdFrec, mdFhc, mdFwa, mdFs, mdFcorrel, mdFclust, mdFNNLL,
           mH1, mC1hc,
+          logXS, lambdaS,
+          logXJ, lambdaJ,
           res
         },
 
@@ -159,33 +169,41 @@ BeginPackage["ARES`Resum`ResumEPAThreeJet`"]
         mIcorrell = TransferFunctions["Icorrell"];
         mIclustl  = TransferFunctions["Iclustl"];
 
+        logXS = logXV;
+        logXJ = 0;
+        logXV = 0;
+
+        lambdaS = alphaS beta0 LtildePT[Exp[-logV], Exp[logXS]];
+        lambdaJ = alphaS beta0 LtildePT[Exp[-logV], Exp[logXJ]];
         lambda = alphaS beta0 LtildePT[Exp[-logV], Exp[logXV]];
 
         (* check Landau pole *)
         If[lambda > a/2, Return[0, Module]];
+        If[lambdaJ > a/2, Return[0, Module]];
+        If[lambdaS > a/2, Return[0, Module]];
  
-        Rs  = Rads[lambda, alphaS, xmuR, logXV, 2, dipoles, obsSC];
-        Rhc = Radhc[lambda, alphaS, xmuR, logXV, 2, legs, obsSC];
-        RsConst  = Rads[0, alphaS, xmuR, logXV, 2, dipoles, obsSC];
-        RhcConst = Radhc[0, alphaS, xmuR, logXV, 2, legs, obsSC];
+        Rs  = Rads[lambdaS, alphaS, xmuR, logXS, 2, dipoles, obsSC];
+        Rhc = Radhc[lambdaJ, alphaS, xmuR, logXJ, 2, legs, obsSC];
+        RsConst  = Rads[0, alphaS, xmuR, logXS, 2, dipoles, obsSC];
+        RhcConst = Radhc[0, alphaS, xmuR, logXJ, 2, legs, obsSC];
 
-        RpNLL = RadpNLL[lambda, legs, obsSC];
-        RsNNLL = RadsNNLL[lambda, alphaS, legs, obsSC];
+        RpNLL = RadpNLL[lambdaS, legs, obsSC];
+        RsNNLL = RadsNNLL[lambdaS, alphaS, legs, obsSC];
         mFNLL = (FNLL[RpNLL]
-                  + alphaS beta0 lambda FpNNLL[RpNLL, RsNNLL, alphaS] Log[xmuR^2]
-                  + alphaS beta0 FpNNLL[RpNLL, RsNNLL, alphaS] (-logXV));
+                  + alphaS beta0 lambdaS FpNNLL[RpNLL, RsNNLL, alphaS] Log[xmuR^2]
+                  + alphaS beta0 FpNNLL[RpNLL, RsNNLL, alphaS] (-logXS));
 
 
         mH1 = Virt3[xq, xqb]/M3sq[xq, xqb];
-        mC1hc = C1hc[lambda, xq, xqb, legs, obsSC];
+        mC1hc = C1hc[lambdaJ, xq, xqb, legs, obsSC];
   
-        mdFsc     = dFsc[lambda, RpNLL, alphaS, legs, obsSC];
-        mdFrec    = dFrec[lambda, RpNLL, alphaS, legs, obsSC, mIrecl];
-        mdFhc     = dFhc[lambda, RpNLL, alphaS, legs, obsSC];
-        mdFwa     = dFwa[lambda, RpNLL, alphaS, dipoles, obsSC, mIwaab];
-        mdFs      = dFs[lambda, RpNLL, alphaS, dipoles, obsSC];
-        mdFcorrel = dFcorrel[lambda, RpNLL, alphaS, legs, obsSC, mIcorrell];
-        mdFclust  = dFclust[lambda, RpNLL, alphaS, legs, obsSC, mIclustl];
+        mdFsc     = dFsc[lambdaS, RpNLL, alphaS, legs, obsSC];
+        mdFrec    = dFrec[lambdaS, RpNLL, alphaS, legs, obsSC, mIrecl];
+        mdFhc     = dFhc[lambdaS, RpNLL, alphaS, legs, obsSC];
+        mdFwa     = dFwa[lambdaS, RpNLL, alphaS, dipoles, obsSC, mIwaab];
+        mdFs      = dFs[lambdaS, RpNLL, alphaS, dipoles, obsSC];
+        mdFcorrel = dFcorrel[lambdaS, RpNLL, alphaS, legs, obsSC, mIcorrell];
+        mdFclust  = dFclust[lambdaS, RpNLL, alphaS, legs, obsSC, mIclustl];
   
         mdFNNLL = mdFsc + mdFrec + mdFhc + mdFwa + mdFs + mdFcorrel + mdFclust;
 
